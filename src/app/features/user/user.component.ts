@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { take } from 'rxjs';
-import { Token, UserService } from './services/user.service';
+import { Store } from '@ngrx/store';
+import { UserService } from './services/user.service';
+import { signIn } from '../../core/store/user/user.actions';
 
 
 @Component({
@@ -9,30 +11,30 @@ import { Token, UserService } from './services/user.service';
   styleUrl: './user.component.scss'
 })
 export class UserComponent {
-  public token: Token| undefined;
+  constructor(private userService: UserService, private readonly store: Store){}
 
-  constructor(private userService: UserService){}
-
-  public onSignUp() {
-    this.userService.signUp('adlap@nk.ru', '123456789').pipe(take(1)).subscribe(res => console.log(res))
+  public onSignUp(): void {
+    this.userService.signUp('man@nk.ru', '123456789').pipe(take(1)).subscribe(res => console.log(res))
   }
 
-  public onSignIp(){
+  public onSignIp(): void{
     localStorage.clear();
-    this.userService.signIn('adlap@nk.ru', '123456789').pipe(take(1)).subscribe(res => localStorage.setItem('token', res.token))
+    this.userService.signIn('man@nk.ru', '123456789').pipe(take(1)).subscribe(res => localStorage.setItem('token', res.token))
+    this.store.dispatch(signIn({ role: 'user'}))
   }
 
-  public getUser() {
+  public getUser():void {
     this.userService.getCurrentUser().pipe(take(1)).subscribe(res => console.log(res)).unsubscribe()
   }
 
-  public updateUser(){
-    this.userService.updateCurrentUserName('adlap@nk.ru', 'Jain').pipe(take(1)).subscribe(res => console.log(res))
+  public updateUser(): void {
+    this.userService.updateCurrentUserName('man@nk.ru', 'Ruby').pipe(take(1)).subscribe(res => console.log(res))
     this.userService.updateCurrentUserPassword('987654321').pipe(take(1)).subscribe(res => console.log(res))
   }
 
-  public terminateSession(){
+  public terminateSession(): void{
     localStorage.clear();
     this.userService.deleteCurrentUser().pipe(take(1)).subscribe(res => console.log(res))
+    this.store.dispatch(signIn({ role: 'guest'}))
   }
 }

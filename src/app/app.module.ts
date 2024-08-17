@@ -4,6 +4,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { StoreModule } from '@ngrx/store';
 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -22,6 +23,7 @@ import { addTokenInterceptor } from './core/interceptors/add-token.interceptor';
       user: userReducer,
       trips: tripsReducer,
     }),
+    StoreDevtoolsModule.instrument(),
     UserModule
   ],
   providers: [
