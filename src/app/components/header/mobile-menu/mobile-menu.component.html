@@ -1,0 +1,51 @@
+<button
+  mat-icon-button
+  (click)="toggleMenu()"
+  class="side-menu-icon"
+  class="large-icon"
+>
+  <mat-icon>menu</mat-icon>
+</button>
+<div
+  class="side-menu"
+  [ngClass]="{ 'menu-open': isMenuOpen, 'menu-closed': !isMenuOpen }"
+>
+  <button mat-icon-button (click)="toggleMenu()">
+    <mat-icon>close</mat-icon>
+  </button>
+  <nav>
+    <ul class="nav-list">
+      <li><a routerLink="/" routerLinkActive="active">Home</a></li>
+      <ng-container *ngIf="role === 'user'">
+        <li>
+          <a routerLink="/profile">Profile</a>
+        </li>
+        <li>
+          <a routerLink="/my-orders">My Orders</a>
+        </li>
+        <li>
+          <button mat-flat-button (click)="onLogout()">Logout</button>
+        </li>
+      </ng-container>
+      <ng-container *ngIf="role === 'admin'">
+        <li>
+          <a routerLink="/profile">Profile</a>
+        </li>
+        <li>
+          <a routerLink="/orders">Orders</a>
+        </li>
+        <li>
+          <button mat-flat-button routerLink="'/admin'">Admin</button>
+        </li>
+      </ng-container>
+      <ng-container *ngIf="role === 'guest'">
+        <li>
+          <button mat-flat-button routerLink="'/signup'">Sign Up</button>
+        </li>
+        <li>
+          <button mat-flat-button routerLink="'/login'">Sign In</button>
+        </li>
+      </ng-container>
+    </ul>
+  </nav>
+</div>

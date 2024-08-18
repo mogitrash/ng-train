@@ -1,99 +1,18 @@
 <header>
-  <div class="logo">
-    <a routerLink="/"><img src="assets/images/logo.svg" alt="logo" /></a>
-  </div>
+  <app-logo></app-logo>
   <ng-container *ngIf="role$ | async as role">
     <div class="nav">
-      <div class="desc-nav">
-        <nav>
-          <ul>
-            <li><a routerLink="/" routerLinkActive="active">Home</a></li>
-            <ng-container *ngIf="role === 'user'">
-              <li>
-                <a routerLink="/profile">Profile</a>
-              </li>
-              <li>
-                <a routerLink="/my-orders">My Orders</a>
-              </li>
-            </ng-container>
-            <ng-container *ngIf="role === 'admin'">
-              <li>
-                <a routerLink="/profile">Profile</a>
-              </li>
-              <li>
-                <a routerLink="/orders">Orders</a>
-              </li>
-            </ng-container>
-          </ul>
-        </nav>
-        <div class="buttons">
-          <ng-container *ngIf="role === 'guest'">
-            <button mat-flat-button routerLink="'/signup'">Sign Up</button>
-            <button mat-flat-button routerLink="'/login'">Sign In</button>
-          </ng-container>
-          <ng-container *ngIf="role === 'user'">
-            <button mat-flat-button (click)="logout()">Logout</button>
-          </ng-container>
-          <ng-container *ngIf="role === 'admin'">
-            <button mat-flat-button [routerLink]="'/admin'">Admin</button>
-          </ng-container>
-        </div>
-      </div>
-      <div class="mobil-nav">
-        <button
-          mat-icon-button
-          (click)="toggleMenu()"
-          class="side-menu-icon"
-          class="large-icon"
-        >
-          <mat-icon>menu</mat-icon>
-        </button>
-        <div
-          class="side-menu"
-          [ngClass]="{ 'menu-open': isMenuOpen, 'menu-closed': !isMenuOpen }"
-        >
-          <button mat-icon-button (click)="toggleMenu()">
-            <mat-icon>close</mat-icon>
-          </button>
-          <nav>
-            <ul class="nav-list">
-              <li><a routerLink="/" routerLinkActive="active">Home</a></li>
-              <ng-container *ngIf="role === 'user'">
-                <li>
-                  <a routerLink="/profile">Profile</a>
-                </li>
-                <li>
-                  <a routerLink="/my-orders">My Orders</a>
-                </li>
-                <li>
-                  <button mat-flat-button (click)="logout()">Logout</button>
-                </li>
-              </ng-container>
-              <ng-container *ngIf="role === 'admin'">
-                <li>
-                  <a routerLink="/profile">Profile</a>
-                </li>
-                <li>
-                  <a routerLink="/orders">Orders</a>
-                </li>
-                <li>
-                  <button mat-flat-button routerLink="'/admin'">Admin</button>
-                </li>
-              </ng-container>
-              <ng-container *ngIf="role === 'guest'">
-                <li>
-                  <button mat-flat-button routerLink="'/signup'">
-                    Sign Up
-                  </button>
-                </li>
-                <li>
-                  <button mat-flat-button routerLink="'/login'">Sign In</button>
-                </li>
-              </ng-container>
-            </ul>
-          </nav>
-        </div>
-      </div>
+      <app-desk-menu
+        [role]="role"
+        [onLogout]="logout"
+        class="desc-nav"
+      ></app-desk-menu>
+
+      <app-mobile-menu
+        [role]="role"
+        [onLogout]="logout"
+        class="mobil-nav"
+      ></app-mobile-menu>
     </div>
   </ng-container>
 </header>
