@@ -1,8 +1,8 @@
 import { createReducer } from '@ngrx/store';
 import { UserState } from '../../models/user.model';
 
-const inititalState: UserState = {
+const initialState: UserState = {
   currentAccess: 'guest',
 };
 
-export const userReducer = createReducer(inititalState);
+export const userReducer = createReducer(initialState);

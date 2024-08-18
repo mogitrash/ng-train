@@ -1,1 +1,43 @@
-<p>header works!</p>
+<header>
+  <div class="logo"></div>
+  <ng-container *ngIf="role$ | async as role">
+    <div class="nav">
+      <div class="desc-nav">
+        <nav>
+          <ul>
+            <li><a routerLink="/" routerLinkActive="active">Home</a></li>
+            <ng-container *ngIf="role === 'user'">
+              <li>
+                <a routerLink="/profile">Profile</a>
+              </li>
+              <li>
+                <a routerLink="/my-orders">My Orders</a>
+              </li>
+            </ng-container>
+            <ng-container *ngIf="role === 'admin'">
+              <li>
+                <a routerLink="/profile">Profile</a>
+              </li>
+              <li>
+                <a routerLink="/orders">Orders</a>
+              </li>
+            </ng-container>
+          </ul>
+        </nav>
+        <div class="buttons">
+          <ng-container *ngIf="role === 'guest'">
+            <button mat-flat-button>Sign Up</button>
+            <button mat-flat-button>Sign In</button>
+          </ng-container>
+          <ng-container *ngIf="role === 'user'">
+            <button mat-flat-button>Logout</button>
+          </ng-container>
+          <ng-container *ngIf="role === 'admin'">
+            <button mat-flat-button>Admin</button>
+          </ng-container>
+        </div>
+      </div>
+      <div class="mobil-nav"></div>
+    </div>
+  </ng-container>
+</header>
