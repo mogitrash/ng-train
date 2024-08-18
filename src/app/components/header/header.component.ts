@@ -13,10 +13,16 @@ import { TrainState } from '../../core/store/store.model';
 export class HeaderComponent implements OnInit {
   role$!: Observable<Access>;
 
+  isMenuOpen: boolean = false;
+
   // eslint-disable-next-line @ngrx/no-typed-global-store
   constructor(private store: Store<TrainState>) {}
 
   ngOnInit(): void {
     this.role$ = this.store.select(selectCurrentAccess);
+  }
+
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
   }
 }
