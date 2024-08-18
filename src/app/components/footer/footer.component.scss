@@ -2,8 +2,12 @@ footer {
   display: flex;
   justify-content: space-between;
   width: var(--container-with);
+  padding: 1rem 0;
   @media (max-width: 1200px) {
     width: calc(100% - 4rem);
-    padding: 2rem;
+    padding: 1rem 2rem;
+  }
+  a {
+    color: inherit;
   }
 }
