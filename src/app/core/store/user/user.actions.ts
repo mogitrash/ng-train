@@ -2,7 +2,9 @@ import { createAction, props } from "@ngrx/store";
 
 export const signUpAction = createAction('[User] User signUp', props<{email: string, password: string}>());
 
-export const signInAction = createAction('[User] User signIn', props<{role: 'guest'| 'user', token: string}>());
+export const signInAction = createAction('[User] User signIn', props<{email: string, password: string}>());
+
+export const getTokenAction = createAction('[User] User gets Token ',props<{role: 'guest'| 'user', token: string}>())
 
 export const getUserAction = createAction('[User] get User');
 

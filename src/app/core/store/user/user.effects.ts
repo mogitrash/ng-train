@@ -26,19 +26,29 @@ export class UserEffects{
         return this.user$.pipe(
         switchMap(({email, password}) => {
           return this.User.signUp(email, password).pipe(
-          switchMap(() => {
+         switchMap(() => {
             return this.user$.pipe(
-            switchMap((user) => {
-              return this.User.signIn(user.email,user.password).pipe(
-                tap(({ token }) => {localStorage.setItem('token', token)}),
-              switchMap(({token}) => {
-                return of(userActions.signInAction({ token, role: 'user'}))
+            map((user) => {
+             return userActions.signInAction({ email: user.email, password: user.password})
               }), catchError(() => {return of(userActions.getError())})
             )}),
+        )}))}))});
 
-        )}))
-    }) )
-})) });
+    signInUser$ = createEffect(() => {
+      return this.actions$.pipe(
+        ofType(userActions.signInAction.type),
+        exhaustMap(() => {
+          return this.user$.pipe(
+            switchMap((user) => {
+                return this.User.signIn(user.email,user.password).pipe(
+                  tap(({ token }) => {localStorage.setItem('token', token)}),
+                  map(({token}) => {
+                  return userActions.getTokenAction({ token, role: 'user'})
+                }), catchError(() => {return of(userActions.getError())})
+          )
+        })
+      )
+    }))});
 
   updateName$ = createEffect(() => {
     return this.actions$.pipe(
