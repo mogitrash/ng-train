@@ -1,0 +1,33 @@
+header {
+  display: flex;
+  justify-content: space-between;
+  width: var(--container-with);
+  padding: 0.5rem 0;
+  @media (max-width: 1200px) {
+    width: calc(100% - 4rem);
+    padding: 2rem;
+  }
+}
+.nav {
+  display: flex;
+  align-items: center;
+}
+.desc-nav {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  nav {
+    ul {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+  }
+
+  .buttons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+}

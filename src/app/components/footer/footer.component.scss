@@ -1,0 +1,9 @@
+footer {
+  display: flex;
+  justify-content: space-between;
+  width: var(--container-with);
+  @media (max-width: 1200px) {
+    width: calc(100% - 4rem);
+    padding: 2rem;
+  }
+}
