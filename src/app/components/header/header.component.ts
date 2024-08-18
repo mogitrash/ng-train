@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Access } from '../../core/models/user.model';
 import { selectCurrentAccess } from '../../core/store/user/user.selectors';
 import { TrainState } from '../../core/store/store.model';
+import { signIn } from '../../core/store/user/user.actions';
 
 @Component({
   selector: 'app-header',
@@ -24,5 +25,9 @@ export class HeaderComponent implements OnInit {
 
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  logout(): void {
+    this.store.dispatch(signIn({ role: 'guest' }));
   }
 }

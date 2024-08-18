@@ -28,14 +28,14 @@
         </nav>
         <div class="buttons">
           <ng-container *ngIf="role === 'guest'">
-            <button mat-flat-button>Sign Up</button>
-            <button mat-flat-button>Sign In</button>
+            <button mat-flat-button routerLink="'/signup'">Sign Up</button>
+            <button mat-flat-button routerLink="'/login'">Sign In</button>
           </ng-container>
           <ng-container *ngIf="role === 'user'">
-            <button mat-flat-button>Logout</button>
+            <button mat-flat-button (click)="logout()">Logout</button>
           </ng-container>
           <ng-container *ngIf="role === 'admin'">
-            <button mat-flat-button>Admin</button>
+            <button mat-flat-button [routerLink]="'/admin'">Admin</button>
           </ng-container>
         </div>
       </div>
@@ -65,7 +65,9 @@
                 <li>
                   <a routerLink="/my-orders">My Orders</a>
                 </li>
-                <li><button mat-flat-button>Logout</button></li>
+                <li>
+                  <button mat-flat-button (click)="logout()">Logout</button>
+                </li>
               </ng-container>
               <ng-container *ngIf="role === 'admin'">
                 <li>
@@ -74,11 +76,19 @@
                 <li>
                   <a routerLink="/orders">Orders</a>
                 </li>
-                <li><button mat-flat-button>Admin</button></li>
+                <li>
+                  <button mat-flat-button routerLink="'/admin'">Admin</button>
+                </li>
               </ng-container>
               <ng-container *ngIf="role === 'guest'">
-                <li><button mat-flat-button>Sign Up</button></li>
-                <li><button mat-flat-button>Sign In</button></li>
+                <li>
+                  <button mat-flat-button routerLink="'/signup'">
+                    Sign Up
+                  </button>
+                </li>
+                <li>
+                  <button mat-flat-button routerLink="'/login'">Sign In</button>
+                </li>
               </ng-container>
             </ul>
           </nav>
