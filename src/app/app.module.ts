@@ -15,9 +15,32 @@ import { FooterComponent } from './components/footer/footer.component';
 import { LogoComponent } from './components/header/logo/logo.component';
 import { DeskMenuComponent } from './components/header/desk-menu/desk-menu.component';
 import { MobileMenuComponent } from './components/header/mobile-menu/mobile-menu.component';
+import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
+import { AdminPageComponent } from './pages/admin-page/admin-page.component';
+import { OrdersPageComponent } from './pages/orders-page/orders-page.component';
+import { UserOrdersPageComponent } from './pages/user-orders-page/user-orders-page.component';
+import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
+import { SigninPageComponent } from './pages/signin-page/signin-page.component';
+import { SignupPageComponent } from './pages/signup-page/signup-page.component';
+import { MainPageComponent } from './pages/main-page/main-page.component';
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, FooterComponent, LogoComponent, DeskMenuComponent, MobileMenuComponent],
+  declarations: [
+    AppComponent,
+    HeaderComponent,
+    FooterComponent,
+    LogoComponent,
+    DeskMenuComponent,
+    MobileMenuComponent,
+    NotFoundPageComponent,
+    AdminPageComponent,
+    OrdersPageComponent,
+    UserOrdersPageComponent,
+    ProfilePageComponent,
+    SigninPageComponent,
+    SignupPageComponent,
+    MainPageComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
