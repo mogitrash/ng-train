@@ -15,13 +15,13 @@
   </button>
   <nav>
     <ul class="nav-list">
-      <li><a routerLink="/" routerLinkActive="active">Home</a></li>
+      <li><a [routerLink]="this.navLinks.guest.home">Home</a></li>
       <ng-container *ngIf="role === 'user'">
         <li>
-          <a routerLink="/profile">Profile</a>
+          <a [routerLink]="this.navLinks.user.profile">Profile</a>
         </li>
         <li>
-          <a routerLink="/my-orders">My Orders</a>
+          <a [routerLink]="this.navLinks.user.orders">My Orders</a>
         </li>
         <li>
           <button mat-flat-button (click)="onLogout()">Logout</button>
@@ -29,21 +29,27 @@
       </ng-container>
       <ng-container *ngIf="role === 'admin'">
         <li>
-          <a routerLink="/profile">Profile</a>
+          <a [routerLink]="this.navLinks.admin.profile">Profile</a>
         </li>
         <li>
-          <a routerLink="/orders">Orders</a>
+          <a [routerLink]="this.navLinks.admin.orders">Orders</a>
         </li>
         <li>
-          <button mat-flat-button routerLink="'/admin'">Admin</button>
+          <button mat-flat-button [routerLink]="this.navLinks.admin.panel">
+            Admin
+          </button>
         </li>
       </ng-container>
       <ng-container *ngIf="role === 'guest'">
         <li>
-          <button mat-flat-button routerLink="'/signup'">Sign Up</button>
+          <button mat-flat-button [routerLink]="this.navLinks.guest.signup">
+            Sign Up
+          </button>
         </li>
         <li>
-          <button mat-flat-button routerLink="'/login'">Sign In</button>
+          <button mat-flat-button [routerLink]="this.navLinks.guest.signin">
+            Sign In
+          </button>
         </li>
       </ng-container>
     </ul>
