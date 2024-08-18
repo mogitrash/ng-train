@@ -20,6 +20,7 @@
         "prettier"
       ],
       "rules": {
+        "arrow-body-style": ["error", "always"],
         "@angular-eslint/directive-selector": [
           "error",
           {
