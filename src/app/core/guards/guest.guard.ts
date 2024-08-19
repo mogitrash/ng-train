@@ -12,7 +12,6 @@ export const guestGuard: CanActivateFn = () => {
     take(1),
     map((currentAccess) => {
       if (currentAccess === 'guest') {
-        console.log('гость');
         return true;
       }
       router.navigate(['/']);

@@ -9,7 +9,7 @@
         <a [routerLink]="this.navLinks.user.orders">My Orders</a>
       </li>
     </ng-container>
-    <ng-container *ngIf="role === 'admin'">
+    <ng-container *ngIf="role === 'manager'">
       <li>
         <a [routerLink]="this.navLinks.admin.profile">Profile</a>
       </li>
@@ -31,7 +31,7 @@
   <ng-container *ngIf="role === 'user'">
     <button mat-flat-button (click)="onLogout()">Logout</button>
   </ng-container>
-  <ng-container *ngIf="role === 'admin'">
+  <ng-container *ngIf="role === 'manager'">
     <button mat-flat-button [routerLink]="this.navLinks.admin.panel">
       Admin
     </button>

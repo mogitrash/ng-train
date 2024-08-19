@@ -2,4 +2,4 @@ export interface UserState {
   currentAccess: Access;
 }
 
-export type Access = 'guest' | 'user' | 'admin';
+export type Access = 'guest' | 'user' | 'manager';

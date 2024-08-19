@@ -11,7 +11,7 @@ export const adminGuard: CanActivateFn = () => {
   return store.select(selectCurrentAccess).pipe(
     take(1),
     map((currentAccess) => {
-      if (currentAccess === 'admin') {
+      if (currentAccess === 'manager') {
         return true;
       }
       router.navigate(['/signin']);
