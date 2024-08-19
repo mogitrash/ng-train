@@ -13,8 +13,7 @@ import { tripsReducer } from './core/store/trips/trips.reducer';
 import { userReducer } from './core/store/user/user.reducer';
 import { FooterComponent } from './components/footer/footer.component';
 import { LogoComponent } from './components/header/logo/logo.component';
-import { DeskMenuComponent } from './components/header/desk-menu/desk-menu.component';
-import { MobileMenuComponent } from './components/header/mobile-menu/mobile-menu.component';
+import { MenuComponent } from './components/header/menu/menu.component';
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { OrdersPageComponent } from './pages/orders-page/orders-page.component';
@@ -30,8 +29,7 @@ import { MainPageComponent } from './pages/main-page/main-page.component';
     HeaderComponent,
     FooterComponent,
     LogoComponent,
-    DeskMenuComponent,
-    MobileMenuComponent,
+    MenuComponent,
     NotFoundPageComponent,
     AdminPageComponent,
     OrdersPageComponent,

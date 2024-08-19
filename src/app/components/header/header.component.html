@@ -2,17 +2,35 @@
   <app-logo></app-logo>
   <ng-container *ngIf="role$ | async as role">
     <div class="nav">
-      <app-desk-menu
+      <app-menu
         [role]="role"
         [onLogout]="logout"
         class="desc-nav"
-      ></app-desk-menu>
-
-      <app-mobile-menu
-        [role]="role"
-        [onLogout]="logout"
-        class="mobil-nav"
-      ></app-mobile-menu>
+        [isMobile]="false"
+      ></app-menu>
+      <div class="mobil-nav">
+        <button
+          mat-icon-button
+          (click)="toggleMenu()"
+          class="side-menu-icon"
+          class="large-icon"
+        >
+          <mat-icon>menu</mat-icon>
+        </button>
+        <div
+          class="side-menu"
+          [ngClass]="{ 'menu-open': isMenuOpen, 'menu-closed': !isMenuOpen }"
+        >
+          <button mat-icon-button (click)="toggleMenu()">
+            <mat-icon>close</mat-icon>
+          </button>
+          <app-menu
+            [role]="role"
+            [onLogout]="logout"
+            [isMobile]="true"
+          ></app-menu>
+        </div>
+      </div>
     </div>
   </ng-container>
 </header>

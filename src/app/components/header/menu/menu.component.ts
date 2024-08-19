@@ -1,14 +1,16 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-desk-menu',
-  templateUrl: './desk-menu.component.html',
-  styleUrl: './desk-menu.component.scss',
+  selector: 'app-menu',
+  templateUrl: './menu.component.html',
+  styleUrl: './menu.component.scss',
 })
-export class DeskMenuComponent {
+export class MenuComponent {
   @Input() role!: string;
 
   @Input() onLogout!: () => void;
+
+  @Input() isMobile!: boolean;
 
   navLinks = {
     guest: { home: '/', signup: '/signup', signin: '/signin' },

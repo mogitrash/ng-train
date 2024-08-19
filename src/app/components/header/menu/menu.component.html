@@ -1,5 +1,5 @@
 <nav>
-  <ul>
+  <ul [ngClass]="{ row: !isMobile, colum: isMobile }">
     <li><a [routerLink]="this.navLinks.guest.home">Home</a></li>
     <ng-container *ngIf="role === 'user'">
       <li>
@@ -19,7 +19,7 @@
     </ng-container>
   </ul>
 </nav>
-<div class="buttons">
+<div class="buttons" [ngClass]="{ row: !isMobile, colum: isMobile }">
   <ng-container *ngIf="role === 'guest'">
     <button mat-flat-button [routerLink]="this.navLinks.guest.signup">
       Sign Up

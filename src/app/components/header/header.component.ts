@@ -14,6 +14,8 @@ import { signIn } from '../../core/store/user/user.actions';
 export class HeaderComponent implements OnInit {
   role$!: Observable<Access>;
 
+  isMenuOpen: boolean = false;
+
   // eslint-disable-next-line @ngrx/no-typed-global-store
   constructor(private store: Store<TrainState>) {}
 
@@ -23,5 +25,9 @@ export class HeaderComponent implements OnInit {
 
   logout(): void {
     this.store.dispatch(signIn({ role: 'guest' }));
+  }
+
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
   }
 }
