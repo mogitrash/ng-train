@@ -13,16 +13,16 @@ export class UserComponent {
   constructor( private readonly store: Store){}
 
   public onSignUp(): void {
-    this.store.dispatch(userActions.signUpAction({email: 'myEmail@ru.bl', password: '123456789'}))
+    this.store.dispatch(userActions.signUp({email: 'myEmail@ru.bl', password: '123456789'}))
   }
 
   public onSignIp(): void{
     localStorage.clear();
-    this.store.dispatch(userActions.signInAction({email: 'myEmail@ru.bl', password: '123456789'}))
+    this.store.dispatch(userActions.signIn({email: 'myEmail@ru.bl', password: '123456789'}))
   }
 
   public getUser():void {
-    this.store.dispatch(userActions.getUserAction())
+    this.store.dispatch(userActions.getUser())
   }
 
   public updateUser(): void {
@@ -32,7 +32,7 @@ export class UserComponent {
 
   public terminateSession(): void{
     localStorage.clear();
-    this.store.dispatch(userActions.goOutAction())
+    this.store.dispatch(userActions.signOut())
   }
   }
 

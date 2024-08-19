@@ -1,27 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
-
-export interface UserError{
-  message: string,
-  reason: string
-  }
-
-export interface AuthBody{
- email: string,
- password: string
-}
-
-export interface User{
-  name: string,
-  email: string,
-  role: 'manager'|'user'
-}
-
-export interface Token{
-  token: string
-}
-
+import { Token, User } from '../../../core/models/user.model';
 
 
 @Injectable({

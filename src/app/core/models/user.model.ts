@@ -11,3 +11,23 @@ export interface CurrentUser {
  name: string,
  password: string
 }
+
+export interface UserError{
+  message: string,
+  reason: string
+  }
+
+export interface AuthBody{
+ email: string,
+ password: string
+}
+
+export interface User{
+  name: string,
+  email: string,
+  role: 'manager'|'user'
+}
+
+export interface Token{
+  token: string
+}
