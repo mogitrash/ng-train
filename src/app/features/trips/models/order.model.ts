@@ -1,3 +1,5 @@
+import { Schedule } from "./schedule.model";
+
 export interface Order {
     id: number,
     rideId: number,
@@ -7,10 +9,5 @@ export interface Order {
     status: 'active' | 'completed' | 'rejected' | 'canceled',
     path: number[],
     carriages: string[],
-    schedule: {
-        segments: {
-            time: [string, string],
-            price: { [key: string]: number }
-        }[]
-    }
+    schedule: Schedule[]
 }

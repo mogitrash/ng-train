@@ -244,7 +244,6 @@ export class TripsEffects {
     return this.actions$.pipe(
       ofType(loadRouteById),
       exhaustMap((action) => {
-        // Вывод значения action
         return this.tripsService.getRouteById(action.id).pipe(
           map((route) => {
             return routeLoadedByIdSuccess({ route });
@@ -332,7 +331,7 @@ export class TripsEffects {
         ofType(failureSnackBar),
         tap((error) => {
           this.snackBar.open(error.error.message, 'Close', {
-            duration: 5000, // Duration in milliseconds
+            duration: 5000, 
           });
         })
       );
