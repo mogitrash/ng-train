@@ -1,9 +1,7 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-
+import { startServer } from '@planess/train-a-backend';
 import { AppModule } from './app/app.module';
 
-platformBrowserDynamic()
-  .bootstrapModule(AppModule, {
-    ngZoneEventCoalescing: true,
-  })
-  .catch();
+startServer().then(() => {
+  platformBrowserDynamic().bootstrapModule(AppModule);
+});

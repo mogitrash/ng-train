@@ -1,5 +1,5 @@
 import { createReducer } from '@ngrx/store';
-import { TripsState } from './trips.model';
+import { TripsState } from '../../models/trips.model';
 
 const inititalState: TripsState = {};
 
