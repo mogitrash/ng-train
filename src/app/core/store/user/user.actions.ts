@@ -16,6 +16,8 @@ export const successfulUpdate = createAction('[User] successful update');
 
 export const updateUserPassword = createAction('[User] update Users password');
 
-export const deleteUser = createAction('[User] delete User');
+export const goOutAction = createAction('[User] sign Out User');
+
+export const successfulExit = createAction('[User] successful terminates Session');
 
 export const getError = createAction('[User] have Error')

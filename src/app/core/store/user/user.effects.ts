@@ -83,20 +83,20 @@ export class UserEffects{
       ofType(userActions.getUserAction.type),
       exhaustMap(() => {
         return this.User.getCurrentUser().pipe(
-          switchMap((user) => { return of(userActions.saveUserAction({name: user.name, email: user.email, role: user.role}),
-        )})
+          map((user) => { return userActions.saveUserAction({name: user.name, email: user.email, role: user.role})
+        }), catchError(() => {return of(userActions.getError())})
         )
       })
     )
   });
 
-  removeUser$ = createEffect(() => {
+  signOut$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(userActions.deleteUser.type),
+      ofType(userActions.goOutAction.type),
       exhaustMap(() => {
         return this.User.deleteCurrentUser().pipe(
           map(()=> {
-            return userActions.deleteUser()
+            return userActions.successfulExit()
           }),
           catchError(() => {return of(userActions.getError())}))})
         )

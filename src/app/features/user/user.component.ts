@@ -32,7 +32,7 @@ export class UserComponent {
 
   public terminateSession(): void{
     localStorage.clear();
-    this.store.dispatch(userActions.deleteUser())
+    this.store.dispatch(userActions.goOutAction())
   }
   }
 
