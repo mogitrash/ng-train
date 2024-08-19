@@ -4,7 +4,7 @@ export const signUpAction = createAction('[User] User signUp', props<{email: str
 
 export const signInAction = createAction('[User] User signIn', props<{email: string, password: string}>());
 
-export const getTokenAction = createAction('[User] User gets Token ',props<{role: 'guest'| 'user', token: string}>())
+export const getTokenAction = createAction('[User] User gets Token ',props<{role: 'guest'| 'user'| 'manager', token: string}>())
 
 export const getUserAction = createAction('[User] get User');
 

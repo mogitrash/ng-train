@@ -94,7 +94,7 @@ export class UserEffects{
     return this.actions$.pipe(
       ofType(userActions.goOutAction.type),
       exhaustMap(() => {
-        return this.User.deleteCurrentUser().pipe(
+        return this.User.signOutCurrentUser().pipe(
           map(()=> {
             return userActions.successfulExit()
           }),

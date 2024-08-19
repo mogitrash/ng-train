@@ -50,7 +50,7 @@ export class UserService {
     return this.http.put('/api/profile/password', {password})
   }
 
-  public deleteCurrentUser(){
+  public signOutCurrentUser(){
     return this.http.delete('/api/logout')
   }
 }
