@@ -106,7 +106,7 @@ export class TripsService {
   }
 
 
-  updateRide(routeId: number, rideId: number, segments: {
+  public updateRide(routeId: number, rideId: number, segments: {
     time: [string, string],
     price: { [key: string]: number }
   }[]) {
