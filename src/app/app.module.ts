@@ -12,10 +12,11 @@ import { tripsReducer } from './core/store/trips/trips.reducer';
 import { userReducer } from './core/store/user/user.reducer';
 import { UserModule } from './features/user/user.module';
 import { addTokenInterceptor } from './core/interceptors/add-token.interceptor';
+import { SignupPageComponent } from './pages/signup-page/signup-page.component';
 
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent],
+  declarations: [AppComponent, HeaderComponent, SignupPageComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
