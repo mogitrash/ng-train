@@ -1,0 +1,50 @@
+@import "./../../../styles.scss";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: var(--container-with);
+  padding: 0.5rem 0;
+  @media (max-width: 1200px) {
+    width: calc(100% - 4rem);
+    padding: 0.5rem 2rem;
+    margin: 0 auto;
+  }
+
+  h2 {
+    text-align: center;
+    color: var(--primary-blue);
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin: 3% auto;
+    width: 50%;
+
+    .wrapper-button {
+      width: 100%;
+      display: flex;
+      justify-content: space-evenly;
+      gap: 5%;
+    }
+  }
+  @media (max-width: 450px) {
+    margin: 0 auto;
+
+    form {
+      width: 100%;
+      .wrapper-button {
+        margin: 0 auto;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5%;
+        button {
+          margin-bottom: 3%;
+        }
+      }
+    }
+  }
+}
