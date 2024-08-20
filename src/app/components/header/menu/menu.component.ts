@@ -12,7 +12,7 @@ export class MenuComponent {
 
   @Input() isMobile!: boolean;
 
-  navLinks = {
+  protected navLinks = {
     guest: { home: '/', signup: '/signup', signin: '/signin' },
     user: { profile: '/profile', orders: '/my-orders' },
     admin: { profile: '/profile', orders: '/orders', panel: '/admin' },
