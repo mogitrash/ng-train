@@ -2,13 +2,13 @@ import { map, take } from 'rxjs';
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { selectCurrentAccess } from '../store/user/user.selectors';
+import { selectAccess } from '../store/user/user.selectors';
 
 export const userGuard: CanActivateFn = () => {
   const store = inject(Store);
   const router = inject(Router);
 
-  return store.select(selectCurrentAccess).pipe(
+  return store.select(selectAccess).pipe(
     take(1),
     map((currentAccess) => {
       if (currentAccess === 'user') {

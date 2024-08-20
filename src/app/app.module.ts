@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { StoreModule } from '@ngrx/store';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -50,12 +52,14 @@ import { MainPageComponent } from './pages/main-page/main-page.component';
       trips: tripsReducer,
     }),
     StoreDevtoolsModule.instrument(),
-    UserModule
-    // angular material
+    UserModule,
     MatButtonModule,
     MatIconModule,
   ],
-  providers: [provideAnimationsAsync()],
+  providers: [
+    provideAnimationsAsync(),
+    provideHttpClient(withInterceptors([addTokenInterceptor])),
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
