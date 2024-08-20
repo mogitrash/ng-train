@@ -3,30 +3,19 @@ import { catchError, exhaustMap, map, of, tap } from 'rxjs';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TripsService } from '../../../features/trips/services/trips.service';
-import {
-  carriagesCreatedSuccess,
-  carriagesLoadedSuccess, carriageUpdatedSuccess,
-  createCarriage, createOrder, createOrderSuccess, createRide,
-  createRideSuccess, createRoute, createStation, createStationSuccess,
-  deleteOrder, deleteRoute, deleteStation, failureSnackBar, loadCarriages, loadOrders,
-  loadRideById, loadRouteById, loadRoutes, loadSearch, loadStations, loadUsers, orderDeletedSuccess,
-  ordersLoadedSuccess, rideLoadedByIdSuccess, routeCreatedSuccess, routeDeletedSuccess,
-  routeLoadedByIdSuccess, routesLoadedSuccess, routeUpdatedSuccess, searchLoadedSuccess,
-  stationDeleteSuccess, stationsLoadedSuccess, updateCarriage, updateRide, updateRideSuccess,
-  updateRoute, usersLoadedSuccess
-} from './trips.actions';
+import * as tripActions from './trips.actions';
 
 @Injectable()
 export class TripsEffects {
   loadSearch$ = createEffect(
     () => {
       return this.actions$.pipe(
-        ofType(loadSearch),
+        ofType(tripActions.loadSearch),
         exhaustMap((action) => {
           return this.tripsService.search(action.fromLatitude, action.fromLongitude, action.toLatitude, action.toLongitude, action.time).pipe(
-            map((search) => { return searchLoadedSuccess({ search }) }),
+            map((search) => { return tripActions.searchLoadedSuccess({ search }) }),
             catchError((error) => {
-              return of(failureSnackBar(error));
+              return of(tripActions.failureSnackBar(error));
             })
           )
         }
@@ -38,12 +27,12 @@ export class TripsEffects {
   loadStations$ = createEffect(
     () => {
       return this.actions$.pipe(
-        ofType(loadStations),
+        ofType(tripActions.loadStations),
         exhaustMap(() => {
           return this.tripsService.getStationList().pipe(
-            map((stations) => { return stationsLoadedSuccess({ stations }) }),
+            map((stations) => { return tripActions.stationsLoadedSuccess({ stations }) }),
             catchError((error) => {
-              return of(failureSnackBar(error));
+              return of(tripActions.failureSnackBar(error));
             })
           )
         }
@@ -55,12 +44,12 @@ export class TripsEffects {
   deleteStation$ = createEffect(
     () => {
       return this.actions$.pipe(
-        ofType(deleteStation),
+        ofType(tripActions.deleteStation),
         exhaustMap((action) => {
           return this.tripsService.deleteStation(action.id).pipe(
-            map(() => { return stationDeleteSuccess() }),
+            map(() => { return tripActions.stationDeleteSuccess() }),
             catchError((error) => {
-              return of(failureSnackBar(error));
+              return of(tripActions.failureSnackBar(error));
             })
           )
         }
@@ -71,12 +60,12 @@ export class TripsEffects {
 
   loadRoutes$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadRoutes),
+      ofType(tripActions.loadRoutes),
       exhaustMap(() => {
         return this.tripsService.getRouteList().pipe(
-          map((routes) => { return routesLoadedSuccess({ routes }) }),
+          map((routes) => { return tripActions.routesLoadedSuccess({ routes }) }),
           catchError((error) => {
-            return of(failureSnackBar(error));
+            return of(tripActions.failureSnackBar(error));
           })
         )
       }
@@ -86,12 +75,12 @@ export class TripsEffects {
 
   createRoute$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(createRoute),
+      ofType(tripActions.createRoute),
       exhaustMap((action) => {
         return this.tripsService.createRoute(action.path, action.carriages).pipe(
-          map((id) => { return routeCreatedSuccess(id) }),
+          map((id) => { return tripActions.routeCreatedSuccess(id) }),
           catchError((error) => {
-            return of(failureSnackBar(error));
+            return of(tripActions.failureSnackBar(error));
           })
         )
       }
@@ -101,13 +90,13 @@ export class TripsEffects {
 
   updateRoute$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(updateRoute),
+      ofType(tripActions.updateRoute),
       exhaustMap((action) => {
         return this.tripsService.updateRoute(action.id, action.path, action.carriages
         ).pipe(
-          map((id) => { return routeUpdatedSuccess(id) }),
+          map((id) => { return tripActions.routeUpdatedSuccess(id) }),
           catchError((error) => {
-            return of(failureSnackBar(error));
+            return of(tripActions.failureSnackBar(error));
           })
         )
       }
@@ -117,12 +106,12 @@ export class TripsEffects {
 
   deleteRoute$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(deleteRoute),
+      ofType(tripActions.deleteRoute),
       exhaustMap((action) => {
         return this.tripsService.deleteRoute(action.id).pipe(
-          map(() => { return routeDeletedSuccess() }),
+          map(() => { return tripActions.routeDeletedSuccess() }),
           catchError((error) => {
-            return of(failureSnackBar(error));
+            return of(tripActions.failureSnackBar(error));
           })
         )
       }
@@ -132,12 +121,12 @@ export class TripsEffects {
 
   loadCarriage$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadCarriages),
+      ofType(tripActions.loadCarriages),
       exhaustMap(() => {
         return this.tripsService.getCarriageList().pipe(
-          map((carriages) => { return carriagesLoadedSuccess({ carriages }) }),
+          map((carriages) => { return tripActions.carriagesLoadedSuccess({ carriages }) }),
           catchError((error) => {
-            return of(failureSnackBar(error));
+            return of(tripActions.failureSnackBar(error));
           })
         )
       }
@@ -147,12 +136,12 @@ export class TripsEffects {
 
   createCarriage$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(createCarriage),
+      ofType(tripActions.createCarriage),
       exhaustMap((action) => {
         return this.tripsService.createCarriageType(action.name, action.rows, action.leftSeats, action.rightSeats).pipe(
-          map((code) => { return carriagesCreatedSuccess(code) }),
+          map((code) => { return tripActions.carriagesCreatedSuccess(code) }),
           catchError((error) => {
-            return of(failureSnackBar(error));
+            return of(tripActions.failureSnackBar(error));
           })
         )
       }
@@ -162,12 +151,12 @@ export class TripsEffects {
 
   updateCarriage$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(updateCarriage),
+      ofType(tripActions.updateCarriage),
       exhaustMap((action) => {
         return this.tripsService.updateCarriageType(action.code, action.name, action.rows, action.leftSeats, action.rightSeats).pipe(
-          map((code) => { return carriageUpdatedSuccess(code) }),
+          map((code) => { return tripActions.carriageUpdatedSuccess(code) }),
           catchError((error) => {
-            return of(failureSnackBar(error));
+            return of(tripActions.failureSnackBar(error));
           })
         )
       }
@@ -177,12 +166,12 @@ export class TripsEffects {
 
   loadOrder$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadOrders),
+      ofType(tripActions.loadOrders),
       exhaustMap(() => {
         return this.tripsService.getOrderList().pipe(
-          map((orders) => { return ordersLoadedSuccess({ orders }) }),
+          map((orders) => { return tripActions.ordersLoadedSuccess({ orders }) }),
           catchError((error) => {
-            return of(failureSnackBar(error));
+            return of(tripActions.failureSnackBar(error));
           })
         )
       }
@@ -192,14 +181,14 @@ export class TripsEffects {
 
   createOrder$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(createOrder),
+      ofType(tripActions.createOrder),
       exhaustMap(action => {
         return this.tripsService.createOrder(action.rideId, action.seat, action.stationStart, action.stationEnd).pipe(
           map(response => {
-            return createOrderSuccess(response);
+            return tripActions.createOrderSuccess(response);
           }),
           catchError((error) => {
-            return of(failureSnackBar(error));
+            return of(tripActions.failureSnackBar(error));
           })
         );
       })
@@ -209,14 +198,14 @@ export class TripsEffects {
 
   deleteOrder$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(deleteOrder),
+      ofType(tripActions.deleteOrder),
       exhaustMap(action => {
         return this.tripsService.deleteOrder(action.orderId).pipe(
           map(() => {
-            return orderDeletedSuccess();
+            return tripActions.orderDeletedSuccess();
           }),
           catchError((error) => {
-            return of(failureSnackBar(error));
+            return of(tripActions.failureSnackBar(error));
           })
         );
       })
@@ -227,12 +216,12 @@ export class TripsEffects {
 
   loadUser$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadUsers),
+      ofType(tripActions.loadUsers),
       exhaustMap(() => {
         return this.tripsService.getUsersList().pipe(
-          map((users) => { return usersLoadedSuccess({ users }) }),
+          map((users) => { return tripActions.usersLoadedSuccess({ users }) }),
           catchError((error) => {
-            return of(failureSnackBar(error));
+            return of(tripActions.failureSnackBar(error));
           })
         )
       }
@@ -242,14 +231,14 @@ export class TripsEffects {
 
   loadRouteById$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadRouteById),
+      ofType(tripActions.loadRouteById),
       exhaustMap((action) => {
         return this.tripsService.getRouteById(action.id).pipe(
           map((route) => {
-            return routeLoadedByIdSuccess({ route });
+            return tripActions.routeLoadedByIdSuccess({ route });
           }),
           catchError((error) => {
-            return of(failureSnackBar(error));
+            return of(tripActions.failureSnackBar(error));
           })
         );
       })
@@ -259,14 +248,14 @@ export class TripsEffects {
 
   createStation$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(createStation),
+      ofType(tripActions.createStation),
       exhaustMap(action => {
         return this.tripsService.createStation(action.city, action.latitude, action.longitude, action.relations).pipe(
           map(() => {
-            return createStationSuccess();
+            return tripActions.createStationSuccess();
           }),
           catchError((error) => {
-            return of(failureSnackBar(error));
+            return of(tripActions.failureSnackBar(error));
           })
         );
       })
@@ -276,14 +265,14 @@ export class TripsEffects {
 
   loadRideById$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadRideById),
+      ofType(tripActions.loadRideById),
       exhaustMap(action => {
         return this.tripsService.getRideById(action.rideId).pipe(
           map(ride => {
-            return rideLoadedByIdSuccess({ ride });
+            return tripActions.rideLoadedByIdSuccess({ ride });
           }),
           catchError((error) => {
-            return of(failureSnackBar(error));
+            return of(tripActions.failureSnackBar(error));
           })
         );
       })
@@ -293,14 +282,14 @@ export class TripsEffects {
 
   createRide$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(createRide),
+      ofType(tripActions.createRide),
       exhaustMap(action => {
         return this.tripsService.createRide(action.routeId, action.segments).pipe(
           map(id => {
-            return createRideSuccess(id);
+            return tripActions.createRideSuccess(id);
           }),
           catchError((error) => {
-            return of(failureSnackBar(error));
+            return of(tripActions.failureSnackBar(error));
           })
         );
       })
@@ -310,14 +299,14 @@ export class TripsEffects {
 
   updateRide$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(updateRide),
+      ofType(tripActions.updateRide),
       exhaustMap(action => {
         return this.tripsService.updateRide(action.routeId, action.rideId, action.segments).pipe(
           map(() => {
-            return updateRideSuccess();
+            return tripActions.updateRideSuccess();
           }),
           catchError((error) => {
-            return of(failureSnackBar(error));
+            return of(tripActions.failureSnackBar(error));
           })
         );
       })
@@ -328,10 +317,10 @@ export class TripsEffects {
   displayErrorSnackBar = createEffect(
     () => {
       return this.actions$.pipe(
-        ofType(failureSnackBar),
+        ofType(tripActions.failureSnackBar),
         tap((error) => {
           this.snackBar.open(error.error.message, 'Close', {
-            duration: 5000, 
+            duration: 5000,
           });
         })
       );
