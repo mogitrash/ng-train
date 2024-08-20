@@ -3,7 +3,6 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Access } from '../../core/models/user.model';
 import { selectAccess } from '../../core/store/user/user.selectors';
-import { TrainState } from '../../core/store/store.model';
 import { signOut } from '../../core/store/user/user.actions';
 
 @Component({
@@ -16,8 +15,7 @@ export class HeaderComponent implements OnInit {
 
   protected isMenuOpen: boolean = false;
 
-  // eslint-disable-next-line @ngrx/no-typed-global-store
-  constructor(private store: Store<TrainState>) {}
+  constructor(private store: Store) {}
 
   ngOnInit(): void {
     this.role$ = this.store.select(selectAccess);
