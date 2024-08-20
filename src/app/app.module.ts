@@ -11,6 +11,9 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { tripsReducer } from './core/store/trips/trips.reducer';
 import { userReducer } from './core/store/user/user.reducer';
+import { UserModule } from './features/user/user.module';
+import { addTokenInterceptor } from './core/interceptors/add-token.interceptor';
+
 import { FooterComponent } from './components/footer/footer.component';
 import { LogoComponent } from './components/header/logo/logo.component';
 import { MenuComponent } from './components/header/menu/menu.component';
@@ -46,6 +49,8 @@ import { MainPageComponent } from './pages/main-page/main-page.component';
       user: userReducer,
       trips: tripsReducer,
     }),
+    StoreDevtoolsModule.instrument(),
+    UserModule
     // angular material
     MatButtonModule,
     MatIconModule,

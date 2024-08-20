@@ -1,3 +1,19 @@
-import { TrainState } from '../store.model';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { UserState } from '../../models/user.model';
 
-export const selectCurrentAccess = ({ user }: TrainState) => user.currentAccess;
+export const selectUserState = createFeatureSelector<UserState>('user');
+
+export const selectAccess = createSelector(
+  selectUserState,
+  (state) => {return state.currentAccess}
+);
+
+export const selectToken = createSelector(
+  selectUserState,
+  (state) => {return state.token}
+)
+
+export const selectUser = createSelector(
+  selectUserState,
+  ( state ) =>{return  {...state.currentUser} }
+)
