@@ -5,10 +5,10 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -29,6 +29,7 @@ import { ProfilePageComponent } from './pages/profile-page/profile-page.componen
 import { SigninPageComponent } from './pages/signin-page/signin-page.component';
 import { SignupPageComponent } from './pages/signup-page/signup-page.component';
 import { MainPageComponent } from './pages/main-page/main-page.component';
+import { UserEffects } from './core/store/user/user.effects';
 
 @NgModule({
   declarations: [
@@ -53,11 +54,12 @@ import { MainPageComponent } from './pages/main-page/main-page.component';
       user: userReducer,
       trips: tripsReducer,
     }),
-    EffectsModule.forRoot([TripsEffects]),
+    EffectsModule.forRoot([TripsEffects, UserEffects]),
     StoreDevtoolsModule.instrument(),
     UserModule,
     MatButtonModule,
     MatIconModule,
+    LeafletModule
   ],
   providers: [
     provideAnimationsAsync(),
