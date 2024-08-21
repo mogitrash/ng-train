@@ -6,9 +6,15 @@ export enum SeatStatus {
   BOOKED = 'booked',
 }
 export interface Seat {
-  carriageCode: string;
   numberInCarriage: number;
   status: SeatStatus.FREE | SeatStatus.OCCUPIED | SeatStatus.BOOKED;
+}
+
+export interface CarriageSelectedSeats {
+  carriageNumber: number;
+  carriageCode: string;
+  carriageName: string;
+  selectedSeats: Seat[];
 }
 
 @Component({
@@ -39,7 +45,7 @@ export class CarriageComponent implements OnInit {
   @Input() occupiedSeat!: number[];
 
   // passing data on selected places to the parent component for order placement
-  @Output() selectedSeatsChange = new EventEmitter<Seat[]>();
+  @Output() selectedSeatsChange = new EventEmitter<CarriageSelectedSeats>();
 
   private countOfSeats!: number;
 
@@ -66,7 +72,6 @@ export class CarriageComponent implements OnInit {
   private createSeats() {
     for (let i = 0; i < this.countOfSeats; i += 1) {
       const seat: Seat = {
-        carriageCode: this.code,
         numberInCarriage: i + 1,
         status: this.occupiedSeat.some((item) => {
           return item === i + 1;
@@ -91,6 +96,15 @@ export class CarriageComponent implements OnInit {
       });
     }
 
-    this.selectedSeatsChange.emit(this.selectedSeats);
+    // saving the location data for ordering
+    // maybe some of them will turn out to be unnecessary in the future.
+    const selectedSeatData: CarriageSelectedSeats = {
+      carriageNumber: this.carriageNumber,
+      carriageCode: this.code,
+      carriageName: this.name,
+      selectedSeats: this.selectedSeats,
+    };
+
+    this.selectedSeatsChange.emit(selectedSeatData);
   }
 }

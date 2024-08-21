@@ -1,21 +1,12 @@
-<p>main-page works!</p>
-<app-carriage
-  [code]="'1234'"
-  [name]="'name'"
-  [rows]="16"
-  [leftSeats]="2"
-  [rightSeats]="3"
-  [carriageNumber]="1"
-  [occupiedSeat]="[2, 6, 7, 8, 10]"
-  (selectedSeatsChange)="onSelectedSeatsChange($event)"
-></app-carriage>
-<app-carriage
-  [code]="'54321'"
-  [name]="'name'"
-  [rows]="16"
-  [leftSeats]="2"
-  [rightSeats]="3"
-  [carriageNumber]="1"
-  [occupiedSeat]="[2, 6, 7, 8, 10]"
-  (selectedSeatsChange)="onSelectedSeatsChange($event)"
-></app-carriage>
+<div *ngFor="let carriage of carriages">
+  <app-carriage
+    [code]="carriage.code"
+    [name]="carriage.name"
+    [rows]="carriage.rows"
+    [leftSeats]="carriage.leftSeats"
+    [rightSeats]="carriage.rightSeats"
+    [carriageNumber]="carriage.carriageNumber"
+    [occupiedSeat]="carriage.occupiedSeat"
+    (selectedSeatsChange)="onSelectedSeatsChange($event)"
+  ></app-carriage>
+</div>

@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { Seat } from '../../shared/components/carriage/carriage.component';
+import {
+  CarriageSelectedSeats,
+  Seat,
+} from '../../shared/components/carriage/carriage.component';
 
 @Component({
   selector: 'app-main-page',
@@ -7,17 +10,34 @@ import { Seat } from '../../shared/components/carriage/carriage.component';
   styleUrl: './main-page.component.scss',
 })
 export class MainPageComponent {
-  private selectedSeatsMap = new Map<number, Seat>();
-
   selectedSeats: Seat[] = [];
 
-  onSelectedSeatsChange(seats: Seat[]) {
-    this.selectedSeatsMap.clear();
-    seats.forEach((seat) => {
-      return this.selectedSeatsMap.set(seat.numberInCarriage, seat);
-    });
+  carriages = [
+    {
+      code: '1234',
+      name: 'Wagon 1',
+      rows: 16,
+      leftSeats: 2,
+      rightSeats: 3,
+      carriageNumber: 1,
+      occupiedSeat: [2, 6, 7, 8, 10],
+    },
+    {
+      code: '5678',
+      name: 'Wagon 2',
+      rows: 16,
+      leftSeats: 2,
+      rightSeats: 3,
+      carriageNumber: 2,
+      occupiedSeat: [1, 3, 5, 9],
+    },
+  ];
 
-    this.selectedSeats = Array.from(this.selectedSeatsMap.values());
+  onSelectedSeatsChange(seatsData: CarriageSelectedSeats) {
+    // Обновляем массив выбранных мест, исключая дублирование
+    this.selectedSeats = seatsData.selectedSeats;
+
+    // Логируем выбранные места для проверки
     console.log('Выбранные места:', this.selectedSeats);
   }
 }
