@@ -1,10 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PasswordMatchDirective } from './directives/password-match.directive';
 
 
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    PasswordMatchDirective
+  ],
   imports: [
     CommonModule
   ]

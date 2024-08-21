@@ -11,7 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -68,6 +68,7 @@ import { MainPageComponent } from './pages/main-page/main-page.component';
   providers: [
     provideAnimationsAsync(),
     provideHttpClient(withInterceptors([addTokenInterceptor])),
+    FormControl,
   ],
   bootstrap: [AppComponent],
 })

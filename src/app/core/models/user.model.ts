@@ -1,3 +1,5 @@
+import { FormControl } from '@angular/forms';
+
 export interface UserState {
   currentAccess: Access;
   currentUser: CurrentUser;
@@ -25,9 +27,15 @@ export interface AuthBody {
 export interface User {
   name: string;
   email: string;
-  role: 'manager' | 'user';
+  role: Access;
 }
 
 export interface Token {
   token: string;
+}
+
+export interface SighUpForm {
+  email: FormControl<string | null>;
+  password: FormControl<string | null>;
+  repeatPassword: FormControl<string | null>;
 }
