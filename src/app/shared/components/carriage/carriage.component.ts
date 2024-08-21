@@ -55,6 +55,8 @@ export class CarriageComponent implements OnInit {
 
   public selectedSeats: Seat[] = [];
 
+  public seatStatus = SeatStatus;
+
   ngOnInit(): void {
     this.countOfSeats = this.calcCountTotalNumberOfSeats();
     this.countOfFreeSeats = this.calcCountFreeOfSeats();

@@ -1,4 +1,4 @@
-<div *ngFor="let carriage of carriages">
+<ng-container *ngFor="let carriage of carriages">
   <app-carriage
     [code]="carriage.code"
     [name]="carriage.name"
@@ -9,4 +9,4 @@
     [occupiedSeat]="carriage.occupiedSeat"
     (selectedSeatsChange)="onSelectedSeatsChange($event)"
   ></app-carriage>
-</div>
+</ng-container>

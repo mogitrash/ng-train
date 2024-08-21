@@ -1,16 +1,35 @@
-<p>carriage works!</p>
 <div class="number">Car {{ carriageNumber }}</div>
 <div class="all-seats">{{ countOfFreeSeats }} Free seats</div>
 <div class="carriage">
-  <div *ngFor="let seat of seats" class="seat">
-    <label>
-      <input
-        type="checkbox"
-        [checked]="seat.status === 'occupied'"
-        [disabled]="seat.status === 'occupied'"
-        (change)="onSeatSelectionChange(seat, $event)"
-      />
-      {{ seat.numberInCarriage }}
-    </label>
-  </div>
+  <!-- Пайп разделяет места на две группы -->
+  <ng-container
+    *ngFor="let seatGroup of [seats | splitSeats : leftSeats : rightSeats]"
+  >
+    <div class="seats seats-left">
+      <div *ngFor="let seat of seatGroup[0]" class="seat">
+        <label>
+          <input
+            type="checkbox"
+            [checked]="seat.status === seatStatus.BOOKED"
+            [disabled]="seat.status === seatStatus.OCCUPIED"
+            (change)="onSeatSelectionChange(seat, $event)"
+          />
+          {{ seat.numberInCarriage }}
+        </label>
+      </div>
+    </div>
+    <div class="seats seats-right">
+      <div *ngFor="let seat of seatGroup[1]" class="seat">
+        <label>
+          <input
+            type="checkbox"
+            [checked]="seat.status === seatStatus.BOOKED"
+            [disabled]="seat.status === seatStatus.OCCUPIED"
+            (change)="onSeatSelectionChange(seat, $event)"
+          />
+          {{ seat.numberInCarriage }}
+        </label>
+      </div>
+    </div>
+  </ng-container>
 </div>
