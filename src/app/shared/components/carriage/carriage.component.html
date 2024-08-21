@@ -5,6 +5,38 @@
   <ng-container
     *ngFor="let seatGroup of [seats | splitSeats : leftSeats : rightSeats]"
   >
+    <div class="seats seats-right">
+      <div *ngFor="let colum of seatGroup[0]" class="colum">
+        <div *ngFor="let seat of colum" class="seat">
+          <label>
+            <input
+              type="checkbox"
+              [checked]="seat.status === seatStatus.BOOKED"
+              [disabled]="seat.status === seatStatus.OCCUPIED"
+              (change)="onSeatSelectionChange(seat, $event)"
+            />
+            {{ seat.numberInCarriage }}
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="seats seats-left">
+      <div *ngFor="let colum of seatGroup[1]" class="colum">
+        <div *ngFor="let seat of colum" class="seat">
+          <label>
+            <input
+              type="checkbox"
+              [checked]="seat.status === seatStatus.BOOKED"
+              [disabled]="seat.status === seatStatus.OCCUPIED"
+              (change)="onSeatSelectionChange(seat, $event)"
+            />
+            {{ seat.numberInCarriage }}
+          </label>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <!--
     <div class="seats seats-left">
       <div *ngFor="let seat of seatGroup[0]" class="seat">
         <label>
@@ -18,18 +50,5 @@
         </label>
       </div>
     </div>
-    <div class="seats seats-right">
-      <div *ngFor="let seat of seatGroup[1]" class="seat">
-        <label>
-          <input
-            type="checkbox"
-            [checked]="seat.status === seatStatus.BOOKED"
-            [disabled]="seat.status === seatStatus.OCCUPIED"
-            (change)="onSeatSelectionChange(seat, $event)"
-          />
-          {{ seat.numberInCarriage }}
-        </label>
-      </div>
-    </div>
-  </ng-container>
+  -->
 </div>

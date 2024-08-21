@@ -1,0 +1,12 @@
+.columns-container {
+  display: flex;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.seat {
+  margin: 5px;
+}
