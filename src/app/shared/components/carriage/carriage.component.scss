@@ -65,7 +65,7 @@
 .seat {
   border-radius: 0.5rem;
   @media (hover: hover) and (pointer: fine) {
-    &:not(.seat-booked):hover {
+    &:is(.seat-free):hover {
       background-color: var(--blue-extra-light);
     }
   }
