@@ -1,0 +1,16 @@
+<p>carriage works!</p>
+<div class="number">Car {{ carriageNumber }}</div>
+<div class="all-seats">{{ countOfFreeSeats }} Free seats</div>
+<div class="carriage">
+  <div *ngFor="let seat of seats" class="seat">
+    <label>
+      <input
+        type="checkbox"
+        [checked]="seat.status === 'occupied'"
+        [disabled]="seat.status === 'occupied'"
+        (change)="onSeatSelectionChange(seat, $event)"
+      />
+      {{ seat.numberInCarriage }}
+    </label>
+  </div>
+</div>

@@ -29,6 +29,7 @@ import { ProfilePageComponent } from './pages/profile-page/profile-page.componen
 import { SigninPageComponent } from './pages/signin-page/signin-page.component';
 import { SignupPageComponent } from './pages/signup-page/signup-page.component';
 import { MainPageComponent } from './pages/main-page/main-page.component';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { MainPageComponent } from './pages/main-page/main-page.component';
     UserModule,
     MatButtonModule,
     MatIconModule,
+    SharedModule,
   ],
   providers: [
     provideAnimationsAsync(),
