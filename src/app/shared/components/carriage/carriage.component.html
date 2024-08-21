@@ -6,8 +6,8 @@
     *ngFor="let seatGroup of [seats | splitSeats : leftSeats : rightSeats]"
   >
     <div class="seats seats-right">
-      <div *ngFor="let colum of seatGroup[0]" class="colum">
-        <div *ngFor="let seat of colum" class="seat">
+      <div *ngFor="let column of seatGroup[0]" class="column">
+        <div *ngFor="let seat of column" class="seat">
           <label>
             <input
               type="checkbox"
@@ -21,8 +21,8 @@
       </div>
     </div>
     <div class="seats seats-left">
-      <div *ngFor="let colum of seatGroup[1]" class="colum">
-        <div *ngFor="let seat of colum" class="seat">
+      <div *ngFor="let column of seatGroup[1]" class="column">
+        <div *ngFor="let seat of column" class="seat">
           <label>
             <input
               type="checkbox"

@@ -4,9 +4,10 @@
 
 .column {
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
 }
 
-.seat {
-  margin: 5px;
+.seats {
+  display: flex;
+  margin-bottom: 1rem;
 }
