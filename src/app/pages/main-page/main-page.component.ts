@@ -26,7 +26,7 @@ export class MainPageComponent {
       code: '5678',
       name: 'Wagon 2',
       rows: 16,
-      leftSeats: 2,
+      leftSeats: 3,
       rightSeats: 3,
       carriageNumber: 2,
       occupiedSeat: [1, 3, 5, 9],
