@@ -37,4 +37,7 @@ export const successfulExit = createAction(
   '[User] successful terminates Session'
 );
 
-export const getError = createAction('[User] have Error');
+export const getError = createAction(
+  '[User] have Error',
+  props<{ error: string }>()
+);

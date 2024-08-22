@@ -22,7 +22,7 @@ const initialUserState: UserState = {
     password: '',
   },
   token: null,
-  hasError: false,
+  hasError: '',
 };
 
 export const userReducer = createReducer(
@@ -69,7 +69,7 @@ export const userReducer = createReducer(
   on(successfulExit, (state): UserState => {
     return { ...state };
   }),
-  on(getError, (state): UserState => {
-    return { ...state, hasError: true };
+  on(getError, (state, { error }): UserState => {
+    return { ...state, hasError: error };
   })
 );

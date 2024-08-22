@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import {
   FormGroup,
@@ -8,7 +8,13 @@ import {
   AbstractControl,
 } from '@angular/forms';
 
-import { PasswordMatchDirective } from '../../shared/directives/password-match.directive.js';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Router } from '@angular/router';
+import { PasswordMatchValidator } from '../../shared/directives/password-match.directive.js';
+import { EmailFormatValidator } from '../../shared/directives/email-format.directive.js';
+import { selectError } from '../../core/store/user/user.selectors.js';
+import * as userActions from '../../core/store/user/user.actions';
 
 @Component({
   selector: 'app-signup-page',
@@ -18,26 +24,27 @@ import { PasswordMatchDirective } from '../../shared/directives/password-match.d
 export class SignupPageComponent implements OnInit {
   public registryForm: FormGroup = new FormGroup({});
 
-  public passwordCheckValidator: PasswordMatchDirective = inject(
-    PasswordMatchDirective
-  );
+  public error: Observable<string> | undefined;
 
-  constructor(private readonly FB: FormBuilder) {}
+  constructor(
+    private readonly FB: FormBuilder,
+    private store: Store,
+    private readonly router: Router
+  ) {
+    this.error = this.store.select(selectError);
+  }
 
   ngOnInit(): void {
     this.registryForm = this.FB.group(
       {
         email: new FormControl('', [
           Validators.required,
-          Validators.pattern('^[wd_]+@[wd_]+.w{2,7}$'),
+          EmailFormatValidator(),
         ]),
-        password: new FormControl('', [
-          Validators.required,
-          Validators.minLength(8),
-        ]),
+        password: new FormControl('', [Validators.required]),
         repeatPassword: new FormControl('', [Validators.required]),
       },
-      { Validators: this.passwordCheckValidator.validate }
+      { validators: PasswordMatchValidator.bind(this) }
     );
   }
 
@@ -53,7 +60,21 @@ export class SignupPageComponent implements OnInit {
     return this.registryForm.get('repeatPassword')!;
   }
 
-  public onSubmit() {
-    console.log(this.registryForm!.value);
+  public checkPassword(password: AbstractControl) {
+    return PasswordMatchValidator(password);
+  }
+
+  public onSubmit(): void {
+    console.log(this.registryForm!.value.email);
+    this.store.dispatch(
+      userActions.signUp({
+        email: this.registryForm.value.email,
+        password: this.registryForm.value.password,
+      })
+    );
+  }
+
+  public goSignIn(): void {
+    this.router.navigate(['/signin']);
   }
 }

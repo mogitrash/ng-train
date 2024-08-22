@@ -4,7 +4,7 @@ export interface UserState {
   currentAccess: Access;
   currentUser: CurrentUser;
   token: string | null;
-  hasError: boolean;
+  hasError: string;
 }
 
 export type Access = 'guest' | 'user' | 'manager';
