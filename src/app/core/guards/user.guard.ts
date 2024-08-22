@@ -16,6 +16,6 @@ export const userGuard: CanActivateFn = () => {
       }
       router.navigate(['/signin']);
       return false;
-    })
+    }),
   );
 };

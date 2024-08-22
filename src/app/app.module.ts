@@ -59,10 +59,7 @@ import { MainPageComponent } from './pages/main-page/main-page.component';
     MatButtonModule,
     MatIconModule,
   ],
-  providers: [
-    provideAnimationsAsync(),
-    provideHttpClient(withInterceptors([addTokenInterceptor])),
-  ],
+  providers: [provideAnimationsAsync(), provideHttpClient(withInterceptors([addTokenInterceptor]))],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
