@@ -1,8 +1,4 @@
 import { Component } from '@angular/core';
-import {
-  CarriageSelectedSeats,
-  Seat,
-} from '../../shared/components/carriage/carriage.component';
 
 @Component({
   selector: 'app-main-page',
