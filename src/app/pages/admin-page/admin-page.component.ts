@@ -1,7 +1,9 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import * as L from 'leaflet';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { Station } from '../../features/trips/models/station.model';
 import { PopUpService } from '../../features/admin/services/popup.service';
 import { loadStations } from '../../core/store/trips/trips.actions';
@@ -28,9 +30,15 @@ L.Marker.prototype.options.icon = iconDefault;
   styleUrl: './admin-page.component.scss',
 })
 export class AdminPageComponent implements AfterViewInit {
-  private stations$: Observable<Station[]>;
+  protected stations$: Observable<Station[]>;
 
   private map!: L.Map;
+
+  protected visualisation$!: Observable<Station[]>;
+
+  private dataSource = new MatTableDataSource<Station>();
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   private initMap(): void {
     this.map = L.map('map', {
@@ -43,7 +51,7 @@ export class AdminPageComponent implements AfterViewInit {
         maxZoom: 18,
         minZoom: 3,
         attribution:
-          '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+          '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       }
     );
 
@@ -57,15 +65,22 @@ export class AdminPageComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.initMap();
-    this.stations$
-      .subscribe((stations) => {
-        stations.forEach((station) => {
-          const lon = station.longitude;
-          const lat = station.latitude;
-          const marker = L.marker([lat, lon]);
-          marker.bindPopup(this.popupService.makeCapitalPopup(station.city));
-          marker.addTo(this.map);
-        });
+    this.stations$.subscribe((stations) => {
+      this.dataSource.data = stations;
+      this.visualisation$ = this.dataSource.connect();
+      this.dataSource.paginator = this.paginator;
+      stations.forEach((station) => {
+        const lon = station.longitude;
+        const lat = station.latitude;
+        const marker = L.marker([lat, lon]);
+        marker.bindPopup(this.popupService.makeCapitalPopup(station.city));
+        marker.addTo(this.map);
       });
+    });
+  }
+
+  findStationNameById(id: number, stations: Station[]): string {
+    const foundStation = stations.find((station) => {return station.id === id});
+    return foundStation ? foundStation.city : 'Station not found';
   }
 }

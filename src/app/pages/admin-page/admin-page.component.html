@@ -1,2 +1,30 @@
-<div id="map" class="map-container">
-</div>
+<mat-card appearance="outlined">
+  <mat-card-content>
+    <div id="map" class="map-container"></div>
+    @if(stations$|async; as stations){ @for(station of visualisation$|async;track
+    station.id){
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>{{ station.city }}</mat-card-title>
+        <mat-card-subtitle
+          >{{ station.latitude | number : "1.0-4" }}
+          {{ station.longitude | number : "1.0-4" }}</mat-card-subtitle
+        >
+      </mat-card-header>
+      <mat-card-content
+        >@for(connectedStation of station.connectedTo;track
+        connectedStation.id){
+        {{ findStationNameById(connectedStation.id, stations) }}
+
+        }
+      </mat-card-content>
+    </mat-card>
+    }
+  <mat-paginator
+      [pageSizeOptions]="[5, 10, 20]"
+      showFirstLastButtons
+      aria-label="Select page of periodic elements"
+    >
+    </mat-paginator>}
+  </mat-card-content>
+</mat-card>

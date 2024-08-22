@@ -7,8 +7,11 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
 
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -59,7 +62,10 @@ import { UserEffects } from './core/store/user/user.effects';
     UserModule,
     MatButtonModule,
     MatIconModule,
-    LeafletModule
+    LeafletModule,
+    MatCardModule,
+    MatPaginatorModule,
+    MatTableModule,
   ],
   providers: [
     provideAnimationsAsync(),
