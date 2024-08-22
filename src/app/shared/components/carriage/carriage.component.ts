@@ -1,3 +1,26 @@
+/*
+** How to use in parents component **
+
+In the parent component, you can get data for user-selected seats form CarriageComponent:
+Method for example:
+
+onSelectedSeatsChange(seatsData: CarriageSelectedSeats) {
+    console.log('Выбранные места:', seatsData);
+  }
+
+In HTML template:
+ <app-carriage
+    [code]="carriage.code"
+    [name]="carriage.name"
+    [rows]="carriage.rows"
+    [leftSeats]="carriage.leftSeats"
+    [rightSeats]="carriage.rightSeats"
+    [carriageNumber]="carriage.carriageNumber"
+    [occupiedSeat]="carriage.occupiedSeat"
+    (selectedSeatsChange)="onSelectedSeatsChange($event)"
+  ></app-carriage>
+*/
+
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 export enum SeatStatus {
@@ -38,10 +61,10 @@ export class CarriageComponent implements OnInit {
   // rightSeats - the number of seats to the right of the aisle in a row (3 in example below)
   @Input() rightSeats!: number;
 
-  // is calculated by the index of the carriage in the train+1
+  // should be calculated by the index of the carriage in the train+1
   @Input() carriageNumber!: number;
 
-  // is calculated by the index of occupied seats in the train based on the number and order of carriages and the number of seats in each of them
+  // should be calculated by the indicator of occupied seats in the train, based on the number and order of wagons and the number of seats in each of them
   @Input() occupiedSeat!: number[];
 
   // passing data on selected places to the parent component for order placement
