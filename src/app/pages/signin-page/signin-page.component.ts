@@ -34,7 +34,6 @@ export class SigninPageComponent implements OnInit {
   }
 
   public onSubmit(): void {
-    console.log(this.loginForm!.value);
     this.store.dispatch(
       userActions.signIn({
         email: this.loginForm.value.email,
