@@ -12,13 +12,22 @@ import { SearchResponse } from '../models/searchResponse.model';
   providedIn: 'root',
 })
 export class TripsService {
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
-  public search(fromLatitude: number, fromLongitude: number, toLatitude: number, toLongitude: number, time?: number) {
-
-    const params: { fromLatitude: number, fromLongitude: number, toLatitude: number, toLongitude: number, time?: number } =
-      { fromLatitude, fromLongitude, toLatitude, toLongitude };
+  public search(
+    fromLatitude: number,
+    fromLongitude: number,
+    toLatitude: number,
+    toLongitude: number,
+    time?: number,
+  ) {
+    const params: {
+      fromLatitude: number;
+      fromLongitude: number;
+      toLatitude: number;
+      toLongitude: number;
+      time?: number;
+    } = { fromLatitude, fromLongitude, toLatitude, toLongitude };
     if (time) {
       params.time = time;
     }
@@ -34,7 +43,7 @@ export class TripsService {
       city,
       latitude,
       longitude,
-      relations
+      relations,
     });
   }
 
@@ -66,8 +75,19 @@ export class TripsService {
     return this.http.post<{ code: string }>('/api/carriage', { name, rows, leftSeats, rightSeats });
   }
 
-  public updateCarriageType(code: string, name: string, rows: number, leftSeats: number, rightSeats: number) {
-    return this.http.put<{ code: string }>(`/api/carriage/${code}`, { name, rows, leftSeats, rightSeats });
+  public updateCarriageType(
+    code: string,
+    name: string,
+    rows: number,
+    leftSeats: number,
+    rightSeats: number,
+  ) {
+    return this.http.put<{ code: string }>(`/api/carriage/${code}`, {
+      name,
+      rows,
+      leftSeats,
+      rightSeats,
+    });
   }
 
   public getOrderList(all?: boolean) {
@@ -98,19 +118,24 @@ export class TripsService {
     return this.http.get<Ride>(`/api/search/${rideId}`);
   }
 
-  public createRide(routeId: number, segments: {
-    time: [string, string],
-    price: { [key: string]: number }
-  }[]) {
+  public createRide(
+    routeId: number,
+    segments: {
+      time: [string, string];
+      price: { [key: string]: number };
+    }[],
+  ) {
     return this.http.post<{ id: number }>(`/api/route/${routeId}/ride`, { segments });
   }
 
-
-  public updateRide(routeId: number, rideId: number, segments: {
-    time: [string, string],
-    price: { [key: string]: number }
-  }[]) {
+  public updateRide(
+    routeId: number,
+    rideId: number,
+    segments: {
+      time: [string, string];
+      price: { [key: string]: number };
+    }[],
+  ) {
     return this.http.put(`/api/route/${routeId}/ride/${rideId}`, { segments });
   }
-
 }

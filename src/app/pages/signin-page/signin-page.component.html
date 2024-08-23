@@ -11,18 +11,10 @@
     <mat-error *ngIf="password.hasError('required')">Required</mat-error>
   </mat-form-field>
   <div class="wrapper-button">
-    <button
-      mat-flat-button
-      [ngStyle]="{ 'min-width.px': 100 }"
-      [disabled]="!loginForm.valid"
-    >
+    <button mat-flat-button [ngStyle]="{ 'min-width.px': 100 }" [disabled]="!loginForm.valid">
       Sign In
     </button>
-    <button
-      mat-flat-button
-      [ngStyle]="{ 'min-width.px': 100 }"
-      (click)="goSignUp()"
-    >
+    <button mat-flat-button [ngStyle]="{ 'min-width.px': 100 }" (click)="goSignUp()">
       Sign Up
     </button>
   </div>

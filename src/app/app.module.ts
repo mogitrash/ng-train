@@ -30,8 +30,8 @@ import { OrdersPageComponent } from './pages/orders-page/orders-page.component';
 import { UserOrdersPageComponent } from './pages/user-orders-page/user-orders-page.component';
 import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
 import { SigninPageComponent } from './pages/signin-page/signin-page.component';
-import { SignupPageComponent } from './pages/signup-page/signup-page.component';
 import { MainPageComponent } from './pages/main-page/main-page.component';
+import { SignupPageComponent } from './pages/signup-page/signup-page.component';
 
 @NgModule({
   declarations: [

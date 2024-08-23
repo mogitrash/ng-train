@@ -12,38 +12,22 @@
     <mat-error *ngIf="password.hasError('minLength')"
       >Password must be at least 8 characters long</mat-error
     >
-    <mat-error
-      *ngIf="(error | async) === 'Account with this email already exists'"
-      >{{ error }}</mat-error
-    >
+    <mat-error *ngIf="(error | async) === 'Account with this email already exists'">{{
+      error
+    }}</mat-error>
     <mat-error *ngIf="password.hasError('required')">Required</mat-error>
   </mat-form-field>
   <mat-form-field appearance="outline">
     <mat-label for="repeatPassword">Repeat password</mat-label>
-    <input
-      matInput
-      type="password"
-      id="repeatPassword"
-      formControlName="repeatPassword"
-    />
-    <mat-error *ngIf="registryForm.errors?.['MatchError']">
-      Passwords do not match
-    </mat-error>
+    <input matInput type="password" id="repeatPassword" formControlName="repeatPassword" />
+    <mat-error *ngIf="registryForm.errors?.['MatchError']"> Passwords do not match </mat-error>
     <mat-error *ngIf="repeatPassword.hasError('required')">Required</mat-error>
   </mat-form-field>
   <div class="wrapper-button">
-    <button
-      mat-flat-button
-      [ngStyle]="{ 'min-width.px': 100 }"
-      [disabled]="!registryForm.valid"
-    >
+    <button mat-flat-button [ngStyle]="{ 'min-width.px': 100 }" [disabled]="!registryForm.valid">
       Register
     </button>
-    <button
-      mat-flat-button
-      [ngStyle]="{ 'min-width.px': 100 }"
-      (click)="goSignIn()"
-    >
+    <button mat-flat-button [ngStyle]="{ 'min-width.px': 100 }" (click)="goSignIn()">
       Sign In
     </button>
   </div>

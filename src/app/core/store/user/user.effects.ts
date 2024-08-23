@@ -1,15 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import {
-  catchError,
-  exhaustMap,
-  map,
-  Observable,
-  of,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { catchError, exhaustMap, map, Observable, of, switchMap, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { UserService } from '../../../features/user/services/user.service';
 import * as userActions from './user.actions';
@@ -24,7 +16,7 @@ export class UserEffects {
     private readonly store: Store,
     private actions$: Actions,
     private userService: UserService,
-    private readonly router: Router
+    private readonly router: Router,
   ) {
     this.user$ = this.store.select(selectUser);
   }
@@ -42,11 +34,11 @@ export class UserEffects {
               }),
               catchError((error: UserError) => {
                 return of(userActions.getError({ error: error.message }));
-              })
+              }),
             );
-          })
+          }),
         );
-      })
+      }),
     );
   });
 
@@ -69,11 +61,11 @@ export class UserEffects {
               }),
               catchError((error: UserError) => {
                 return of(userActions.getError({ error: error.message }));
-              })
+              }),
             );
-          })
+          }),
         );
-      })
+      }),
     );
   });
 
@@ -89,11 +81,11 @@ export class UserEffects {
               }),
               catchError((error: UserError) => {
                 return of(userActions.getError({ error: error.message }));
-              })
+              }),
             );
-          })
+          }),
         );
-      })
+      }),
     );
   });
 
@@ -109,11 +101,11 @@ export class UserEffects {
               }),
               catchError((error: UserError) => {
                 return of(userActions.getError({ error: error.message }));
-              })
+              }),
             );
-          })
+          }),
         );
-      })
+      }),
     );
   });
 
@@ -131,9 +123,9 @@ export class UserEffects {
           }),
           catchError((error: UserError) => {
             return of(userActions.getError({ error: error.message }));
-          })
+          }),
         );
-      })
+      }),
     );
   });
 
@@ -147,9 +139,9 @@ export class UserEffects {
           }),
           catchError((error: UserError) => {
             return of(userActions.getError({ error: error.message }));
-          })
+          }),
         );
-      })
+      }),
     );
   });
 }

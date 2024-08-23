@@ -1,11 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormGroup,
-  FormBuilder,
-  FormControl,
-  Validators,
-  AbstractControl,
-} from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import * as userActions from '../../core/store/user/user.actions';
@@ -21,7 +15,7 @@ export class SigninPageComponent implements OnInit {
   constructor(
     private readonly FB: FormBuilder,
     private store: Store,
-    private readonly router: Router
+    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -45,7 +39,7 @@ export class SigninPageComponent implements OnInit {
       userActions.signIn({
         email: this.loginForm.value.email,
         password: this.loginForm.value.password,
-      })
+      }),
     );
   }
 

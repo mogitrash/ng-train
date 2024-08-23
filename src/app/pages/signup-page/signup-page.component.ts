@@ -1,12 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import {
-  FormGroup,
-  FormControl,
-  FormBuilder,
-  Validators,
-  AbstractControl,
-} from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
@@ -29,7 +23,7 @@ export class SignupPageComponent implements OnInit {
   constructor(
     private readonly FB: FormBuilder,
     private store: Store,
-    private readonly router: Router
+    private readonly router: Router,
   ) {
     this.error = this.store.select(selectError);
   }
@@ -37,14 +31,11 @@ export class SignupPageComponent implements OnInit {
   ngOnInit(): void {
     this.registryForm = this.FB.group(
       {
-        email: new FormControl('', [
-          Validators.required,
-          EmailFormatValidator(),
-        ]),
+        email: new FormControl('', [Validators.required, EmailFormatValidator()]),
         password: new FormControl('', [Validators.required]),
         repeatPassword: new FormControl('', [Validators.required]),
       },
-      { validators: PasswordMatchValidator.bind(this) }
+      { validators: PasswordMatchValidator.bind(this) },
     );
   }
 
@@ -70,7 +61,7 @@ export class SignupPageComponent implements OnInit {
       userActions.signUp({
         email: this.registryForm.value.email,
         password: this.registryForm.value.password,
-      })
+      }),
     );
   }
 

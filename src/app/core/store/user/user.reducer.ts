@@ -71,5 +71,5 @@ export const userReducer = createReducer(
   }),
   on(getError, (state, { error }): UserState => {
     return { ...state, hasError: error };
-  })
+  }),
 );
