@@ -37,7 +37,6 @@ export class UserEffects {
                 return of(userActions.successfulUpdate(), userActions.clearError());
               }),
               catchError(({ error }) => {
-                console.log(error);
                 return of(userActions.getError({ error }));
               }),
             );
@@ -58,10 +57,8 @@ export class UserEffects {
               tap(({ token }) => {
                 localStorage.clear();
                 localStorage.setItem('token', token);
-                console.log('token');
               }),
               mergeMap(({ token }) => {
-                console.log('token');
                 this.router.navigate(['/']);
                 return of(userActions.getToken({ token, role: 'user' }), userActions.clearError());
               }),
