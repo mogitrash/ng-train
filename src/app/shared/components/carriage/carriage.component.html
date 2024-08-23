@@ -3,9 +3,7 @@
   <div class="free-seats">{{ countOfFreeSeats }} free seats</div>
 </div>
 <div class="carriage">
-  <ng-container
-    *ngFor="let seatGroup of [seats | splitSeats : leftSeats : rightSeats]"
-  >
+  <ng-container *ngFor="let seatGroup of [seats | splitSeats: leftSeats : rightSeats]">
     <div class="seats seats-right">
       <div *ngFor="let column of seatGroup[0]" class="column">
         <div
@@ -14,7 +12,7 @@
           [ngClass]="{
             'seat-free': seat.status === 'free',
             'seat-occupied': seat.status === 'occupied',
-            'seat-booked': seat.status === 'booked'
+            'seat-booked': seat.status === 'booked',
           }"
         >
           <label>
@@ -37,7 +35,7 @@
           [ngClass]="{
             'seat-free': seat.status === 'free',
             'seat-occupied': seat.status === 'occupied',
-            'seat-booked': seat.status === 'booked'
+            'seat-booked': seat.status === 'booked',
           }"
         >
           <label>
