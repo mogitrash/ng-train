@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, exhaustMap, map, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, exhaustMap, map, mergeMap, Observable, of, switchMap, take, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { UserService } from '../../../features/user/services/user.service';
 import * as userActions from './user.actions';
@@ -23,17 +23,22 @@ export class UserEffects {
 
   createUser$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(userActions.signUp.type),
+      ofType(userActions.signUp),
       exhaustMap(() => {
         return this.user$.pipe(
+          take(1),
           switchMap(({ email, password }) => {
             return this.userService.signUp(email, password).pipe(
-              map(() => {
-                this.router.navigate(['/signin']);
-                return userActions.successfulUpdate();
+              tap(() => {
+                localStorage.clear();
               }),
-              catchError((error: UserError) => {
-                return of(userActions.getError({ error: error.message }));
+              mergeMap(() => {
+                this.router.navigate(['/signin']);
+                return of(userActions.successfulUpdate(), userActions.clearError());
+              }),
+              catchError(({ error }) => {
+                console.log(error);
+                return of(userActions.getError({ error }));
               }),
             );
           }),
@@ -44,9 +49,10 @@ export class UserEffects {
 
   signInUser$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(userActions.signIn.type),
+      ofType(userActions.signIn),
       exhaustMap(() => {
         return this.user$.pipe(
+          take(1),
           switchMap((user) => {
             return this.userService.signIn(user.email, user.password).pipe(
               tap(({ token }) => {
@@ -54,13 +60,13 @@ export class UserEffects {
                 localStorage.setItem('token', token);
                 console.log('token');
               }),
-              map(({ token }) => {
+              mergeMap(({ token }) => {
                 console.log('token');
                 this.router.navigate(['/']);
-                return userActions.getToken({ token, role: 'user' });
+                return of(userActions.getToken({ token, role: 'user' }), userActions.clearError());
               }),
               catchError((error: UserError) => {
-                return of(userActions.getError({ error: error.message }));
+                return of(userActions.getError({ error }));
               }),
             );
           }),
@@ -71,16 +77,17 @@ export class UserEffects {
 
   updateName$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(userActions.updateUserName.type),
+      ofType(userActions.updateUserName),
       exhaustMap(() => {
         return this.user$.pipe(
+          take(1),
           switchMap(({ email, name }) => {
             return this.userService.updateCurrentUserName(email, name).pipe(
               switchMap(() => {
                 return of(userActions.successfulUpdate());
               }),
               catchError((error: UserError) => {
-                return of(userActions.getError({ error: error.message }));
+                return of(userActions.getError({ error }));
               }),
             );
           }),
@@ -91,16 +98,17 @@ export class UserEffects {
 
   updatePassword$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(userActions.updateUserPassword.type),
+      ofType(userActions.updateUserPassword),
       exhaustMap(() => {
         return this.user$.pipe(
+          take(1),
           switchMap(({ password }) => {
             return this.userService.updateCurrentUserPassword(password).pipe(
               map(() => {
                 return userActions.successfulUpdate();
               }),
               catchError((error: UserError) => {
-                return of(userActions.getError({ error: error.message }));
+                return of(userActions.getError({ error }));
               }),
             );
           }),
@@ -111,9 +119,10 @@ export class UserEffects {
 
   getUserData$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(userActions.getUser.type),
+      ofType(userActions.getUser),
       exhaustMap(() => {
         return this.userService.getCurrentUser().pipe(
+          take(1),
           map((user) => {
             return userActions.saveUser({
               name: user.name,
@@ -122,7 +131,7 @@ export class UserEffects {
             });
           }),
           catchError((error: UserError) => {
-            return of(userActions.getError({ error: error.message }));
+            return of(userActions.getError({ error }));
           }),
         );
       }),
@@ -131,14 +140,15 @@ export class UserEffects {
 
   signOut$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(userActions.signOut.type),
+      ofType(userActions.signOut),
       exhaustMap(() => {
         return this.userService.signOutCurrentUser().pipe(
+          take(1),
           map(() => {
             return userActions.successfulExit();
           }),
           catchError((error: UserError) => {
-            return of(userActions.getError({ error: error.message }));
+            return of(userActions.getError({ error }));
           }),
         );
       }),

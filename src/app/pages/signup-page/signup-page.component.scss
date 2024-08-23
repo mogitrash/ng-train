@@ -18,11 +18,45 @@
   }
 
   form {
+    position: relative;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     margin: 3% auto;
     width: 50%;
+
+    .error {
+      position: absolute;
+      display: block;
+      color: var(--error-red);
+      font-size: 12px;
+      font-weight: 400;
+      width: 100%;
+      height: 16px;
+      top: 21%;
+      left: 3%;
+    }
+    .hide {
+      position: absolute;
+      display: block;
+      color: transparent;
+      font-size: 0px;
+      font-weight: 400;
+      width: 100%;
+      height: 16px;
+    }
+
+    .second {
+      position: absolute;
+      display: block;
+      color: var(--error-red);
+      font-size: 12px;
+      font-weight: 400;
+      width: 100%;
+      height: 16px;
+      top: 77%;
+      left: 3%;
+    }
 
     .wrapper-button {
       width: 100%;

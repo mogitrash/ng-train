@@ -1,8 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { UserState } from '../../models/user.model';
 
-
-
 export const selectUserState = createFeatureSelector<UserState>('user');
 
 export const selectAccess = createSelector(selectUserState, (state) => {
@@ -18,5 +16,9 @@ export const selectUser = createSelector(selectUserState, (state) => {
 });
 
 export const selectError = createSelector(selectUserState, (state) => {
-  return state.hasError;
+  return { ...state.hasError };
+});
+
+export const selectReasonError = createSelector(selectError, (hasError) => {
+  return hasError.reason;
 });

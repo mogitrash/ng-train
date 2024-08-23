@@ -5,10 +5,10 @@ import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
-import { PasswordMatchValidator } from '../../shared/directives/password-match.directive.js';
-import { EmailFormatValidator } from '../../shared/directives/email-format.directive.js';
-import { selectError } from '../../core/store/user/user.selectors.js';
-import * as userActions from '../../core/store/user/user.actions';
+import { PasswordMatchValidator } from '../../shared/validators/password-match.js';
+import { EmailFormatValidator } from '../../shared/validators/email-format.js';
+import { selectReasonError } from '../../core/store/user/user.selectors.js';
+import { clearError, signUp } from '../../core/store/user/user.actions';
 
 @Component({
   selector: 'app-signup-page',
@@ -18,21 +18,21 @@ import * as userActions from '../../core/store/user/user.actions';
 export class SignupPageComponent implements OnInit {
   public registryForm: FormGroup = new FormGroup({});
 
-  public error: Observable<string> | undefined;
+  public reason$: Observable<string>;
 
   constructor(
     private readonly FB: FormBuilder,
     private store: Store,
     private readonly router: Router,
   ) {
-    this.error = this.store.select(selectError);
+    this.reason$ = this.store.select(selectReasonError);
   }
 
   ngOnInit(): void {
     this.registryForm = this.FB.group(
       {
         email: new FormControl('', [Validators.required, EmailFormatValidator()]),
-        password: new FormControl('', [Validators.required]),
+        password: new FormControl('', [Validators.required, Validators.minLength(8)]),
         repeatPassword: new FormControl('', [Validators.required]),
       },
       { validators: PasswordMatchValidator.bind(this) },
@@ -56,13 +56,16 @@ export class SignupPageComponent implements OnInit {
   }
 
   public onSubmit(): void {
-    console.log(this.registryForm!.value.email);
     this.store.dispatch(
-      userActions.signUp({
+      signUp({
         email: this.registryForm.value.email,
         password: this.registryForm.value.password,
       }),
     );
+  }
+
+  public onClearError() {
+    this.store.dispatch(clearError());
   }
 
   public goSignIn(): void {

@@ -32,6 +32,7 @@ import { ProfilePageComponent } from './pages/profile-page/profile-page.componen
 import { SigninPageComponent } from './pages/signin-page/signin-page.component';
 import { MainPageComponent } from './pages/main-page/main-page.component';
 import { SignupPageComponent } from './pages/signup-page/signup-page.component';
+import { UserEffects } from './core/store/user/user.effects';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,7 @@ import { SignupPageComponent } from './pages/signup-page/signup-page.component';
       user: userReducer,
       trips: tripsReducer,
     }),
-    EffectsModule.forRoot([TripsEffects]),
+    EffectsModule.forRoot([TripsEffects, UserEffects]),
     StoreDevtoolsModule.instrument(),
     UserModule,
     MatButtonModule,

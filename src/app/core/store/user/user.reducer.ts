@@ -1,6 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { UserState } from '../../models/user.model';
 import {
+  clearError,
   getError,
   getToken,
   getUser,
@@ -22,7 +23,10 @@ const initialUserState: UserState = {
     password: '',
   },
   token: null,
-  hasError: '',
+  hasError: {
+    message: '',
+    reason: '',
+  },
 };
 
 export const userReducer = createReducer(
@@ -70,6 +74,9 @@ export const userReducer = createReducer(
     return { ...state };
   }),
   on(getError, (state, { error }): UserState => {
-    return { ...state, hasError: error };
+    return { ...state, hasError: { ...error } };
+  }),
+  on(clearError, (state): UserState => {
+    return { ...state, hasError: { message: '', reason: '' } };
   }),
 );
