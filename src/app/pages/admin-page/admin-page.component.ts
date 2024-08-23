@@ -4,9 +4,14 @@ import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Station } from '../../features/trips/models/station.model';
 import { PopUpService } from '../../features/admin/services/popup.service';
-import { deleteStation, loadStations } from '../../core/store/trips/trips.actions';
+import {
+  createStation,
+  deleteStation,
+  loadStations,
+} from '../../core/store/trips/trips.actions';
 import { selectStations } from '../../core/store/trips/trips.selectors';
 
 const iconRetinaUrl = 'assets/marker-icon-2x.png';
@@ -40,6 +45,13 @@ export class AdminPageComponent implements AfterViewInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+  protected stationForm = this.formBuilder.nonNullable.group({
+    city: ['', Validators.required],
+    latitude: [0, Validators.required],
+    longitude: [0, Validators.required],
+    relations: this.formBuilder.array([], Validators.required),
+  });
+
   private initMap(): void {
     this.map = L.map('map', {
       center: [39.8282, -98.5795],
@@ -58,7 +70,11 @@ export class AdminPageComponent implements AfterViewInit {
     tiles.addTo(this.map);
   }
 
-  constructor(private store: Store, private popupService: PopUpService) {
+  constructor(
+    private store: Store,
+    private popupService: PopUpService,
+    private formBuilder: FormBuilder
+  ) {
     this.store.dispatch(loadStations());
     this.stations$ = this.store.select(selectStations);
   }
@@ -80,12 +96,55 @@ export class AdminPageComponent implements AfterViewInit {
   }
 
   findStationNameById(id: number, stations: Station[]): string {
-    const foundStation = stations.find((station) => {return station.id === id});
+    const foundStation = stations.find((station) => {
+      return station.id === id;
+    });
     return foundStation ? foundStation.city : 'Station not found';
   }
 
-  onDelete(id: number){
-    this.store.dispatch(deleteStation({id}));
+  findStationIdByName(city: string, stations: Station[]): number {
+    const foundStation = stations.find((station) => {
+      return station.city === city;
+    });
+    return foundStation ? foundStation.id : 0;
+  }
+
+  onCreate() {}
+
+  onDelete(id: number) {
+    this.store.dispatch(deleteStation({ id }));
     // this.store.dispatch(loadStations());
+  }
+
+  get relations(): FormArray {
+    return this.stationForm.get('relations') as FormArray;
+  }
+
+  addRelation(): void {
+    this.relations.push(this.formBuilder.control(''));
+  }
+
+  onSubmit(): void {
+    const formValue = this.stationForm.value as {
+      city: string;
+      latitude: number;
+      longitude: number;
+      relations: string[];
+    };
+
+    this.stations$.subscribe((stations) => {
+      const stationsId = formValue.relations.map((city) =>
+        {return this.findStationIdByName(city, stations)}
+      );
+
+      this.store.dispatch(
+        createStation({
+          city: formValue.city,
+          latitude: formValue.latitude,
+          longitude: formValue.longitude,
+          relations: stationsId,
+        })
+      );
+    });
   }
 }
