@@ -8,6 +8,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -29,6 +30,7 @@ import { ProfilePageComponent } from './pages/profile-page/profile-page.componen
 import { SigninPageComponent } from './pages/signin-page/signin-page.component';
 import { SignupPageComponent } from './pages/signup-page/signup-page.component';
 import { MainPageComponent } from './pages/main-page/main-page.component';
+import { TripsModule } from './features/trips/trips.module';
 
 @NgModule({
   declarations: [
@@ -49,6 +51,7 @@ import { MainPageComponent } from './pages/main-page/main-page.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    TripsModule,
     StoreModule.forRoot({
       user: userReducer,
       trips: tripsReducer,
@@ -59,7 +62,11 @@ import { MainPageComponent } from './pages/main-page/main-page.component';
     MatButtonModule,
     MatIconModule,
   ],
-  providers: [provideAnimationsAsync(), provideHttpClient(withInterceptors([addTokenInterceptor]))],
+  providers: [
+    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },
+    provideAnimationsAsync(),
+    provideHttpClient(withInterceptors([addTokenInterceptor])),
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
