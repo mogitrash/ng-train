@@ -5,7 +5,7 @@ In the parent component, you can get data for user-selected seats form CarriageC
 Method for example:
 
 onSelectedSeatsChange(seatsData: CarriageSelectedSeats) {
-    console.log('Выбранные места:', seatsData);
+    console.log('Selected seats:', seatsData.selectedSeats);
   }
 
 In HTML template:
@@ -15,8 +15,8 @@ In HTML template:
     [rows]="carriage.rows"
     [leftSeats]="carriage.leftSeats"
     [rightSeats]="carriage.rightSeats"
-    [carriageNumber]="carriage.carriageNumber"
-    [occupiedSeat]="carriage.occupiedSeat"
+    [carriageNumber]="carriageNumber"
+    [occupiedSeat]="occupiedSeat"
     (selectedSeatsChange)="onSelectedSeatsChange($event)"
   ></app-carriage>
 */
@@ -47,25 +47,25 @@ export interface CarriageSelectedSeats {
 })
 export class CarriageComponent implements OnInit {
   // code - auto-generated unique code for item. User to update carriage.
-  @Input() code!: string;
+  @Input({ required: true }) code!: string;
 
   // name - unique name of the carriage type.
-  @Input() name!: string;
+  @Input({ required: true }) name!: string;
 
   // rows - number of rows
-  @Input() rows!: number;
+  @Input({ required: true }) rows!: number;
 
   // leftSeats - - the number of seats to the left of the aisle in a row (2 in example below)
-  @Input() leftSeats!: number;
+  @Input({ required: true }) leftSeats!: number;
 
   // rightSeats - the number of seats to the right of the aisle in a row (3 in example below)
-  @Input() rightSeats!: number;
+  @Input({ required: true }) rightSeats!: number;
 
   // should be calculated by the index of the carriage in the train+1
-  @Input() carriageNumber!: number;
+  @Input({ required: true }) carriageNumber!: number;
 
   // should be calculated by the indicator of occupied seats in the train, based on the number and order of wagons and the number of seats in each of them
-  @Input() occupiedSeat!: number[];
+  @Input({ required: true }) occupiedSeat!: number[];
 
   // passing data on selected places to the parent component for order placement
   @Output() selectedSeatsChange = new EventEmitter<CarriageSelectedSeats>();
