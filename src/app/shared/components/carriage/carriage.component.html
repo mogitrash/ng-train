@@ -30,7 +30,7 @@
     <div class="seats seats-left">
       <div *ngFor="let column of seatGroup[1]" class="column">
         <div
-          *ngFor="let seat of column"
+          *ngFor="let seat of column; trackBy: trackBySeat"
           class="seat"
           [ngClass]="{
             'seat-free': seat.status === 'free',

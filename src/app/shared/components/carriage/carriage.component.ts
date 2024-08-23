@@ -45,7 +45,7 @@ export class CarriageComponent implements OnInit {
   // rows - number of rows
   @Input({ required: true }) rows!: number;
 
-  // leftSeats - - the number of seats to the left of the aisle in a row (2 in example below)
+  // leftSeats - the number of seats to the left of the aisle in a row (2 in example below)
   @Input({ required: true }) leftSeats!: number;
 
   // rightSeats - the number of seats to the right of the aisle in a row (3 in example below)
@@ -119,5 +119,9 @@ export class CarriageComponent implements OnInit {
     };
 
     this.selectedSeatsChange.emit(selectedSeatData);
+  }
+
+  trackBySeat(index: number, seat: Seat): number {
+    return seat.numberInCarriage;
   }
 }
