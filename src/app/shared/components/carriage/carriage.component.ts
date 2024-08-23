@@ -10,8 +10,6 @@ onSelectedSeatsChange(seatsData: CarriageSelectedSeats) {
 
 In HTML template:
  <app-carriage
-    [code]="carriage.code"
-    [name]="carriage.name"
     [rows]="carriage.rows"
     [leftSeats]="carriage.leftSeats"
     [rightSeats]="carriage.rightSeats"
@@ -35,8 +33,6 @@ export interface Seat {
 
 export interface CarriageSelectedSeats {
   carriageNumber: number;
-  carriageCode: string;
-  carriageName: string;
   selectedSeats: Seat[];
 }
 
@@ -46,12 +42,6 @@ export interface CarriageSelectedSeats {
   styleUrl: './carriage.component.scss',
 })
 export class CarriageComponent implements OnInit {
-  // code - auto-generated unique code for item. User to update carriage.
-  @Input({ required: true }) code!: string;
-
-  // name - unique name of the carriage type.
-  @Input({ required: true }) name!: string;
-
   // rows - number of rows
   @Input({ required: true }) rows!: number;
 
@@ -125,8 +115,6 @@ export class CarriageComponent implements OnInit {
     // maybe some of them will turn out to be unnecessary in the future.
     const selectedSeatData: CarriageSelectedSeats = {
       carriageNumber: this.carriageNumber,
-      carriageCode: this.code,
-      carriageName: this.name,
       selectedSeats: this.selectedSeats,
     };
 
