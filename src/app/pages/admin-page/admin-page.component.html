@@ -1,11 +1,59 @@
 <mat-card appearance="outlined">
   <mat-card-content>
-    <div id="map" class="map-container"></div>
-    @if(stations$|async; as stations){ @for(station of visualisation$|async;track
-    station.id){
+    <div class="content-container">
+      <div id="map" class="map-container"></div>
+      <div class="other-container">
+        <p>
+          <mat-form-field appearance="fill">
+            <mat-label>Fill form field</mat-label>
+            <input matInput placeholder="Placeholder" />
+            <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+            <mat-hint>Hint</mat-hint>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field appearance="outline">
+            <mat-label>Outline form field</mat-label>
+            <input matInput placeholder="Placeholder" />
+            <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+            <mat-hint>Hint</mat-hint>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field appearance="outline">
+            <mat-label>Outline form field</mat-label>
+            <input matInput placeholder="Placeholder" />
+            <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+            <mat-hint>Hint</mat-hint>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field>
+            <mat-label>1234</mat-label>
+            <mat-select>
+              <mat-option value="one">First option</mat-option>
+              <mat-option value="two">Second option</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </p>
+      </div>
+    </div>
+    @if(stations$|async; as stations){ @for(station of
+    visualisation$|async;track station.id){
     <mat-card appearance="outlined">
       <mat-card-header>
-        <mat-card-title>{{ station.city }}</mat-card-title>
+        <mat-card-title>
+          <div class="title-container">
+            <span>{{ station.city }}</span>
+            <mat-icon
+              aria-hidden="false"
+              aria-label="delete station icon"
+              fontIcon="delete"
+              (click)="onDelete(station.id)"
+            ></mat-icon>
+          </div>
+        </mat-card-title>
+
         <mat-card-subtitle
           >{{ station.latitude | number : "1.0-4" }}
           {{ station.longitude | number : "1.0-4" }}</mat-card-subtitle
@@ -20,11 +68,12 @@
       </mat-card-content>
     </mat-card>
     }
-  <mat-paginator
+    <mat-paginator
       [pageSizeOptions]="[5, 10, 20]"
       showFirstLastButtons
       aria-label="Select page of periodic elements"
     >
-    </mat-paginator>}
+    </mat-paginator
+    >}
   </mat-card-content>
 </mat-card>

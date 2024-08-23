@@ -6,7 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Station } from '../../features/trips/models/station.model';
 import { PopUpService } from '../../features/admin/services/popup.service';
-import { loadStations } from '../../core/store/trips/trips.actions';
+import { deleteStation, loadStations } from '../../core/store/trips/trips.actions';
 import { selectStations } from '../../core/store/trips/trips.selectors';
 
 const iconRetinaUrl = 'assets/marker-icon-2x.png';
@@ -82,5 +82,10 @@ export class AdminPageComponent implements AfterViewInit {
   findStationNameById(id: number, stations: Station[]): string {
     const foundStation = stations.find((station) => {return station.id === id});
     return foundStation ? foundStation.city : 'Station not found';
+  }
+
+  onDelete(id: number){
+    this.store.dispatch(deleteStation({id}));
+    // this.store.dispatch(loadStations());
   }
 }
