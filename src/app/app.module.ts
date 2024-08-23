@@ -61,10 +61,7 @@ import { SharedModule } from './shared/shared.module';
     MatIconModule,
     SharedModule,
   ],
-  providers: [
-    provideAnimationsAsync(),
-    provideHttpClient(withInterceptors([addTokenInterceptor])),
-  ],
+  providers: [provideAnimationsAsync(), provideHttpClient(withInterceptors([addTokenInterceptor]))],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
