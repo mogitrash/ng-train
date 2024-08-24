@@ -20,6 +20,8 @@ export class SignupPageComponent implements OnInit {
 
   public reason$: Observable<string>;
 
+  public firstContact: boolean = false;
+
   constructor(
     private readonly FB: FormBuilder,
     private store: Store,
@@ -62,6 +64,7 @@ export class SignupPageComponent implements OnInit {
         password: this.registryForm.value.password,
       }),
     );
+    this.firstContact = true;
   }
 
   public onClearError() {

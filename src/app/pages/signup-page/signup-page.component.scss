@@ -1,5 +1,11 @@
 @import './../../../styles.scss';
 
+:root {
+  --mdc-outlined-text-field-error-outline-color: gray;
+  --mdc-outlined-text-field-error-focus-outline-color: gray;
+  --mdc-outlined-text-field-error-label-text-color: gray;
+  --mdc-outlined-text-field-error-focus-label-text-color: gray;
+}
 :host {
   display: flex;
   flex-direction: column;
