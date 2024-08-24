@@ -7,6 +7,7 @@ import {
   routeLoadedByIdSuccess,
   routesLoadedSuccess,
   searchLoadedSuccess,
+  setSearchDate,
   stationsLoadedSuccess,
   usersLoadedSuccess,
 } from './trips.actions';
@@ -23,6 +24,9 @@ const inititalTripState: TripsState = {
 
 export const tripsReducer = createReducer(
   inititalTripState,
+  on(setSearchDate, (state, { date }): TripsState => {
+    return { ...state, searchDate: date };
+  }),
   on(searchLoadedSuccess, (state, { search }): TripsState => {
     return { ...state, searchResponses: [...state.searchResponses, search] };
   }),

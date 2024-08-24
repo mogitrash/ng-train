@@ -1,8 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { Component, OnInit, output } from '@angular/core';
+import { map, Observable, Subject, switchMap } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, Validators } from '@angular/forms';
-import { TripsService } from '../../services/trips.service';
 import { Station } from '../../models/station.model';
+import { SearchResponse } from '../../models/searchResponse.model';
+import {
+  loadSearch,
+  loadStations,
+  setSearchDate,
+} from '../../../../core/store/trips/trips.actions';
+import { selectStations } from '../../../../core/store/trips/trips.selectors';
 
 @Component({
   selector: 'app-trips-search',
@@ -10,47 +18,88 @@ import { Station } from '../../models/station.model';
   styleUrl: './trips-search.component.scss',
 })
 export class TripsSearchComponent implements OnInit {
-  protected stations!: Station[];
+  public onSearchResponse = output<Subject<SearchResponse>>();
 
-  protected filteredFromStations$!: Observable<Station[]>;
+  public stations$ = this.store.select(selectStations);
 
-  protected filteredToStations$!: Observable<Station[]>;
+  public stations!: Station[];
 
-  protected minDate = new Date();
+  public filteredFromStations$!: Observable<Station[]>;
 
-  protected searchForm = this.formBuilder.group({
+  public filteredToStations$!: Observable<Station[]>;
+
+  public minDate = new Date();
+
+  public searchForm = this.formBuilder.group({
     startCity: ['', Validators.required],
     endCity: ['', Validators.required],
-    date: ['', Validators.required],
+    date: [''],
   });
 
   constructor(
     private formBuilder: FormBuilder,
-    private tripsService: TripsService,
+    private store: Store,
+    private snackBar: MatSnackBar,
   ) {}
 
   ngOnInit(): void {
-    this.tripsService.getStationList().subscribe((stations) => {
+    this.stations$.subscribe((stations) => {
       this.stations = stations;
     });
 
+    this.store.dispatch(loadStations());
+
     this.filteredFromStations$ = this.searchForm.controls.startCity.valueChanges.pipe(
-      map((value) => {
+      switchMap((value) => {
         return this.autocompleteFilter(value || '');
       }),
     );
 
     this.filteredToStations$ = this.searchForm.controls.endCity.valueChanges.pipe(
-      map((value) => {
+      switchMap((value) => {
         return this.autocompleteFilter(value || '');
       }),
     );
   }
 
-  private autocompleteFilter(value: string): Station[] {
+  public onSubmit() {
+    const { startCity, endCity, date } = this.searchForm.controls;
+
+    const fromLatitude = this.stations.find((station) => {
+      return station.city === startCity.value;
+    })?.latitude;
+    const fromLongitude = this.stations.find((station) => {
+      return station.city === startCity.value;
+    })?.longitude;
+
+    const toLatitude = this.stations.find((station) => {
+      return station.city === endCity.value;
+    })?.latitude;
+    const toLongitude = this.stations.find((station) => {
+      return station.city === endCity.value;
+    })?.longitude;
+
+    if (date.value) {
+      this.store.dispatch(setSearchDate({ date: new Date(date.value) }));
+    }
+
+    if (fromLatitude && fromLongitude && toLatitude && toLongitude) {
+      this.store.dispatch(loadSearch({ fromLatitude, fromLongitude, toLatitude, toLongitude }));
+    } else {
+      this.snackBar.open("City doesn't exist", 'Close', {
+        duration: 5000,
+      });
+    }
+  }
+
+  private autocompleteFilter(value: string): Observable<Station[]> {
     const filterValue = value.toLowerCase();
-    return this.stations.filter(({ city }) => {
-      return city.toLocaleLowerCase().includes(filterValue);
-    });
+    return this.stations$.pipe(
+      map((stations) => {
+        return stations.filter(({ city }) => {
+          return city.toLocaleLowerCase().includes(filterValue);
+        });
+      }),
+    );
   }
 }

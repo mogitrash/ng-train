@@ -3,6 +3,10 @@ import { TripsState } from '../../models/trips.model';
 
 const selectTripsState = createFeatureSelector<TripsState>('trips');
 
+export const selectSearchDate = createSelector(selectTripsState, (state: TripsState) => {
+  return state.searchDate;
+});
+
 export const selectStations = createSelector(selectTripsState, (state: TripsState) => {
   return state.stations;
 });

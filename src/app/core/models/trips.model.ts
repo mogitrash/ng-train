@@ -14,4 +14,5 @@ export interface TripsState {
   rides: Ride[];
   users: User[];
   searchResponses: SearchResponse[];
+  searchDate?: Date;
 }

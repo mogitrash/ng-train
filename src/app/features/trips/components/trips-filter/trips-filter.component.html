@@ -1,0 +1,8 @@
+@if (searchDate) {
+} @else {
+  <mat-tab-group class="tabs">
+    @for (date of startDates; track date) {
+      <mat-tab [label]="(date | date: 'MMMM dd')!">{{ date | date }}</mat-tab>
+    }
+  </mat-tab-group>
+}

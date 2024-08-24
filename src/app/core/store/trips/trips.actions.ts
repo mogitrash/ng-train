@@ -7,6 +7,8 @@ import { User } from '../../../features/trips/models/user.model';
 import { Ride } from '../../../features/trips/models/ride.model';
 import { SearchResponse } from '../../../features/trips/models/searchResponse.model';
 
+export const setSearchDate = createAction('[Trips] Set Search Date', props<{ date: Date }>());
+
 export const loadSearch = createAction(
   '[Trips] Load Search',
   props<{

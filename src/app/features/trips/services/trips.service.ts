@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { Station } from '../models/station.model';
 import { Route } from '../models/route.model';
 import { Carriage } from '../models/carriage.model';
@@ -12,7 +13,17 @@ import { SearchResponse } from '../models/searchResponse.model';
   providedIn: 'root',
 })
 export class TripsService {
+  public searchResponse$ = new Subject<SearchResponse>();
+
   constructor(private http: HttpClient) {}
+
+  public getSearchResponse() {
+    return this.searchResponse$.asObservable();
+  }
+
+  public setSearchResponse(res: SearchResponse) {
+    this.searchResponse$.next(res);
+  }
 
   public search(
     fromLatitude: number,
