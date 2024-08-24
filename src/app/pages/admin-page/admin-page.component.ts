@@ -47,9 +47,18 @@ export class AdminPageComponent implements AfterViewInit {
 
   protected stationForm = this.formBuilder.nonNullable.group({
     city: ['', Validators.required],
-    latitude: [0, Validators.required],
-    longitude: [0, Validators.required],
-    relations: this.formBuilder.array([], Validators.required),
+    latitude: [
+      0,
+      [Validators.required, Validators.min(-180), Validators.max(180)],
+    ],
+    longitude: [
+      0,
+      [Validators.required, Validators.min(-180), Validators.max(180)],
+    ],
+    relations: this.formBuilder.array(
+      [this.formBuilder.control(0, Validators.required)], // Используйте числа вместо строк
+      Validators.required
+    ),
   });
 
   private initMap(): void {
@@ -121,30 +130,31 @@ export class AdminPageComponent implements AfterViewInit {
   }
 
   addRelation(): void {
-    this.relations.push(this.formBuilder.control(''));
+    this.relations.push(this.formBuilder.control('', Validators.required));
+  }
+
+  deleteRelation(): void {
+    if (this.relations.length > 1) {
+      this.relations.removeAt(this.relations.length - 1);
+    }
   }
 
   onSubmit(): void {
-    const formValue = this.stationForm.value as {
-      city: string;
-      latitude: number;
-      longitude: number;
-      relations: string[];
-    };
-
-    this.stations$.subscribe((stations) => {
-      const stationsId = formValue.relations.map((city) =>
-        {return this.findStationIdByName(city, stations)}
-      );
-
+    if (this.stationForm.valid) {
+      const formValue = this.stationForm.value as {
+        city: string;
+        latitude: number;
+        longitude: number;
+        relations: number[];
+      };
       this.store.dispatch(
         createStation({
           city: formValue.city,
           latitude: formValue.latitude,
           longitude: formValue.longitude,
-          relations: stationsId,
+          relations: formValue.relations,
         })
       );
-    });
+    }
   }
 }
