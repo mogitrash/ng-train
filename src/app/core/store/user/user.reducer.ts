@@ -33,7 +33,7 @@ export const userReducer = createReducer(
   on(signIn, (state, { email, password }): UserState => {
     return {
       ...state,
-      currentAccess: 'user',
+      // currentAccess: 'user', // мое, убрать потом
       currentUser: { email, name: '', password },
     };
   }),

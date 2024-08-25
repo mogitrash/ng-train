@@ -21,7 +21,6 @@ export class MenuComponent {
   };
 
   protected logout(): void {
-    console.log('!!!');
     this.store.dispatch(signOut());
   }
 }
