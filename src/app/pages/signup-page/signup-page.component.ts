@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { PasswordMatchValidator } from '../../shared/validators/password-match.js';
@@ -22,6 +22,8 @@ export class SignupPageComponent implements OnInit {
 
   public firstContact: boolean = false;
 
+  protected errorMessage$: BehaviorSubject<string> = new BehaviorSubject('');
+
   constructor(
     private readonly FB: FormBuilder,
     private store: Store,
@@ -31,7 +33,7 @@ export class SignupPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.registryForm = this.FB.group(
+    this.registryForm = this.FB.nonNullable.group(
       {
         email: new FormControl('', [Validators.required, EmailFormatValidator()]),
         password: new FormControl('', [Validators.required, Validators.minLength(8)]),
@@ -51,6 +53,32 @@ export class SignupPageComponent implements OnInit {
 
   public get repeatPassword(): AbstractControl<string> {
     return this.registryForm.get('repeatPassword')!;
+  }
+
+  protected updateErrorMessage(str: string) {
+    switch (str) {
+      case 'email': {
+        if (this.registryForm.controls['email'].hasError('required')) {
+          this.errorMessage$.next('Required');
+        }
+        if (this.registryForm.controls['email'].errors?.['EmailError']) {
+          this.errorMessage$.next('Incorrect email');
+        }
+        break;
+      }
+      case 'password': {
+        if (this.registryForm.controls['password'].hasError('required')) {
+          this.errorMessage$.next('Required');
+        }
+        if (!this.registryForm.controls['password'].value.trim().length) {
+          this.errorMessage$.next('Password must be at least 8 characters long');
+        }
+        break;
+      }
+      default: {
+        break;
+      }
+    }
   }
 
   public checkPassword(password: AbstractControl) {

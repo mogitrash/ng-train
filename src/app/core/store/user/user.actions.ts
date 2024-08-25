@@ -30,7 +30,10 @@ export const updateUserName = createAction(
 
 export const successfulUpdate = createAction('[User] successful update');
 
-export const updateUserPassword = createAction('[User] update Users password');
+export const updateUserPassword = createAction(
+  '[User] update Users password',
+  props<{ newPassword: string }>(),
+);
 
 export const signOut = createAction('[User] sign Out User');
 

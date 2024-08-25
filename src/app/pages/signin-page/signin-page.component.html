@@ -2,24 +2,19 @@
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" [ngClass]="firstContact ? 'active' : null">
   <mat-form-field appearance="outline">
     <mat-label for="email">Email</mat-label>
-    <input matInput type="text" id="email" formControlName="email" (keydown)="onClearError()" />
-    <mat-error *ngIf="email.hasError('required') && email.dirty && email.touched && firstContact"
-      >Required</mat-error
-    >
+    <input
+      matInput
+      type="text"
+      id="email"
+      formControlName="email"
+      (keydown)="onClearError()"
+      (blur)="updateErrorMessage('email')"
+    />
     <mat-error
-      *ngIf="
-        email.errors?.['EmailError'] &&
-        email.dirty &&
-        email.touched &&
-        email.value.length &&
-        firstContact
-      "
+      *ngIf="loginForm.controls['email'].invalid && email.dirty && email.touched && firstContact"
+      >{{ errorMessage$ | async }}</mat-error
     >
-      Incorrect email
-    </mat-error>
-    <div [ngClass]="(error$ | async) !== '' ? 'error' : 'hide'" [ngStyle]="{ top: 15 }">
-      Incorrect email or password
-    </div>
+    <div [ngClass]="(error$ | async) !== '' ? 'error' : 'hide'">Incorrect email or password</div>
   </mat-form-field>
   <mat-form-field appearance="outline">
     <mat-label for="password">Password</mat-label>
@@ -27,20 +22,15 @@
       matInput
       type="password"
       id="password"
+      (blur)="updateErrorMessage('password')"
       formControlName="password"
       (keydown)="onClearError()"
     />
     <mat-error
-      *ngIf="password.hasError('required') && password.dirty && password.touched && firstContact"
-      >Required</mat-error
+      *ngIf="loginForm.controls['password'].invalid && email.dirty && email.touched && firstContact"
+      >{{ errorMessage$ | async }}</mat-error
     >
-    <mat-error
-      *ngIf="password.value.trim().length && password.dirty && password.touched && firstContact"
-      >Password must be at least 8 characters long</mat-error
-    >
-    <div [ngClass]="(error$ | async) !== '' ? 'error' : 'hide'" [ngStyle]="{ top: 15 }">
-      Incorrect email or password
-    </div>
+    <div [ngClass]="(error$ | async) !== '' ? 'error' : 'hide'">Incorrect email or password</div>
   </mat-form-field>
   <div class="wrapper-button">
     <button

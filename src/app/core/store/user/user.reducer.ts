@@ -56,8 +56,15 @@ export const userReducer = createReducer(
       currentUser: { email, name, password: state.currentUser.password },
     };
   }),
-  on(updateUserPassword, (state): UserState => {
-    return { ...state };
+  on(updateUserPassword, (state, { newPassword }): UserState => {
+    return {
+      ...state,
+      currentUser: {
+        email: state.currentUser.email,
+        name: state.currentUser.name,
+        password: newPassword,
+      },
+    };
   }),
   on(successfulUpdate, (state): UserState => {
     return { ...state };

@@ -3,37 +3,36 @@
 <form [formGroup]="registryForm" (ngSubmit)="onSubmit()" [ngClass]="firstContact ? 'active' : null">
   <mat-form-field appearance="outline">
     <mat-label for="email">Email</mat-label>
-    <input matInput type="text" id="email" formControlName="email" (keydown)="onClearError()" />
-    <mat-error *ngIf="email.hasError('required') && email.dirty && email.touched && firstContact">
-      Required</mat-error
-    >
+    <input
+      matInput
+      type="text"
+      id="email"
+      formControlName="email"
+      (keydown)="onClearError()"
+      (blur)="updateErrorMessage('email')"
+    />
     <mat-error
-      *ngIf="
-        email.errors?.['EmailError'] &&
-        email.dirty &&
-        email.touched &&
-        email.value.length &&
-        firstContact
-      "
+      *ngIf="registryForm.controls['email'].invalid && email.dirty && email.touched && firstContact"
+      >{{ errorMessage$ | async }}</mat-error
     >
-      Incorrect email
-    </mat-error>
   </mat-form-field>
   <div [ngClass]="(reason$ | async) === 'invalidUniqueKey' ? 'error' : 'hide'">
     Account with this email already exists
   </div>
   <mat-form-field appearance="outline">
     <mat-label for="password">Password</mat-label>
-    <input matInput type="password" id="password" formControlName="password" />
+    <input
+      matInput
+      type="password"
+      id="password"
+      formControlName="password"
+      (blur)="updateErrorMessage('password')"
+    />
     <mat-error
-      *ngIf="password.hasError('required') && password.dirty && password.touched && firstContact"
-    >
-      Required</mat-error
-    >
-    <mat-error
-      *ngIf="password.value.length < 8 && password.dirty && password.touched && firstContact"
-    >
-      Password must be at least 8 characters long</mat-error
+      *ngIf="
+        registryForm.controls['password'].invalid && email.dirty && email.touched && firstContact
+      "
+      >{{ errorMessage$ | async }}</mat-error
     >
   </mat-form-field>
   <mat-form-field appearance="outline">
@@ -42,10 +41,7 @@
   </mat-form-field>
   <div
     [ngClass]="
-      registryForm.errors?.['MatchError'] &&
-      repeatPassword.dirty &&
-      repeatPassword.touched &&
-      firstContact
+      registryForm.errors?.['MatchError'] && repeatPassword.dirty && repeatPassword.touched
         ? 'second'
         : 'hide'
     "

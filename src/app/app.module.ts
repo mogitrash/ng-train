@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatDividerModule } from '@angular/material/divider';
 
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
@@ -66,6 +67,7 @@ import { UserEffects } from './core/store/user/user.effects';
     SharedModule,
     MatFormFieldModule,
     MatInputModule,
+    MatDividerModule,
     ReactiveFormsModule,
   ],
   providers: [
