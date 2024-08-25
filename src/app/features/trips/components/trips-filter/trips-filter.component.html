@@ -1,8 +1,21 @@
-@if (searchDate) {
-} @else {
-  <mat-tab-group class="tabs">
-    @for (date of startDates; track date) {
-      <mat-tab [label]="(date | date: 'MMMM dd')!">{{ date | date }}</mat-tab>
-    }
-  </mat-tab-group>
-}
+@let selectedIndex = searchDate ? getTabIndexAccordingDate(searchDate) : 0;
+
+<mat-tab-group class="tabs" [selectedIndex]="selectedIndex">
+  @for (date of uniqueSearchDates; track date.getTime()) {
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <div class="tab-label">
+          <div class="tab-date">
+            {{ date | date: 'MMMM dd' }}
+          </div>
+
+          <div class="tab-day">
+            {{ date | date: 'EEEE' }}
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template matTabContent> {{ date | date }} </ng-template>
+    </mat-tab>
+  }
+</mat-tab-group>

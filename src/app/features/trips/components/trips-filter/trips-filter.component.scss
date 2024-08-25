@@ -4,3 +4,13 @@
 .tabs {
   width: 100%;
 }
+
+.tab-label {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.tab-day {
+  font-size: 12px;
+}

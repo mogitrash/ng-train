@@ -3,8 +3,9 @@ import { Store } from '@ngrx/store';
 import {
   selectSearchDate,
   selectSearchResponses,
+  selectUniqueSearchDates,
 } from '../../../../core/store/trips/trips.selectors';
-import { SearchResponse } from '../../models/searchResponse.model';
+import { getISOSDate } from '../../../../shared/utilities/getISOSDate.utility';
 
 @Component({
   selector: 'app-trips-filter',
@@ -14,22 +15,21 @@ import { SearchResponse } from '../../models/searchResponse.model';
 export class TripsFilterComponent implements OnInit {
   public searchResponses$ = this.store.select(selectSearchResponses);
 
-  public lastResponse!: SearchResponse;
-
-  public startDates!: Date[];
+  public uniqueSearchDates$ = this.store.select(selectUniqueSearchDates);
 
   public searchDate$ = this.store.select(selectSearchDate);
+
+  public uniqueSearchDates!: Date[];
 
   public searchDate?: Date;
 
   constructor(private store: Store) {}
 
   ngOnInit(): void {
-    this.searchResponses$.subscribe((responses) => {
-      this.lastResponse = responses.at(responses.length - 1)!;
-      // NOTE: I use slice(0, 50) cause in response we get > 1500 results and
-      // lazy-loading of those tabs are not required :)
-      this.startDates = this.getAllDates(this.lastResponse).slice(0, 50);
+    this.searchResponses$.subscribe(() => {
+      this.uniqueSearchDates$.subscribe((uniqueDates) => {
+        this.uniqueSearchDates = uniqueDates;
+      });
 
       this.searchDate$.subscribe((searchDate) => {
         this.searchDate = searchDate;
@@ -37,19 +37,10 @@ export class TripsFilterComponent implements OnInit {
     });
   }
 
-  private getAllDates(response: SearchResponse): Date[] {
-    const dates: Date[] = [];
-
-    response.routes.forEach((route) => {
-      if (route.schedule) {
-        route.schedule.forEach((schedule) => {
-          schedule.segments.forEach((segment) => {
-            dates.push(new Date(segment.time[0]));
-          });
-        });
-      }
+  public getTabIndexAccordingDate(date: Date): number {
+    const index = this.uniqueSearchDates.findIndex((value) => {
+      return getISOSDate(value) === getISOSDate(date);
     });
-
-    return dates;
+    return index;
   }
 }
