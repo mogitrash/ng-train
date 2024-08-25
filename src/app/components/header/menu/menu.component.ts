@@ -14,7 +14,7 @@ export class MenuComponent {
 
   protected navLinks = {
     guest: { home: '/', signup: '/signup', signin: '/signin' },
-    user: { profile: '/profile', orders: '/my-orders' },
-    admin: { profile: '/profile', orders: '/orders', panel: '/admin' },
+    user: { profile: '/profile', orders: '/orders' },
+    admin: { panel: '/admin' },
   };
 }

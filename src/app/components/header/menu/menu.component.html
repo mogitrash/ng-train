@@ -1,20 +1,12 @@
 <nav>
   <ul [ngClass]="{ row: !isMobile, colum: isMobile }">
     <li><a [routerLink]="this.navLinks.guest.home">Home</a></li>
-    <ng-container *ngIf="role === 'user'">
+    <ng-container *ngIf="role !== 'guest'">
       <li>
         <a [routerLink]="this.navLinks.user.profile">Profile</a>
       </li>
       <li>
-        <a [routerLink]="this.navLinks.user.orders">My Orders</a>
-      </li>
-    </ng-container>
-    <ng-container *ngIf="role === 'manager'">
-      <li>
-        <a [routerLink]="this.navLinks.admin.profile">Profile</a>
-      </li>
-      <li>
-        <a [routerLink]="this.navLinks.admin.orders">Orders</a>
+        <a [routerLink]="this.navLinks.user.orders">Orders</a>
       </li>
     </ng-container>
   </ul>

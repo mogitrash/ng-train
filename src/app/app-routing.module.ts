@@ -20,20 +20,19 @@ const routes: Routes = [
   { path: 'signup', component: SignupPageComponent, canActivate: [guestGuard] },
   { path: 'signin', component: SigninPageComponent, canActivate: [guestGuard] },
 
-  // Users routes
+  //  Admin and Users routes
   {
     path: 'profile',
     component: ProfilePageComponent,
     canActivate: [userGuard],
   },
   {
-    path: 'my-orders',
+    path: 'orders',
     component: UserOrdersPageComponent,
     canActivate: [userGuard],
   },
 
-  // Admin routes
-  { path: 'orders', component: OrdersPageComponent, canActivate: [adminGuard] },
+  // Only admin route
   { path: 'admin', component: AdminPageComponent, canActivate: [adminGuard] },
 
   // not found
