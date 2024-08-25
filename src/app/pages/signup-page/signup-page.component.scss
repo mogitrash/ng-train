@@ -71,6 +71,16 @@
       gap: 5%;
     }
   }
+
+  form:not([class~='active']) {
+    --mdc-outlined-text-field-error-outline-color: var(--grey);
+    --mdc-outlined-text-field-error-focus-outline-color: var(--grey);
+    --mdc-outlined-text-field-error-label-text-color: var(--grey);
+    --mdc-outlined-text-field-error-focus-label-text-color: var(--grey);
+    --mdc-filled-text-field-error-focus-label-text-color: var(--grey);
+    --mdc-outlined-text-field-error-hover-outline-color: var(--grey);
+    --mdc-outlined-text-field-error-hover-label-text-color: var(--grey);
+  }
   @media (max-width: 450px) {
     margin: 0 auto;
 
