@@ -12,12 +12,8 @@
 </nav>
 <div class="buttons" [ngClass]="{ row: !isMobile, colum: isMobile }">
   <ng-container *ngIf="role === 'guest'">
-    <button mat-flat-button [routerLink]="navLinks.guest.signup">
-      Sign Up
-    </button>
-    <button mat-flat-button [routerLink]="navLinks.guest.signin">
-      Sign In
-    </button>
+    <button mat-flat-button [routerLink]="navLinks.guest.signup">Sign Up</button>
+    <button mat-flat-button [routerLink]="navLinks.guest.signin">Sign In</button>
   </ng-container>
   <ng-container *ngIf="role !== 'guest'">
     <button mat-flat-button (click)="logout()">Logout</button>

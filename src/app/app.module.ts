@@ -29,6 +29,7 @@ import { SigninPageComponent } from './pages/signin-page/signin-page.component';
 import { SignupPageComponent } from './pages/signup-page/signup-page.component';
 import { MainPageComponent } from './pages/main-page/main-page.component';
 import { OrderComponent } from './pages/orders-page/order/order.component';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -58,11 +59,9 @@ import { OrderComponent } from './pages/orders-page/order/order.component';
     UserModule,
     MatButtonModule,
     MatIconModule,
+    SharedModule,
   ],
-  providers: [
-    provideAnimationsAsync(),
-    provideHttpClient(withInterceptors([addTokenInterceptor])),
-  ],
+  providers: [provideAnimationsAsync(), provideHttpClient(withInterceptors([addTokenInterceptor]))],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

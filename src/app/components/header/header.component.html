@@ -4,17 +4,10 @@
     <div class="nav">
       <app-menu [role]="role" class="desc-nav" [isMobile]="false"></app-menu>
       <div class="mobil-nav">
-        <button
-          mat-icon-button
-          (click)="toggleMenu()"
-          class="side-menu-icon large-icon"
-        >
+        <button mat-icon-button (click)="toggleMenu()" class="side-menu-icon large-icon">
           <mat-icon>menu</mat-icon>
         </button>
-        <div
-          class="side-menu"
-          [ngClass]="{ 'menu-open': isMenuOpen, 'menu-closed': !isMenuOpen }"
-        >
+        <div class="side-menu" [ngClass]="{ 'menu-open': isMenuOpen, 'menu-closed': !isMenuOpen }">
           <button mat-icon-button (click)="toggleMenu()">
             <mat-icon>close</mat-icon>
           </button>

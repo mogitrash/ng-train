@@ -14,14 +14,10 @@ export class MainPageComponent implements OnInit {
 
   ngOnInit() {
     // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
-    this.store.dispatch(
-      actions.signUp({ email: 'test@mail.com', password: '12345aA!!' }),
-    );
+    this.store.dispatch(actions.signUp({ email: 'test@mail.com', password: '12345aA!!' }));
 
     // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
-    this.store.dispatch(
-      actions.signIn({ email: 'test@mail.com', password: '12345aA!!' }),
-    );
+    this.store.dispatch(actions.signIn({ email: 'test@mail.com', password: '12345aA!!' }));
 
     console.log(`User ${this.store.select(selectUser)}`);
   }
