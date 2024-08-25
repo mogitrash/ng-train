@@ -14,3 +14,11 @@ export const selectToken = createSelector(selectUserState, (state) => {
 export const selectUser = createSelector(selectUserState, (state) => {
   return { ...state.currentUser };
 });
+
+export const selectError = createSelector(selectUserState, (state) => {
+  return { ...state.hasError };
+});
+
+export const selectReasonError = createSelector(selectError, (hasError) => {
+  return hasError.reason;
+});

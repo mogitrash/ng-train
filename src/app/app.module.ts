@@ -8,7 +8,11 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDividerModule } from '@angular/material/divider';
 
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -27,9 +31,10 @@ import { OrdersPageComponent } from './pages/orders-page/orders-page.component';
 import { UserOrdersPageComponent } from './pages/user-orders-page/user-orders-page.component';
 import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
 import { SigninPageComponent } from './pages/signin-page/signin-page.component';
-import { SignupPageComponent } from './pages/signup-page/signup-page.component';
 import { MainPageComponent } from './pages/main-page/main-page.component';
+import { SignupPageComponent } from './pages/signup-page/signup-page.component';
 import { SharedModule } from './shared/shared.module';
+import { UserEffects } from './core/store/user/user.effects';
 
 @NgModule({
   declarations: [
@@ -54,14 +59,22 @@ import { SharedModule } from './shared/shared.module';
       user: userReducer,
       trips: tripsReducer,
     }),
-    EffectsModule.forRoot([TripsEffects]),
+    EffectsModule.forRoot([TripsEffects, UserEffects]),
     StoreDevtoolsModule.instrument(),
     UserModule,
     MatButtonModule,
     MatIconModule,
     SharedModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDividerModule,
+    ReactiveFormsModule,
   ],
-  providers: [provideAnimationsAsync(), provideHttpClient(withInterceptors([addTokenInterceptor]))],
+  providers: [
+    provideAnimationsAsync(),
+    provideHttpClient(withInterceptors([addTokenInterceptor])),
+    FormControl,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
