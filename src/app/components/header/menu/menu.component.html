@@ -6,6 +6,14 @@
         <a [routerLink]="this.navLinks.user.profile">Profile</a>
       </li>
       <li>
+        <a [routerLink]="this.navLinks.user.orders">My Orders</a>
+      </li>
+    </ng-container>
+    <ng-container *ngIf="role === 'manager'">
+      <li>
+        <a [routerLink]="this.navLinks.user.profile">Profile</a>
+      </li>
+      <li>
         <a [routerLink]="this.navLinks.user.orders">Orders</a>
       </li>
     </ng-container>

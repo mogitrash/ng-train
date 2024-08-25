@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { OrdersPageComponent } from './pages/orders-page/orders-page.component';
-import { UserOrdersPageComponent } from './pages/user-orders-page/user-orders-page.component';
 import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
 import { SigninPageComponent } from './pages/signin-page/signin-page.component';
 import { SignupPageComponent } from './pages/signup-page/signup-page.component';
@@ -28,7 +27,7 @@ const routes: Routes = [
   },
   {
     path: 'orders',
-    component: UserOrdersPageComponent,
+    component: OrdersPageComponent,
     canActivate: [userGuard],
   },
 
