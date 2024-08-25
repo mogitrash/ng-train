@@ -1,9 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { UserState } from '../../core/models/user.model';
-import { selectUserState } from '../../core/store/user/user.selectors';
-import { updateUserName, updateUserPassword } from '../../core/store/user/user.actions';
+import { FormControl } from '@angular/forms';
+import { CurrentUser } from '../../core/models/user.model';
+import { selectAccess, selectUser } from '../../core/store/user/user.selectors';
+import {
+  getUser,
+  signOut,
+  updateUserName,
+  updateUserPassword,
+} from '../../core/store/user/user.actions';
 
 @Component({
   selector: 'app-profile-page',
@@ -15,20 +21,35 @@ export class ProfilePageComponent implements OnInit {
 
   public emailMode: 'reading' | 'writing' = 'reading';
 
-  public userState$: Observable<UserState>;
+  public user$: Observable<CurrentUser>;
 
-  public email: string = '';
+  public currentEmail: string = '';
 
-  public name: string = '';
+  public currentName: string = '';
+
+  public newEmail: FormControl<string | null>;
+
+  public newName: FormControl<string | null>;
+
+  public newPassword: FormControl<string | null>;
+
+  protected role$: Observable<string>;
+
+  protected visibleModal: boolean = false;
 
   constructor(private readonly store: Store) {
-    this.userState$ = this.store.select(selectUserState);
+    this.user$ = this.store.select(selectUser);
+    this.role$ = this.store.select(selectAccess);
+    this.newEmail = new FormControl('');
+    this.newName = new FormControl('');
+    this.newPassword = new FormControl('');
   }
 
   ngOnInit(): void {
-    this.userState$.subscribe(({ currentUser: CurrentUser }) => {
-      this.email = CurrentUser.email;
-      this.name = CurrentUser.name;
+    this.store.dispatch(getUser());
+    this.user$.subscribe((currentUser: CurrentUser) => {
+      this.currentEmail = currentUser.email;
+      this.currentName = currentUser.name;
     });
   }
 
@@ -40,16 +61,30 @@ export class ProfilePageComponent implements OnInit {
     this.emailMode = 'writing';
   }
 
+  public makeVisibleModal() {
+    this.visibleModal = true;
+  }
+
   public updateUserData(newName: string, newEmail: string): void {
     this.store.dispatch(
       updateUserName({
-        name: newName.length ? newName : this.name,
-        email: newEmail.length ? newEmail : this.email,
+        name: newName.length ? newName : this.currentName,
+        email: newEmail.length ? newEmail : this.currentEmail,
       }),
     );
+    this.emailMode = 'reading';
+    this.nameMode = 'reading';
+    this.newEmail.setValue('');
+    this.newName.setValue('');
   }
 
   public updatePassword(newPassword: string): void {
     this.store.dispatch(updateUserPassword({ newPassword }));
+    this.visibleModal = false;
+    this.newPassword.setValue('');
+  }
+
+  public LogOut() {
+    this.store.dispatch(signOut());
   }
 }

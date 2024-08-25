@@ -1,0 +1,76 @@
+@import './../../../styles.scss';
+
+:host {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: var(--container-with);
+  padding: 0.5rem 0;
+  gap: 20px;
+  h2 {
+    width: 100%;
+    color: var(--primary-blue);
+    text-align: center;
+  }
+  h3 {
+    width: 100%;
+    text-align: start;
+  }
+  button {
+    width: 165px;
+  }
+  div {
+    width: 100%;
+  }
+  .wrapper {
+    height: 60px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+    .mat-mdc-form-field {
+      width: clamp(180px, 48vw, 600px);
+    }
+  }
+  .edit {
+    width: 40px;
+    margin: 2% 0 5% 47%;
+  }
+  .modal {
+    position: absolute;
+    background-color: var(--blue-extra-light);
+    padding: 3%;
+    width: 50%;
+    top: 15%;
+    left: 25%;
+    display: flex;
+    align-items: stretch;
+  }
+
+  span {
+    width: 45%;
+    font-size: 24px;
+    font-weight: 400;
+  }
+  @media (max-width: 1200px) {
+    width: calc(100% - 4rem);
+    padding: 1rem 2rem;
+    margin: 0 auto;
+  }
+  @media (max-width: 450px) {
+    margin: 0 auto;
+    align-items: center;
+    gap: 3em;
+
+    button {
+      width: 165px;
+      margin: 2% auto;
+    }
+    .wrapper {
+      width: 100%;
+      flex-direction: column;
+    }
+  }
+}
