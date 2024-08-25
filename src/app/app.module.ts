@@ -15,6 +15,7 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule } from '@angular/mat
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -74,6 +75,7 @@ import { UserEffects } from './core/store/user/user.effects';
     MatIconModule,
     MatSelectModule,
     ReactiveFormsModule,
+    MatProgressSpinnerModule,
   ],
   providers: [
     provideAnimationsAsync(),

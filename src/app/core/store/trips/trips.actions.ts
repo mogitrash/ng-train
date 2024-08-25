@@ -87,7 +87,7 @@ export const carriageUpdatedSuccess = createAction(
 );
 
 export const loadOrders = createAction(
-  '[Trips] Load Orders'
+  '[Trips] Load Orders',props<{all?:boolean}>()
 );
 export const ordersLoadedSuccess = createAction(
   '[Trips] Orders Loaded Success',

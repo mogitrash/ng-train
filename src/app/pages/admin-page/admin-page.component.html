@@ -35,28 +35,18 @@
           </mat-form-field>
 
           <div formArrayName="relations">
-            <div *ngFor="let relation of relations.controls; let i = index">
-              <mat-form-field
-                subscriptSizing="dynamic"
-                style="margin-bottom: 16px"
-              >
-                <mat-label>Relation {{ i + 1 }}</mat-label>
-                <mat-select [formControlName]="i">
-                  @if(stations$|async; as stations){ @for(station of
-                  visualisation$|async;track station.id){
-                  <mat-option [value]="station.id">{{
-                    station.city
-                  }}</mat-option>
-                  } }
-                </mat-select>
-              </mat-form-field>
-            </div>
-            <button mat-raised-button type="button" (click)="addRelation()">
-              Add Relation
-            </button>
-            <button mat-raised-button type="button" (click)="deleteRelation()">
-              Delete Relation
-            </button>
+            <mat-form-field
+              subscriptSizing="dynamic"
+              style="margin-bottom: 16px"
+            >
+              <mat-label>Relations</mat-label>
+              <mat-select (selectionChange)="onRelationChange($event)" multiple>
+                @if(stations$|async; as stations){ @for(station of
+                stations;track station.id){
+                <mat-option [value]="station.id">{{ station.city }}</mat-option>
+                } }
+              </mat-select>
+            </mat-form-field>
           </div>
 
           <button mat-flat-button type="submit">Submit</button>
@@ -88,7 +78,6 @@
         >@for(connectedStation of station.connectedTo;track
         connectedStation.id){
         {{ findStationNameById(connectedStation.id, stations) }}
-
         }
       </mat-card-content>
     </mat-card>

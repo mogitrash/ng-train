@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
+import { MatSelectChange } from '@angular/material/select';
 import { Station } from '../../features/trips/models/station.model';
 import { PopUpService } from '../../features/admin/services/popup.service';
 import {
@@ -56,10 +57,26 @@ export class AdminPageComponent implements AfterViewInit {
       [Validators.required, Validators.min(-180), Validators.max(180)],
     ],
     relations: this.formBuilder.array(
-      [this.formBuilder.control(0, Validators.required)], // Используйте числа вместо строк
+      [this.formBuilder.control(0, Validators.required)],
       Validators.required
     ),
   });
+
+  constructor(
+    private store: Store,
+    private popupService: PopUpService,
+    private formBuilder: FormBuilder
+  ) {
+    this.store.dispatch(loadStations());
+    this.stations$ = this.store.select(selectStations);
+  }
+
+  ngAfterViewInit(): void {
+    this.initMap();
+    this.stations$.subscribe((stations) => {
+      this.updateMap(stations);
+    });
+  }
 
   private initMap(): void {
     this.map = L.map('map', {
@@ -75,32 +92,28 @@ export class AdminPageComponent implements AfterViewInit {
           '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       }
     );
-
     tiles.addTo(this.map);
+
+    const southWest = L.latLng(-90, -180);
+    const northEast = L.latLng(90, 180);
+    const bounds = L.latLngBounds(southWest, northEast);
+
+    this.map.setMaxBounds(bounds);
+    this.map.on('drag', () => {
+      this.map.panInsideBounds(bounds, { animate: false });
+    });
   }
 
-  constructor(
-    private store: Store,
-    private popupService: PopUpService,
-    private formBuilder: FormBuilder
-  ) {
-    this.store.dispatch(loadStations());
-    this.stations$ = this.store.select(selectStations);
-  }
-
-  ngAfterViewInit(): void {
-    this.initMap();
-    this.stations$.subscribe((stations) => {
-      this.dataSource.data = stations;
-      this.visualisation$ = this.dataSource.connect();
-      this.dataSource.paginator = this.paginator;
-      stations.forEach((station) => {
-        const lon = station.longitude;
-        const lat = station.latitude;
-        const marker = L.marker([lat, lon]);
-        marker.bindPopup(this.popupService.makeCapitalPopup(station.city));
-        marker.addTo(this.map);
-      });
+  private updateMap(stations: Station[]): void {
+    this.dataSource.data = stations;
+    this.visualisation$ = this.dataSource.connect();
+    this.dataSource.paginator = this.paginator;
+    stations.forEach((station) => {
+      const lon = station.longitude;
+      const lat = station.latitude;
+      const marker = L.marker([lat, lon]);
+      marker.bindPopup(this.popupService.makeCapitalPopup(station.city));
+      marker.addTo(this.map);
     });
   }
 
@@ -111,32 +124,18 @@ export class AdminPageComponent implements AfterViewInit {
     return foundStation ? foundStation.city : 'Station not found';
   }
 
-  findStationIdByName(city: string, stations: Station[]): number {
-    const foundStation = stations.find((station) => {
-      return station.city === city;
-    });
-    return foundStation ? foundStation.id : 0;
-  }
-
-  onCreate() {}
-
-  onDelete(id: number) {
-    this.store.dispatch(deleteStation({ id }));
-    // this.store.dispatch(loadStations());
-  }
-
   get relations(): FormArray {
     return this.stationForm.get('relations') as FormArray;
   }
 
-  addRelation(): void {
-    this.relations.push(this.formBuilder.control('', Validators.required));
-  }
-
-  deleteRelation(): void {
-    if (this.relations.length > 1) {
-      this.relations.removeAt(this.relations.length - 1);
-    }
+  onRelationChange(event: MatSelectChange): void {
+    const selectedRelations = event.value;
+    this.relations.clear();
+    selectedRelations.forEach((relation: number) => {
+      this.relations.push(
+        this.formBuilder.control(relation, Validators.required)
+      );
+    });
   }
 
   onSubmit(): void {
@@ -156,5 +155,9 @@ export class AdminPageComponent implements AfterViewInit {
         })
       );
     }
+  }
+
+  onDelete(id: number) {
+    this.store.dispatch(deleteStation({ id }));
   }
 }
