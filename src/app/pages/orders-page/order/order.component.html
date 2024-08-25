@@ -1,6 +1,12 @@
 <div class="top-row">
   <div class="status status_{{ status }}">{{ status }}</div>
-  <button mat-icon-button (click)="delete()" title="Delete this order" class="button-delete">
+  <button
+    mat-icon-button
+    (click)="delete()"
+    title="Delete this order"
+    class="button-delete"
+    *ngIf="status === 'active'"
+  >
     <mat-icon>close</mat-icon>
   </button>
 </div>
