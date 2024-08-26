@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 export interface OrderForView {
   startStation: string;
@@ -26,7 +26,7 @@ export interface OrderForView {
   templateUrl: './order.component.html',
   styleUrl: './order.component.scss',
 })
-export class OrderComponent {
+export class OrderComponent implements OnInit {
   @Input({ required: true }) order!: OrderForView;
 
   /*
@@ -40,27 +40,49 @@ export class OrderComponent {
 - Номер места
 - Цена - $50.00
 */
-  startStation: string = 'Station Start';
+  startStation!: string;
 
-  startTime: string = 'December 25 03:45';
+  startTime!: string;
 
-  endStation: string = 'Station End';
+  endStation!: string;
 
-  endTime: string = 'December 25 06:12';
+  endTime!: string;
 
-  durationTrip: string = '02:37';
+  durationTrip!: string;
 
-  typeCarriage: string = 'standard';
+  typeCarriage!: string;
 
-  numberCarriage: number = 1;
+  numberCarriage!: number;
 
-  numberSeat: number = 10;
+  numberSeat!: number;
 
-  price: string = '50.00';
+  price!: string;
 
-  status: string = 'active';
+  status!: string;
+
+  ngOnInit(): void {
+    this.startStation = this.order.startStation;
+
+    this.startTime = this.order.startTime;
+
+    this.endStation = this.order.endStation;
+
+    this.endTime = this.order.endTime;
+
+    this.durationTrip = this.order.durationTrip;
+
+    this.typeCarriage = this.order.typeCarriage;
+
+    this.numberCarriage = this.order.numberCarriage;
+
+    this.numberSeat = this.order.numberSeat;
+
+    this.price = this.order.price;
+
+    this.status = this.order.status;
+  }
 
   delete() {
-    this.price = '60';
+    this.status = 'cancelled';
   }
 }

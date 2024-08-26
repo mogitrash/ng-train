@@ -6,9 +6,9 @@
     <h1>Your Orders</h1>
   </ng-template>
 </ng-container>
-<ng-container *ngIf="orders$ | async as orders; else noOrders">
+<ng-container *ngIf="ordersForView; else noOrders">
   <ul>
-    <li *ngFor="let order of orders || [] | transformOrder">
+    <li *ngFor="let order of ordersForView">
       {{ order.startStation }}
       <app-order [order]="order"></app-order>
     </li>
