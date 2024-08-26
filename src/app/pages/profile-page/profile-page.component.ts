@@ -109,7 +109,9 @@ export class ProfilePageComponent implements OnInit {
     );
     this.visibleModal = false;
     this.newPassword.setValue('');
-    this.openSnackBarError('Password updated!');
+    this.openSnackBarError(
+      newPassword.trim().length ? 'Password updated!' : 'Empty password cannot be update',
+    );
   }
 
   openSnackBarError(message: string) {

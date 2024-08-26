@@ -38,6 +38,18 @@
       width: clamp(180px, 48vw, 600px);
     }
   }
+
+  .wrapper-modal {
+    height: 60px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0 auto;
+    .mat-mdc-form-field {
+      width: clamp(180px, 48vw, 600px);
+    }
+  }
   .edit {
     width: 40px;
     margin: 2% 0 5% 47%;
@@ -45,7 +57,7 @@
   .modal {
     position: absolute;
     background-color: var(--blue-extra-light);
-    padding: 3%;
+    padding: 7%;
     width: 50%;
     top: 15%;
     left: 25%;
