@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import * as ActionsTrip from '../../../core/store/trips/trips.actions';
+import { Store } from '@ngrx/store';
 // import { Order } from '../../../features/trips/models/order.model';
 
 @Component({
@@ -40,11 +42,15 @@ export class OrderComponent implements OnInit {
 
   status: string = 'active';
 
+  constructor(private store: Store) {}
+
   ngOnInit(): void {
-    console.log();
+    this.store.dispatch(
+      ActionsTrip.createOrder({ rideId: 1, seat: 2, stationStart: 1, stationEnd: 6 }),
+    );
   }
 
   delete() {
-    console.log('delete');
+    this.price = '60';
   }
 }
