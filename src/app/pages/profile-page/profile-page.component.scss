@@ -55,9 +55,19 @@
 
   span {
     width: 45%;
-    font-size: 24px;
+    font-size: 36px;
     font-weight: 400;
+    color: var(--blue-light);
   }
+
+  p {
+    width: 45%;
+    font-size: 36px;
+    font-weight: 400;
+    text-align: end;
+    color: var(--primary-blue);
+  }
+
   @media (max-width: 1200px) {
     width: calc(100% - 4rem);
     padding: 1rem 2rem;

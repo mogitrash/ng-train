@@ -1,5 +1,5 @@
 <h2>Profile</h2>
-<span *ngIf="(role$ | async) === 'manager'">Manager</span>
+<p *ngIf="(role$ | async) === 'manager'">Manager</p>
 <button type="button" mat-flat-button (click)="makeVisibleModal()">Change password</button>
 <mat-card *ngIf="visibleModal" appearance="outlined" class="modal">
   <mat-card-content>

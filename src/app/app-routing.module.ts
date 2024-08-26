@@ -11,6 +11,7 @@ import { MainPageComponent } from './pages/main-page/main-page.component';
 import { guestGuard } from './core/guards/guest.guard';
 import { userGuard } from './core/guards/user.guard';
 import { adminGuard } from './core/guards/admin.guard';
+import { adminUserGuard } from './core/guards/admin-user.guard';
 
 const routes: Routes = [
   // Common routes
@@ -24,7 +25,7 @@ const routes: Routes = [
   {
     path: 'profile',
     component: ProfilePageComponent,
-    canActivate: [userGuard],
+    canActivate: [adminUserGuard],
   },
   {
     path: 'my-orders',
