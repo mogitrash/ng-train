@@ -1,4 +1,5 @@
 import { createAction, props } from '@ngrx/store';
+import { UserError } from '../../models/user.model';
 
 export const signUp = createAction(
   '[User] User signUp',
@@ -29,10 +30,15 @@ export const updateUserName = createAction(
 
 export const successfulUpdate = createAction('[User] successful update');
 
-export const updateUserPassword = createAction('[User] update Users password');
+export const updateUserPassword = createAction(
+  '[User] update Users password',
+  props<{ newPassword: string }>(),
+);
 
 export const signOut = createAction('[User] sign Out User');
 
 export const successfulExit = createAction('[User] successful terminates Session');
 
-export const getError = createAction('[User] have Error');
+export const getError = createAction('[User] have Error', props<{ error: UserError }>());
+
+export const clearError = createAction('[User] clear Error');

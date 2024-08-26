@@ -1,1 +1,17 @@
-<p>profile-page works!</p>
+<h2>Profile</h2>
+<button type="button" mat-flat-button>Change password</button>
+<container-element [ngSwitch]="nameMode">
+  <h3>Name</h3>
+  <div *ngSwitchCase="'writing'">
+    <mat-form-field appearance="outline">
+      <mat-label for="email">New email</mat-label>
+      <input matInput type="text" id="email" controlName="email" />
+    </mat-form-field>
+  </div>
+  ...
+  <div *ngSwitchDefault>
+    <span>{{ name }}</span>
+    <button type="button" mat-icon-button><mat-icon>edit</mat-icon></button>
+  </div>
+</container-element>
+<mat-divider></mat-divider>
