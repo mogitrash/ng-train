@@ -11,8 +11,6 @@ import { PopUpService } from '../../features/admin/services/popup.service';
 import {
   canDelete,
   createStation,
-  deleteStation,
-  loadSearch,
   loadStations,
 } from '../../core/store/trips/trips.actions';
 import { selectStations } from '../../core/store/trips/trips.selectors';

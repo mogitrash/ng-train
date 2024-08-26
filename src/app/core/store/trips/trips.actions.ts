@@ -28,7 +28,7 @@ export const stationsLoadedSuccess = createAction(
   props<{ stations: Station[] }>()
 );
 export const canDelete = createAction(
-  'Can Delete',
+  '[Trips] Can Delete',
   props<{
     station: Station;
     coordinates: {
@@ -37,9 +37,7 @@ export const canDelete = createAction(
     }[];
   }>()
 );
-export const canDeleteSuccess = createAction(
-  'Can Delete Success'
-);
+
 export const deleteStation = createAction(
   '[Trips] Delete Station',
   props<{ id: number }>()

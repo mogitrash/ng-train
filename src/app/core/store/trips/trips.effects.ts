@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
   catchError,
-  combineLatest,
   delay,
   exhaustMap,
   forkJoin,
@@ -63,10 +62,10 @@ export class TripsEffects {
         return forkJoin(searchRequests).pipe(
           delay(1000),
           switchMap((results) => {
-            const canDelete = !results.some((hasRoutes) => hasRoutes);
+            const canDelete = !results.some((hasRoutes) => {return hasRoutes});
             if (canDelete) {
               return of(tripActions.deleteStation(action.station));
-            } else {
+            } 
               return of(
                 tripActions.failureSnackBar({
                   error: {
@@ -75,7 +74,7 @@ export class TripsEffects {
                   },
                 })
               );
-            }
+            
           }),
           catchError((error) => {
             return of(tripActions.failureSnackBar(error));
