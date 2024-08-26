@@ -11,6 +11,7 @@ import { PopUpService } from '../../features/admin/services/popup.service';
 import {
   createStation,
   deleteStation,
+  loadSearch,
   loadStations,
 } from '../../core/store/trips/trips.actions';
 import { selectStations } from '../../core/store/trips/trips.selectors';
@@ -28,6 +29,16 @@ const iconDefault = L.icon({
   tooltipAnchor: [16, -28],
   shadowSize: [41, 41],
 });
+const redIcon = new L.Icon({
+  iconUrl:
+    'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+  shadowUrl:
+    'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
 L.Marker.prototype.options.icon = iconDefault;
 
 @Component({
@@ -43,6 +54,10 @@ export class AdminPageComponent implements AfterViewInit {
   protected visualisation$!: Observable<Station[]>;
 
   private dataSource = new MatTableDataSource<Station>();
+
+  private markers: L.Marker[] = [];
+
+  private marker: L.Marker | undefined;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -78,6 +93,10 @@ export class AdminPageComponent implements AfterViewInit {
     });
   }
 
+  get relations(): FormArray {
+    return this.stationForm.get('relations') as FormArray;
+  }
+
   private initMap(): void {
     this.map = L.map('map', {
       center: [39.8282, -98.5795],
@@ -93,7 +112,6 @@ export class AdminPageComponent implements AfterViewInit {
       }
     );
     tiles.addTo(this.map);
-
     const southWest = L.latLng(-90, -180);
     const northEast = L.latLng(90, 180);
     const bounds = L.latLngBounds(southWest, northEast);
@@ -102,9 +120,12 @@ export class AdminPageComponent implements AfterViewInit {
     this.map.on('drag', () => {
       this.map.panInsideBounds(bounds, { animate: false });
     });
+    this.map.on('click', this.onMapClick.bind(this));
   }
 
   private updateMap(stations: Station[]): void {
+    this.markers.forEach((marker) => {return this.map.removeLayer(marker)});
+    this.markers = [];
     this.dataSource.data = stations;
     this.visualisation$ = this.dataSource.connect();
     this.dataSource.paginator = this.paginator;
@@ -114,6 +135,23 @@ export class AdminPageComponent implements AfterViewInit {
       const marker = L.marker([lat, lon]);
       marker.bindPopup(this.popupService.makeCapitalPopup(station.city));
       marker.addTo(this.map);
+      this.markers.push(marker);
+    });
+  }
+
+  private onMapClick(e: L.LeafletMouseEvent): void {
+    const {lat} = e.latlng;
+    const {lng} = e.latlng;
+    if (this.marker) {
+      this.map.removeLayer(this.marker);
+    }
+    this.marker = L.marker([lat, lng], {
+      icon: redIcon,
+      draggable: true,
+    }).addTo(this.map);
+    this.stationForm.patchValue({
+      latitude: lat,
+      longitude: lng,
     });
   }
 
@@ -122,10 +160,6 @@ export class AdminPageComponent implements AfterViewInit {
       return station.id === id;
     });
     return foundStation ? foundStation.city : 'Station not found';
-  }
-
-  get relations(): FormArray {
-    return this.stationForm.get('relations') as FormArray;
   }
 
   onRelationChange(event: MatSelectChange): void {
@@ -157,7 +191,32 @@ export class AdminPageComponent implements AfterViewInit {
     }
   }
 
-  onDelete(id: number) {
+  onDelete(id: number, stations: Station[]) {
+    const station = stations.find((s) => {return s.id === id});
+    if (!station) {
+      throw new Error('Station not found');
+    }
+
+    const coordinates = station.connectedTo.map((connection) => {
+      const connectedStation = stations.find((s) => {return s.id === connection.id});
+      if (!connectedStation) {
+        throw new Error(`Connected station with id ${connection.id} not found`);
+      }
+      return {
+        latitude: connectedStation.latitude,
+        longitude: connectedStation.longitude,
+      };
+    });
+    coordinates.forEach((coordinate) => {
+      this.store.dispatch(
+        loadSearch({
+          fromLatitude: station.latitude,
+          fromLongitude: station.longitude,
+          toLatitude: coordinate.latitude,
+          toLongitude: coordinate.longitude,
+        })
+      );
+    });
     this.store.dispatch(deleteStation({ id }));
   }
 }

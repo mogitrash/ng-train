@@ -9,3 +9,4 @@ display: grid;
 grid-template-columns: 3fr 1fr;
 gap: 16px; /* Опционально, для отступа между элементами */
 }
+img.huechange { filter: hue-rotate(120deg); }

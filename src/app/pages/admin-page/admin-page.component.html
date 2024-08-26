@@ -8,7 +8,7 @@
             <mat-label>City</mat-label>
             <input matInput formControlName="city" />
             @if (stationForm.controls.city.invalid) {
-            <mat-error>Please city name</mat-error>
+            <mat-error>Please etner city name</mat-error>
             }
           </mat-form-field>
 
@@ -64,7 +64,7 @@
               aria-hidden="false"
               aria-label="delete station icon"
               fontIcon="delete"
-              (click)="onDelete(station.id)"
+              (click)="onDelete(station.id, stations)"
             ></mat-icon>
           </div>
         </mat-card-title>
