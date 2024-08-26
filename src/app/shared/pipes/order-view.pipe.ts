@@ -1,21 +1,8 @@
 import { formatDate } from '@angular/common';
 import { Pipe, PipeTransform } from '@angular/core';
 import { Order } from '../../features/trips/models/order.model';
+import { OrderForView } from '../../pages/orders-page/order/order.component';
 
-export interface OrderForView {
-  id: number;
-  userId: number;
-  startStation: string;
-  startTime: string;
-  endStation: string;
-  endTime: string;
-  durationTrip: string;
-  typeCarriage: string;
-  numberCarriage: number;
-  numberSeat: number;
-  price: string;
-  status: string;
-}
 @Pipe({
   name: 'transformOrder',
 })
@@ -28,6 +15,7 @@ export class TransformOrderPipe implements PipeTransform {
 
   private getNumberCarriage(seatId: number): number {
     // Пример вычислений, заменить на реальные
+    // тут нужно получить о количестве мест в вагонах поезда с сервера используя ngrx
     return seatId < 20 ? 1 : 2;
   }
 
@@ -42,8 +30,8 @@ export class TransformOrderPipe implements PipeTransform {
     }
 
     return response.map((order) => {
-      const startStation = order.stationStart.toString(); // заменить на получение название станции
-      const endStation = order.stationEnd.toString(); // заменить на получение название станции
+      const startStation = order.stationStart.toString(); // тут нужно получить название станции с сервера используя ngrx
+      const endStation = order.stationEnd.toString(); // тут нужно получить название станции с сервера используя ngrx
 
       const startTime = formatDate(
         new Date(order.schedule.segments[0].time[0]),
