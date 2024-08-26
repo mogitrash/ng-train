@@ -1,9 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { FormControl } from '@angular/forms';
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
 import { CurrentUser } from '../../core/models/user.model';
-import { selectAccess, selectUser } from '../../core/store/user/user.selectors';
+import { selectAccess, selectReasonError, selectUser } from '../../core/store/user/user.selectors';
 import {
   getUser,
   signOut,
@@ -37,9 +42,20 @@ export class ProfilePageComponent implements OnInit {
 
   protected visibleModal: boolean = false;
 
+  private hasError$: Observable<string>;
+
+  private currentPassword: string = '';
+
+  private snackBar = inject(MatSnackBar);
+
+  private horizontalPosition: MatSnackBarHorizontalPosition = 'start';
+
+  private verticalPosition: MatSnackBarVerticalPosition = 'bottom';
+
   constructor(private readonly store: Store) {
     this.user$ = this.store.select(selectUser);
     this.role$ = this.store.select(selectAccess);
+    this.hasError$ = this.store.select(selectReasonError);
     this.newEmail = new FormControl('');
     this.newName = new FormControl('');
     this.newPassword = new FormControl('');
@@ -50,6 +66,12 @@ export class ProfilePageComponent implements OnInit {
     this.user$.subscribe((currentUser: CurrentUser) => {
       this.currentEmail = currentUser.email;
       this.currentName = currentUser.name;
+      this.currentPassword = currentUser.password;
+    });
+    this.hasError$.subscribe((reason) => {
+      if (reason.length) {
+        this.openSnackBarError('Something went wrong!');
+      }
     });
   }
 
@@ -68,20 +90,33 @@ export class ProfilePageComponent implements OnInit {
   public updateUserData(newName: string, newEmail: string): void {
     this.store.dispatch(
       updateUserName({
-        name: newName.length ? newName : this.currentName,
-        email: newEmail.length ? newEmail : this.currentEmail,
+        name: newName.trim().length ? newName : this.currentName,
+        email: newEmail.trim().length ? newEmail : this.currentEmail,
       }),
     );
     this.emailMode = 'reading';
     this.nameMode = 'reading';
     this.newEmail.setValue('');
     this.newName.setValue('');
+    this.openSnackBarError('Your data  have been  updated!');
   }
 
   public updatePassword(newPassword: string): void {
-    this.store.dispatch(updateUserPassword({ newPassword }));
+    this.store.dispatch(
+      updateUserPassword({
+        newPassword: newPassword.trim().length ? newPassword : this.currentPassword,
+      }),
+    );
     this.visibleModal = false;
     this.newPassword.setValue('');
+    this.openSnackBarError('Password updated!');
+  }
+
+  openSnackBarError(message: string) {
+    this.snackBar.open(`${message}`, 'Close', {
+      horizontalPosition: this.horizontalPosition,
+      verticalPosition: this.verticalPosition,
+    });
   }
 
   public LogOut() {
