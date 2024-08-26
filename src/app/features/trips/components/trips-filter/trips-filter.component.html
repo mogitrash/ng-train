@@ -1,21 +1,31 @@
 @let selectedIndex = searchDate ? getTabIndexAccordingDate(searchDate) : 0;
 
-<mat-tab-group class="tabs" [selectedIndex]="selectedIndex">
-  @for (date of uniqueSearchDates; track date.getTime()) {
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <div class="tab-label">
-          <div class="tab-date">
-            {{ date | date: 'MMMM dd' }}
-          </div>
+@if (uniqueSearchDates.length > 0) {
+  <mat-tab-group
+    class="tabs"
+    (selectedIndexChange)="setSearchDateByIndex($event)"
+    [selectedIndex]="selectedIndex"
+  >
+    @for (date of uniqueSearchDates; track date.getTime()) {
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <div class="tab-label">
+            <div class="tab-date">
+              {{ date | date: 'MMMM dd' }}
+            </div>
 
-          <div class="tab-day">
-            {{ date | date: 'EEEE' }}
+            <div class="tab-day">
+              {{ date | date: 'EEEE' }}
+            </div>
           </div>
-        </div>
-      </ng-template>
+        </ng-template>
 
-      <ng-template matTabContent> {{ date | date }} </ng-template>
-    </mat-tab>
-  }
-</mat-tab-group>
+        <ng-template matTabContent>
+          <app-trips-search-results></app-trips-search-results>
+        </ng-template>
+      </mat-tab>
+    }
+  </mat-tab-group>
+} @else {
+  <p>Trips not found</p>
+}

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   selectSearchDate,
@@ -6,6 +6,7 @@ import {
   selectUniqueSearchDates,
 } from '../../../../core/store/trips/trips.selectors';
 import { getISOSDate } from '../../../../shared/utilities/getISOSDate.utility';
+import { setSearchDate } from '../../../../core/store/trips/trips.actions';
 
 @Component({
   selector: 'app-trips-filter',
@@ -23,7 +24,10 @@ export class TripsFilterComponent implements OnInit {
 
   public searchDate?: Date;
 
-  constructor(private store: Store) {}
+  constructor(
+    private store: Store,
+    private destroyRef: DestroyRef,
+  ) {}
 
   ngOnInit(): void {
     this.searchResponses$.subscribe(() => {
@@ -34,6 +38,10 @@ export class TripsFilterComponent implements OnInit {
       this.searchDate$.subscribe((searchDate) => {
         this.searchDate = searchDate;
       });
+
+      if (!this.searchDate) {
+        this.setSearchDateByIndex(0);
+      }
     });
   }
 
@@ -42,5 +50,9 @@ export class TripsFilterComponent implements OnInit {
       return getISOSDate(value) === getISOSDate(date);
     });
     return index;
+  }
+
+  public setSearchDateByIndex(index: number) {
+    this.store.dispatch(setSearchDate({ date: this.uniqueSearchDates.at(index)! }));
   }
 }

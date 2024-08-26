@@ -10,13 +10,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { TripsComponent } from './trips.component';
 import { TripsSearchComponent } from './components/trips-search/trips-search.component';
 import { TripsFilterComponent } from './components/trips-filter/trips-filter.component';
+import { TripsSearchResultsComponent } from './components/trips-search-results/trips-search-results.component';
+import { TripItemComponent } from './components/trips-search-results/trip-item/trip-item.component';
 
 @NgModule({
   providers: [provideNativeDateAdapter()],
-  declarations: [TripsComponent, TripsSearchComponent, TripsFilterComponent],
+  declarations: [TripsSearchComponent, TripsFilterComponent, TripsSearchResultsComponent, TripItemComponent],
   imports: [
     CommonModule,
     MatFormFieldModule,
