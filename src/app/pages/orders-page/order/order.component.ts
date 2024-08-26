@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import * as ActionsTrip from '../../../core/store/trips/trips.actions';
 import { Store } from '@ngrx/store';
+import * as ActionsTrip from '../../../core/store/trips/trips.actions';
 // import { Order } from '../../../features/trips/models/order.model';
 
 @Component({
