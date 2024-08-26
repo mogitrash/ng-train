@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Access } from '../../core/models/user.model';
 import { selectAccess } from '../../core/store/user/user.selectors';
-import { signOut } from '../../core/store/user/user.actions';
+import { getUser, signOut } from '../../core/store/user/user.actions';
 
 @Component({
   selector: 'app-header',
@@ -19,6 +19,9 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.role$ = this.store.select(selectAccess);
+    if (localStorage.getItem('token')) {
+      this.store.dispatch(getUser());
+    }
   }
 
   protected logout(): void {
