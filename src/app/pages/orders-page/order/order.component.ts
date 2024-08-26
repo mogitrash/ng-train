@@ -1,15 +1,33 @@
-import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import * as ActionsTrip from '../../../core/store/trips/trips.actions';
-// import { Order } from '../../../features/trips/models/order.model';
+import { Component, Input } from '@angular/core';
+
+export interface OrderForView {
+  startStation: string;
+  startTime: string;
+
+  endStation: string;
+
+  endTime: string;
+
+  durationTrip: string;
+
+  typeCarriage: string;
+
+  numberCarriage: number;
+
+  numberSeat: number;
+
+  price: string;
+
+  status: string;
+}
 
 @Component({
   selector: 'app-order',
   templateUrl: './order.component.html',
   styleUrl: './order.component.scss',
 })
-export class OrderComponent implements OnInit {
-  // @Input() order!: Order;
+export class OrderComponent {
+  @Input({ required: true }) order!: OrderForView;
 
   /*
  - Станция начала поездки
@@ -41,14 +59,6 @@ export class OrderComponent implements OnInit {
   price: string = '50.00';
 
   status: string = 'active';
-
-  constructor(private store: Store) {}
-
-  ngOnInit(): void {
-    this.store.dispatch(
-      ActionsTrip.createOrder({ rideId: 1, seat: 2, stationStart: 1, stationEnd: 6 }),
-    );
-  }
 
   delete() {
     this.price = '60';

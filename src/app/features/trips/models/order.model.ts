@@ -2,12 +2,14 @@ import { Schedule } from './schedule.model';
 
 export interface Order {
   id: number;
-  rideId: number;
-  routeId: number;
-  seatId: number;
   userId: number;
-  status: 'active' | 'completed' | 'rejected' | 'canceled';
+  routeId: number;
+  rideId: number;
+  seatId: number;
   path: number[];
   carriages: string[];
-  schedule: Schedule[];
+  stationStart: number;
+  stationEnd: number;
+  schedule: Schedule;
+  status: 'active' | 'completed' | 'rejected' | 'canceled';
 }

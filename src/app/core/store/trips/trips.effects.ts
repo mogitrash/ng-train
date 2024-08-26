@@ -188,8 +188,8 @@ export class TripsEffects {
   loadOrder$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(tripActions.loadOrders),
-      exhaustMap(() => {
-        return this.tripsService.getOrderList().pipe(
+      exhaustMap((action) => {
+        return this.tripsService.getOrderList(action.all).pipe(
           map((orders) => {
             return tripActions.ordersLoadedSuccess({ orders });
           }),

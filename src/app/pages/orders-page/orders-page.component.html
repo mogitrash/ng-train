@@ -1,1 +1,19 @@
-<p>orders-page works!</p>
+<ng-container *ngIf="role$ | async as role">
+  <ng-container *ngIf="role === 'manager'; else notManager">
+    <h1>All Orders</h1>
+  </ng-container>
+  <ng-template #notManager>
+    <h1>Your Orders</h1>
+  </ng-template>
+</ng-container>
+<ng-container *ngIf="orders$ | async as orders; else noOrders">
+  <ul>
+    <li *ngFor="let order of orders || [] | transformOrder">
+      {{ order.startStation }}
+      <app-order [order]="order"></app-order>
+    </li>
+  </ul>
+</ng-container>
+<ng-template #noOrders>
+  <p>No orders available.</p>
+</ng-template>

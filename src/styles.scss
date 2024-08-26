@@ -25,6 +25,14 @@ body {
   color: var(--black);
 }
 
+.mat-typography h1 {
+  font:
+    400 2.5rem / 3rem 'Segoe UI',
+    sans-serif !important;
+  letter-spacing: -0.016rem;
+  margin: 0 0 0.5em;
+}
+
 .mat-mdc-unelevated-button:not(:disabled) {
   background-color: var(--primary-blue) !important;
 }

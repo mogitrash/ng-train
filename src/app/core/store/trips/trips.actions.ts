@@ -82,7 +82,8 @@ export const carriageUpdatedSuccess = createAction(
   props<{ code: string }>(),
 );
 
-export const loadOrders = createAction('[Trips] Load Orders');
+export const loadOrders = createAction('[Trips] Load Orders', props<{ all?: boolean }>());
+
 export const ordersLoadedSuccess = createAction(
   '[Trips] Orders Loaded Success',
   props<{ orders: Order[] }>(),

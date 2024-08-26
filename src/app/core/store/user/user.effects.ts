@@ -142,6 +142,7 @@ export class UserEffects {
         return this.userService.signOutCurrentUser().pipe(
           take(1),
           map(() => {
+            localStorage.clear();
             return userActions.successfulExit();
           }),
           catchError((error: UserError) => {
