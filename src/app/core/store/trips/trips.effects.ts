@@ -1,5 +1,15 @@
 import { Injectable } from '@angular/core';
-import { catchError, exhaustMap, map, of, tap } from 'rxjs';
+import {
+  catchError,
+  combineLatest,
+  delay,
+  exhaustMap,
+  forkJoin,
+  map,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TripsService } from '../../../features/trips/services/trips.service';
@@ -27,6 +37,50 @@ export class TripsEffects {
               return of(tripActions.failureSnackBar(error));
             })
           );
+      })
+    );
+  });
+
+  canDelete$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(tripActions.canDelete),
+      exhaustMap((action) => {
+        const searchRequests = action.coordinates.map((coordinate) => {
+          return this.tripsService
+            .search(
+              action.station.latitude,
+              action.station.longitude,
+              coordinate.latitude,
+              coordinate.longitude
+            )
+            .pipe(
+              map((route) => {
+                return route.routes.length > 0;
+              })
+            );
+        });
+
+        return forkJoin(searchRequests).pipe(
+          delay(1000),
+          switchMap((results) => {
+            const canDelete = !results.some((hasRoutes) => hasRoutes);
+            if (canDelete) {
+              return of(tripActions.deleteStation(action.station));
+            } else {
+              return of(
+                tripActions.failureSnackBar({
+                  error: {
+                    message: 'Cannot delete station with active rides',
+                    reason: 'Cannot delete station with active rides',
+                  },
+                })
+              );
+            }
+          }),
+          catchError((error) => {
+            return of(tripActions.failureSnackBar(error));
+          })
+        );
       })
     );
   });
@@ -63,12 +117,14 @@ export class TripsEffects {
     );
   });
 
-  loadStationsAfterDelete$ = createEffect(() =>
-    { return this.actions$.pipe(
+  loadStationsAfterDelete$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(tripActions.stationDeleteSuccess),
-      map(() => {return tripActions.loadStations()})
-    ) }
-  );
+      map(() => {
+        return tripActions.loadStations();
+      })
+    );
+  });
 
   loadRoutes$ = createEffect(() => {
     return this.actions$.pipe(
@@ -311,12 +367,14 @@ export class TripsEffects {
     );
   });
 
-  loadStationsAfterCreate$ = createEffect(() =>
-    { return this.actions$.pipe(
+  loadStationsAfterCreate$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(tripActions.createStationSuccess),
-      map(() => {return tripActions.loadStations()})
-    ) }
-  );
+      map(() => {
+        return tripActions.loadStations();
+      })
+    );
+  });
 
   loadRideById$ = createEffect(() => {
     return this.actions$.pipe(

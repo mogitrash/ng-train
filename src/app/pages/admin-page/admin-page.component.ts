@@ -9,12 +9,14 @@ import { MatSelectChange } from '@angular/material/select';
 import { Station } from '../../features/trips/models/station.model';
 import { PopUpService } from '../../features/admin/services/popup.service';
 import {
+  canDelete,
   createStation,
   deleteStation,
   loadSearch,
   loadStations,
 } from '../../core/store/trips/trips.actions';
 import { selectStations } from '../../core/store/trips/trips.selectors';
+import { TripsService } from '../../features/trips/services/trips.service';
 
 const iconRetinaUrl = 'assets/marker-icon-2x.png';
 const iconUrl = 'assets/marker-icon.png';
@@ -80,7 +82,8 @@ export class AdminPageComponent implements AfterViewInit {
   constructor(
     private store: Store,
     private popupService: PopUpService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private service: TripsService
   ) {
     this.store.dispatch(loadStations());
     this.stations$ = this.store.select(selectStations);
@@ -124,7 +127,9 @@ export class AdminPageComponent implements AfterViewInit {
   }
 
   private updateMap(stations: Station[]): void {
-    this.markers.forEach((marker) => {return this.map.removeLayer(marker)});
+    this.markers.forEach((marker) => {
+      return this.map.removeLayer(marker);
+    });
     this.markers = [];
     this.dataSource.data = stations;
     this.visualisation$ = this.dataSource.connect();
@@ -140,8 +145,8 @@ export class AdminPageComponent implements AfterViewInit {
   }
 
   private onMapClick(e: L.LeafletMouseEvent): void {
-    const {lat} = e.latlng;
-    const {lng} = e.latlng;
+    const { lat } = e.latlng;
+    const { lng } = e.latlng;
     if (this.marker) {
       this.map.removeLayer(this.marker);
     }
@@ -192,13 +197,17 @@ export class AdminPageComponent implements AfterViewInit {
   }
 
   onDelete(id: number, stations: Station[]) {
-    const station = stations.find((s) => {return s.id === id});
+    const station = stations.find((s) => {
+      return s.id === id;
+    });
     if (!station) {
       throw new Error('Station not found');
     }
 
     const coordinates = station.connectedTo.map((connection) => {
-      const connectedStation = stations.find((s) => {return s.id === connection.id});
+      const connectedStation = stations.find((s) => {
+        return s.id === connection.id;
+      });
       if (!connectedStation) {
         throw new Error(`Connected station with id ${connection.id} not found`);
       }
@@ -207,16 +216,6 @@ export class AdminPageComponent implements AfterViewInit {
         longitude: connectedStation.longitude,
       };
     });
-    coordinates.forEach((coordinate) => {
-      this.store.dispatch(
-        loadSearch({
-          fromLatitude: station.latitude,
-          fromLongitude: station.longitude,
-          toLatitude: coordinate.latitude,
-          toLongitude: coordinate.longitude,
-        })
-      );
-    });
-    this.store.dispatch(deleteStation({ id }));
+    this.store.dispatch(canDelete({station,coordinates}));
   }
 }
