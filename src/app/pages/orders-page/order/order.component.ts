@@ -1,23 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Store } from '@ngrx/store';
 
 export interface OrderForView {
+  id: number;
   startStation: string;
   startTime: string;
-
   endStation: string;
-
   endTime: string;
-
   durationTrip: string;
-
   typeCarriage: string;
-
   numberCarriage: number;
-
   numberSeat: number;
-
   price: string;
-
   status: string;
 }
 
@@ -27,19 +21,12 @@ export interface OrderForView {
   styleUrl: './order.component.scss',
 })
 export class OrderComponent implements OnInit {
+  constructor(private store: Store) {}
+
   @Input({ required: true }) order!: OrderForView;
 
-  /*
- - Станция начала поездки
-- Время начала поездки - "MMMM dd hh:mm".
-- Станция конечной поездки
-- Время конечной поездки - "MMMM dd hh:mm".
-- Продолжительность поездки - отображается в часах и минутах
-- Тип вагона
-- Номер вагона
-- Номер места
-- Цена - $50.00
-*/
+  @Output() delete = new EventEmitter<number>();
+
   startStation!: string;
 
   startTime!: string;
@@ -82,7 +69,7 @@ export class OrderComponent implements OnInit {
     this.status = this.order.status;
   }
 
-  delete() {
-    this.status = 'cancelled';
+  deleteOrder() {
+    this.delete.emit(this.order.id);
   }
 }

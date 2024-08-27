@@ -2,7 +2,7 @@
   <div class="status status_{{ status }}">{{ status }}</div>
   <button
     mat-icon-button
-    (click)="delete()"
+    (click)="deleteOrder()"
     title="Delete this order"
     class="button-delete"
     *ngIf="status === 'active'"
@@ -10,7 +10,6 @@
     <mat-icon>close</mat-icon>
   </button>
 </div>
-
 <div class="order-info">
   <div class="trip-paths">
     <div class="trip-path">
@@ -29,7 +28,6 @@
       </div>
     </div>
   </div>
-
   <div class="train">
     <div class="carriage">
       <div class="carriage-title">
@@ -44,26 +42,5 @@
       </div>
     </div>
   </div>
-
   <div class="price">Price: ${{ price }}</div>
-
-  <!--
-
-  + startStation: string = 'Station Start';
-
-  + startTime: string = 'MMMM dd hh:mm';
-
-  + endStation: string = 'Station Start';
-
-  +durationTrip: string = 'hh:mm';
-
-  + typeCarriage: string = 'standard';
-
-  + numberCarriage: number = 1;
-
-  + numberSeat: number = 10;
-
-  + price: string = '50.00';
-
-  + status: string = 'Active';
---></div>
+</div>

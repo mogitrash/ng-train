@@ -6,10 +6,10 @@
     <h1>Your Orders</h1>
   </ng-template>
 </ng-container>
-<ng-container *ngIf="ordersForView; else noOrders">
+<ng-container *ngIf="ordersForView.length > 0; else noOrders">
   <ol class="orders-list">
-    <li *ngFor="let order of ordersForView">
-      <app-order [order]="order"></app-order>
+    <li *ngFor="let order of ordersForView; trackBy: trackByOrderId">
+      <app-order [order]="order" (delete)="onDeleteOrder(order.id)"></app-order>
     </li>
   </ol>
 </ng-container>
