@@ -1,0 +1,14 @@
+:host {
+}
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-left: 0.25rem;
+
+  li::marker {
+    color: var(--primary-blue);
+    font-weight: bold;
+    font-size: 1.25em;
+  }
+}

@@ -46,27 +46,26 @@ export class OrdersPageComponent implements OnInit {
   constructor(private store: Store) {}
 
   ngOnInit(): void {
-    /*
     // ________________
 
     // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
-    this.store.dispatch(loadRideById({ rideId: 1 }));
+    this.store.dispatch(loadRideById({ rideId: 6 }));
 
     // eslint-disable-next-line @ngrx/no-store-subscription
     this.store.select(selectRides).subscribe((rides) => {
       console.log('Rides:', rides);
     });
-
     // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
     this.store.dispatch(
       createOrder({
-        rideId: 1,
-        seat: 180,
-        stationStart: 100,
-        stationEnd: 7,
+        rideId: 6,
+        seat: 98,
+        stationStart: 2,
+        stationEnd: 109,
       }),
     );
 
+    /*
     // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
     this.store.dispatch(
       createOrder({
@@ -154,7 +153,6 @@ export class OrdersPageComponent implements OnInit {
   private calculateTotalPrice(order: Order, type: string): string {
     let totalPrice = 0;
     order.schedule.segments.forEach((segment) => {
-      console.log(segment.price[type]);
       totalPrice += segment.price[type];
     });
 

@@ -7,12 +7,11 @@
   </ng-template>
 </ng-container>
 <ng-container *ngIf="ordersForView; else noOrders">
-  <ul>
+  <ol class="orders-list">
     <li *ngFor="let order of ordersForView">
-      {{ order.startStation }}
       <app-order [order]="order"></app-order>
     </li>
-  </ul>
+  </ol>
 </ng-container>
 <ng-template #noOrders>
   <p>No orders available.</p>
