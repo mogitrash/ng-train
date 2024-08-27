@@ -5,9 +5,16 @@ import { formatDate } from '@angular/common';
 import {
   selectCarriages,
   selectOrders,
+  selectRides,
   selectStations,
 } from '../../core/store/trips/trips.selectors';
-import { loadCarriages, loadOrders, loadStations } from '../../core/store/trips/trips.actions';
+import {
+  createOrder,
+  loadCarriages,
+  loadOrders,
+  loadRideById,
+  loadStations,
+} from '../../core/store/trips/trips.actions';
 import { Order } from '../../features/trips/models/order.model';
 import { selectAccess } from '../../core/store/user/user.selectors';
 import { Access } from '../../core/models/user.model';
@@ -39,6 +46,39 @@ export class OrdersPageComponent implements OnInit {
   constructor(private store: Store) {}
 
   ngOnInit(): void {
+    /*
+    // ________________
+
+    // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
+    this.store.dispatch(loadRideById({ rideId: 1 }));
+
+    // eslint-disable-next-line @ngrx/no-store-subscription
+    this.store.select(selectRides).subscribe((rides) => {
+      console.log('Rides:', rides);
+    });
+
+    // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
+    this.store.dispatch(
+      createOrder({
+        rideId: 1,
+        seat: 180,
+        stationStart: 100,
+        stationEnd: 7,
+      }),
+    );
+
+    // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
+    this.store.dispatch(
+      createOrder({
+        rideId: 1,
+        seat: 140,
+        stationStart: 20,
+        stationEnd: 3,
+      }),
+    );
+    */
+
+    // ________________
     this.role$ = this.store.select(selectAccess);
     // Dispatch all actions needed to fetch data
     // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
@@ -56,8 +96,6 @@ export class OrdersPageComponent implements OnInit {
         }),
       )
       .subscribe((result) => {
-        // Handle the result
-        // console.log(result);
         this.ordersForView = result;
       });
   }
@@ -88,7 +126,10 @@ export class OrdersPageComponent implements OnInit {
         numberCarriage: this.getCarriageData(order, carriages).number as number,
         typeCarriage: this.getCarriageData(order, carriages).type as string,
         numberSeat: this.getCarriageData(order, carriages).seat as number,
-        price: this.calculateTotalPrice(order) as string,
+        price: this.calculateTotalPrice(
+          order,
+          this.getCarriageData(order, carriages).type,
+        ) as string,
         status: order.status as string,
       };
     });
@@ -110,12 +151,14 @@ export class OrdersPageComponent implements OnInit {
     return `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
   }
 
-  private calculateTotalPrice(order: Order): string {
+  private calculateTotalPrice(order: Order, type: string): string {
     let totalPrice = 0;
-    order.schedule.segments.forEach((segment, index) => {
-      totalPrice += segment.price[order.carriages[index]];
+    order.schedule.segments.forEach((segment) => {
+      console.log(segment.price[type]);
+      totalPrice += segment.price[type];
     });
-    return totalPrice.toFixed(2);
+
+    return (totalPrice / 100).toFixed(2);
   }
 
   private getCarriageData(order: Order, carriages: Carriage[] | null): CarriageData {
@@ -163,9 +206,8 @@ export class OrdersPageComponent implements OnInit {
     };
   }
 }
-
-// eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
 /*
+// eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
     this.store.dispatch(
       createOrder({
         rideId: 1,
@@ -179,7 +221,7 @@ export class OrdersPageComponent implements OnInit {
     this.store.dispatch(
       createOrder({
         rideId: 2,
-        seat: 10,
+        seat: 140,
         stationStart: 3,
         stationEnd: 20,
       }),
