@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 
 export interface OrderForView {
   id: number;
+  user: string;
   startStation: string;
   startTime: string;
   endStation: string;

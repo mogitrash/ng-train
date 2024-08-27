@@ -5,15 +5,16 @@ import { formatDate } from '@angular/common';
 import {
   selectCarriages,
   selectOrders,
-  selectRides,
+  // selectRides,
   selectStations,
+  selectUsers,
 } from '../../core/store/trips/trips.selectors';
 import {
   createOrder,
   deleteOrder,
   loadCarriages,
   loadOrders,
-  loadRideById,
+  // loadRideById,
   loadStations,
 } from '../../core/store/trips/trips.actions';
 import { Order } from '../../features/trips/models/order.model';
@@ -22,6 +23,7 @@ import { Access } from '../../core/models/user.model';
 import { Carriage } from '../../features/trips/models/carriage.model';
 import { Station } from '../../features/trips/models/station.model';
 import { OrderForView } from './order/order.component';
+import { User } from '../../features/trips/models/user.model';
 
 interface CarriageData {
   number: number;
@@ -40,9 +42,13 @@ export class OrdersPageComponent implements OnInit {
 
   carriages$: Observable<Carriage[] | null> = this.store.select(selectCarriages);
 
+  users$: Observable<User[] | null> = this.store.select(selectUsers);
+
   role$!: Observable<Access>;
 
   ordersForView!: OrderForView[];
+
+  warningOrderId: number | null = null;
 
   constructor(private store: Store) {}
 
@@ -67,10 +73,10 @@ export class OrdersPageComponent implements OnInit {
     });
     this.store.dispatch(loadCarriages());
 
-    combineLatest([this.orders$, this.stations$, this.carriages$])
+    combineLatest([this.orders$, this.stations$, this.carriages$, this.users$])
       .pipe(
-        map(([orders, stations, carriages]) => {
-          return this.TransformOrders(orders, stations, carriages);
+        map(([orders, stations, carriages, users]) => {
+          return this.TransformOrders(orders, stations, carriages, users);
         }),
       )
       .subscribe((result) => {
@@ -82,10 +88,12 @@ export class OrdersPageComponent implements OnInit {
     orders: Order[] | null,
     stations: Station[] | null,
     carriages: Carriage[] | null,
+    users: User[] | null,
   ) {
     const newOrders: OrderForView[] = orders!.map((order) => {
       return {
         id: order.id,
+        user: this.getUserName(order.userId, users),
         startStation: this.getStationName(order.stationStart, stations) as string,
         startTime: formatDate(
           new Date(order.schedule.segments[0].time[0]),
@@ -184,14 +192,32 @@ export class OrdersPageComponent implements OnInit {
     };
   }
 
+  private getUserName(userId: number, users: User[] | null) {
+    if (users) {
+      const user = users.find((item) => {
+        return item.id === userId;
+      });
+      if (user) return user.name;
+    }
+    return '';
+  }
+
   trackByOrderId(index: number, order: OrderForView): number {
     return order.id;
   }
 
   onDeleteOrder(orderId: number): void {
-    console.log(orderId);
+    this.warningOrderId = orderId;
+  }
+
+  closeWarning(): void {
+    this.warningOrderId = null;
+  }
+
+  deleteOrder(orderId: number): void {
+    this.warningOrderId = null;
     this.store.dispatch(deleteOrder({ orderId }));
-    // Dispatch loadOrders after deleting to refresh the list
+    // Refresh orders after deleting
     this.role$.subscribe((role) => {
       if (role === 'manager') this.store.dispatch(loadOrders({ all: true }));
       else if (role === 'user') this.store.dispatch(loadOrders({}));

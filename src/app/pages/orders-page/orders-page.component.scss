@@ -10,3 +10,11 @@
     font-size: 1.25em;
   }
 }
+.warning {
+  z-index: 4;
+  position: absolute;
+  padding: 2rem;
+  background: #fff;
+  top: 50%;
+  left: 50%;
+}

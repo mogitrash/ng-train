@@ -10,6 +10,16 @@
   <ol class="orders-list">
     <li *ngFor="let order of ordersForView; trackBy: trackByOrderId">
       <app-order [order]="order" (delete)="onDeleteOrder(order.id)"></app-order>
+      <ng-container *ngIf="warningOrderId === order.id">
+        <div class="warning">
+          <p>
+            Are you sure you want to delete the order #{{ order.id }}
+            <ng-template> by customer {{ order.user }}?</ng-template>
+          </p>
+          <button type="submit" mat-flat-button (click)="deleteOrder(order.id)">Yes</button>
+          <button type="submit" mat-flat-button (click)="closeWarning()">No</button>
+        </div>
+      </ng-container>
     </li>
   </ol>
 </ng-container>

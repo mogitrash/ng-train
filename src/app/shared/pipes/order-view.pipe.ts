@@ -57,6 +57,7 @@ export class TransformOrderPipe implements PipeTransform {
 
       return {
         id: order.id,
+        user: '',
         userId: order.userId,
         startStation,
         startTime,
