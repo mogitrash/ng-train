@@ -207,3 +207,5 @@ export const createOrderSuccess = createAction(
   '[Trips] Create Order Success',
   props<{ id: string }>()
 );
+export const loadingFinished = createAction('[Trips] Load finished');
+export const loadingStarted = createAction('[Trips] Load started');

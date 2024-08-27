@@ -2,10 +2,12 @@ import { Injectable } from '@angular/core';
 import {
   catchError,
   delay,
+  endWith,
   exhaustMap,
   forkJoin,
   map,
   of,
+  startWith,
   switchMap,
   tap,
 } from 'rxjs';
@@ -44,13 +46,18 @@ export class TripsEffects {
     return this.actions$.pipe(
       ofType(tripActions.canDelete),
       exhaustMap((action) => {
+        if (action.coordinates.length === 0) {
+          return of(tripActions.deleteStation(action.station));
+        }
         const searchRequests = action.coordinates.map((coordinate) => {
+          const now = Date.now();
           return this.tripsService
             .search(
               action.station.latitude,
               action.station.longitude,
               coordinate.latitude,
-              coordinate.longitude
+              coordinate.longitude,
+              now
             )
             .pipe(
               map((route) => {
@@ -62,23 +69,25 @@ export class TripsEffects {
         return forkJoin(searchRequests).pipe(
           delay(1000),
           switchMap((results) => {
-            const canDelete = !results.some((hasRoutes) => {return hasRoutes});
+            const canDelete = !results.some((hasRoutes) => {
+              return hasRoutes;
+            });
             if (canDelete) {
               return of(tripActions.deleteStation(action.station));
-            } 
-              return of(
-                tripActions.failureSnackBar({
-                  error: {
-                    message: 'Cannot delete station with active rides',
-                    reason: 'Cannot delete station with active rides',
-                  },
-                })
-              );
-            
+            }
+            return of(
+              tripActions.failureSnackBar({
+                error: {
+                  message: 'Cannot delete station with active rides',
+                  reason: 'Cannot delete station with active rides',
+                },
+              })
+            );
           }),
           catchError((error) => {
             return of(tripActions.failureSnackBar(error));
-          })
+          }),
+          startWith(tripActions.loadingStarted())
         );
       })
     );
@@ -94,7 +103,9 @@ export class TripsEffects {
           }),
           catchError((error) => {
             return of(tripActions.failureSnackBar(error));
-          })
+          }),
+          startWith(tripActions.loadingStarted()),
+          endWith(tripActions.loadingFinished())
         );
       })
     );
@@ -110,7 +121,8 @@ export class TripsEffects {
           }),
           catchError((error) => {
             return of(tripActions.failureSnackBar(error));
-          })
+          }),
+          startWith(tripActions.loadingStarted())
         );
       })
     );
@@ -360,7 +372,8 @@ export class TripsEffects {
             }),
             catchError((error) => {
               return of(tripActions.failureSnackBar(error));
-            })
+            }),
+            startWith(tripActions.loadingStarted())
           );
       })
     );
@@ -435,6 +448,7 @@ export class TripsEffects {
           this.snackBar.open(error.error.message, 'Close', {
             duration: 5000,
           });
+          tripActions.loadingFinished();
         })
       );
     },

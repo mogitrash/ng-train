@@ -1,11 +1,24 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  DestroyRef,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import * as L from 'leaflet';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { FormArray, FormBuilder, Validators } from '@angular/forms';
-import { MatSelectChange } from '@angular/material/select';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  Validators,
+} from '@angular/forms';
+
 import { Station } from '../../features/trips/models/station.model';
 import { PopUpService } from '../../features/admin/services/popup.service';
 import {
@@ -13,8 +26,10 @@ import {
   createStation,
   loadStations,
 } from '../../core/store/trips/trips.actions';
-import { selectStations } from '../../core/store/trips/trips.selectors';
-import { TripsService } from '../../features/trips/services/trips.service';
+import {
+  selectLoading,
+  selectStations,
+} from '../../core/store/trips/trips.selectors';
 
 const iconRetinaUrl = 'assets/marker-icon-2x.png';
 const iconUrl = 'assets/marker-icon.png';
@@ -59,7 +74,13 @@ export class AdminPageComponent implements AfterViewInit {
 
   private marker: L.Marker | undefined;
 
+  protected isLoading$!: Observable<boolean>;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  private destroyRef;
+
+  private formGroupSubscriptions: Subscription[] = [];
 
   protected stationForm = this.formBuilder.nonNullable.group({
     city: ['', Validators.required],
@@ -71,27 +92,27 @@ export class AdminPageComponent implements AfterViewInit {
       0,
       [Validators.required, Validators.min(-180), Validators.max(180)],
     ],
-    relations: this.formBuilder.array(
-      [this.formBuilder.control(0, Validators.required)],
-      Validators.required
-    ),
+    relations: this.formBuilder.array([this.createRelation(0)]),
   });
 
   constructor(
     private store: Store,
     private popupService: PopUpService,
-    private formBuilder: FormBuilder,
-    private service: TripsService
+    private formBuilder: FormBuilder
   ) {
+    this.destroyRef = inject(DestroyRef);
     this.store.dispatch(loadStations());
     this.stations$ = this.store.select(selectStations);
+    this.isLoading$ = this.store.select(selectLoading);
   }
 
   ngAfterViewInit(): void {
     this.initMap();
-    this.stations$.subscribe((stations) => {
-      this.updateMap(stations);
-    });
+    this.stations$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((stations) => {
+        this.updateMap(stations);
+      });
   }
 
   get relations(): FormArray {
@@ -158,24 +179,49 @@ export class AdminPageComponent implements AfterViewInit {
     });
   }
 
-  findStationNameById(id: number, stations: Station[]): string {
-    const foundStation = stations.find((station) => {
-      return station.id === id;
+  private createRelation(index: number): FormControl {
+    const control = this.formBuilder.control('');
+    const subscription = control.valueChanges.subscribe(() => {
+      this.checkAndAddOrRemoveRelation(index);
     });
-    return foundStation ? foundStation.city : 'Station not found';
+    this.formGroupSubscriptions.push(subscription);
+
+    return control;
   }
 
-  onRelationChange(event: MatSelectChange): void {
-    const selectedRelations = event.value;
-    this.relations.clear();
-    selectedRelations.forEach((relation: number) => {
-      this.relations.push(
-        this.formBuilder.control(relation, Validators.required)
-      );
-    });
+  private addRelation(index: number) {
+    const control = this.createRelation(index);
+    this.relations.push(control);
   }
 
-  onSubmit(): void {
+  private deleteRelation(index: number): void {
+    if (this.relations.length > 1) {
+      this.relations.removeAt(index);
+      const subscription = this.formGroupSubscriptions[index];
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+      this.formGroupSubscriptions.splice(index, 1);
+    }
+  }
+
+  private checkAndAddOrRemoveRelation(changedIndex: number) {
+    const allFilled = this.relations.controls.every((control) => {
+      return control.value;
+    });
+    if (allFilled) {
+      this.addRelation(this.relations.controls.length - 1);
+    } else {
+      const emptyControls = this.relations.controls.filter((control) => {
+        return !control.value;
+      });
+      if (emptyControls.length > 1) {
+        this.deleteRelation(changedIndex);
+      }
+    }
+  }
+
+  protected onSubmit(): void {
     if (this.stationForm.valid) {
       const formValue = this.stationForm.value as {
         city: string;
@@ -191,10 +237,59 @@ export class AdminPageComponent implements AfterViewInit {
           relations: formValue.relations,
         })
       );
+      if (this.marker) {
+        this.map.removeLayer(this.marker);
+      }
+      this.resetForm();
     }
   }
 
-  onDelete(id: number, stations: Station[]) {
+  private resetForm() {
+    this.stationForm.reset({
+      city: '',
+      latitude: 0,
+      longitude: 0,
+    });
+    this.resetRelations();
+  }
+
+  protected updateOptions() {
+    const selectedValues = this.relations.controls.map((control) => {
+      return control.value;
+    });
+    this.relations.controls.forEach((control) => {
+      control.setValidators([
+        Validators.required,
+        this.forbidSelectedValues(selectedValues),
+      ]);
+      control.updateValueAndValidity();
+    });
+  }
+
+  private resetRelations() {
+    const relationsArray = this.stationForm.get('relations') as FormArray;
+    while (relationsArray.length !== 0) {
+      relationsArray.removeAt(0);
+    }
+    relationsArray.push(this.createRelation(0));
+  }
+
+  private forbidSelectedValues(selectedValues: string[]) {
+    return (control: AbstractControl) => {
+      return selectedValues.includes(control.value)
+        ? { forbiddenValue: { value: control.value } }
+        : null;
+    };
+  }
+
+  protected isOptionSelected(option: number): boolean {
+    const selectedValues = this.relations.controls.map((control) => {
+      return control.value;
+    });
+    return selectedValues.includes(option);
+  }
+
+  protected onDelete(id: number, stations: Station[]) {
     const station = stations.find((s) => {
       return s.id === id;
     });
@@ -214,6 +309,13 @@ export class AdminPageComponent implements AfterViewInit {
         longitude: connectedStation.longitude,
       };
     });
-    this.store.dispatch(canDelete({station,coordinates}));
+    this.store.dispatch(canDelete({ station, coordinates }));
+  }
+
+  protected findStationNameById(id: number, stations: Station[]): string {
+    const foundStation = stations.find((station) => {
+      return station.id === id;
+    });
+    return foundStation ? foundStation.city : 'Station not found';
   }
 }

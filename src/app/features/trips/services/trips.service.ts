@@ -34,16 +34,12 @@ export class TripsService {
     return this.http.get<SearchResponse>(`/api/search`, { params });
   }
 
-  public searchStation(
-    fromLatitude: number,
-    fromLongitude: number,
-  ) {
+  public searchStation(fromLatitude: number, fromLongitude: number) {
     const params: {
       fromLatitude: number;
       fromLongitude: number;
-      
-    } = { fromLatitude, fromLongitude};
-    
+    } = { fromLatitude, fromLongitude };
+
     return this.http.get<SearchResponse>(`/api/search`, { params });
   }
 

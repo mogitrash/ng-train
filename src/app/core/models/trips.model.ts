@@ -13,5 +13,6 @@ export interface TripsState {
     orders:Order[],
     rides:Ride[],
     users:User[],
-    searchResponses:SearchResponse[]
+    searchResponses:SearchResponse[],
+    loading:boolean
 }

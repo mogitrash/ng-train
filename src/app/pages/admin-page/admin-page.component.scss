@@ -1,12 +1,33 @@
 .map-container {
-width: 100%;
-height: 600px;
+  width: 100%;
+  height: 600px;
   z-index: 0;
 }
 
 .content-container {
-display: grid;
-grid-template-columns: 3fr 1fr;
-gap: 16px; /* Опционально, для отступа между элементами */
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 16px; /* Опционально, для отступа между элементами */
 }
-img.huechange { filter: hue-rotate(120deg); }
+img.huechange {
+  filter: hue-rotate(120deg);
+}
+
+@media (max-width: 1200px) {
+  .content-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Убедитесь, что значение z-index достаточно высокое */
+}
