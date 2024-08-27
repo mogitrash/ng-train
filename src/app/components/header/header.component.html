@@ -11,7 +11,7 @@
           <button mat-icon-button (click)="toggleMenu()">
             <mat-icon>close</mat-icon>
           </button>
-          <app-menu [role]="role" [isMobile]="true"></app-menu>
+          <app-menu [role]="role" [isMobile]="true" (closeMenu)="closeMenu()"></app-menu>
         </div>
       </div>
     </div>

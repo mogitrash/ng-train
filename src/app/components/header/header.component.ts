@@ -23,4 +23,8 @@ export class HeaderComponent implements OnInit {
   protected toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
   }
+
+  protected closeMenu(): void {
+    this.isMenuOpen = false;
+  }
 }

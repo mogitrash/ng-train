@@ -1,19 +1,23 @@
 <nav>
   <ul [ngClass]="{ row: !isMobile, colum: isMobile }">
-    <li><a [routerLink]="navLinks.guest.home">Home</a></li>
+    <li><a [routerLink]="navLinks.guest.home" (click)="onLinkClick()">Home</a></li>
     <ng-container *ngIf="role !== 'guest'">
-      <li><a [routerLink]="navLinks.user.profile">Profile</a></li>
-      <li><a [routerLink]="navLinks.user.orders">My Orders</a></li>
+      <li><a [routerLink]="navLinks.user.profile" (click)="onLinkClick()">Profile</a></li>
+      <li><a [routerLink]="navLinks.user.orders" (click)="onLinkClick()">My Orders</a></li>
     </ng-container>
     <ng-container *ngIf="role === 'manager'">
-      <li><a [routerLink]="navLinks.admin.panel">Admin</a></li>
+      <li><a [routerLink]="navLinks.admin.panel" (click)="onLinkClick()">Admin</a></li>
     </ng-container>
   </ul>
 </nav>
 <div class="buttons" [ngClass]="{ row: !isMobile, colum: isMobile }">
   <ng-container *ngIf="role === 'guest'">
-    <button mat-flat-button [routerLink]="navLinks.guest.signup">Sign Up</button>
-    <button mat-flat-button [routerLink]="navLinks.guest.signin">Sign In</button>
+    <button mat-flat-button [routerLink]="navLinks.guest.signup" (click)="onLinkClick()">
+      Sign Up
+    </button>
+    <button mat-flat-button [routerLink]="navLinks.guest.signin" (click)="onLinkClick()">
+      Sign In
+    </button>
   </ng-container>
   <ng-container *ngIf="role !== 'guest'">
     <button mat-flat-button (click)="logout()">Logout</button>

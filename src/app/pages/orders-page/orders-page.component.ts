@@ -5,16 +5,9 @@ import { formatDate } from '@angular/common';
 import {
   selectCarriages,
   selectOrders,
-  selectRides,
   selectStations,
 } from '../../core/store/trips/trips.selectors';
-import {
-  createOrder,
-  loadCarriages,
-  loadOrders,
-  loadRideById,
-  loadStations,
-} from '../../core/store/trips/trips.actions';
+import { loadCarriages, loadOrders, loadStations } from '../../core/store/trips/trips.actions';
 import { Order } from '../../features/trips/models/order.model';
 import { selectAccess } from '../../core/store/user/user.selectors';
 import { Access } from '../../core/models/user.model';
@@ -46,6 +39,7 @@ export class OrdersPageComponent implements OnInit {
   constructor(private store: Store) {}
 
   ngOnInit(): void {
+    /*
     // ________________
 
     // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
@@ -65,7 +59,7 @@ export class OrdersPageComponent implements OnInit {
       }),
     );
 
-    /*
+
     // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
     this.store.dispatch(
       createOrder({

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { signOut } from '../../../core/store/user/user.actions';
 
@@ -12,6 +12,8 @@ export class MenuComponent {
 
   @Input() isMobile!: boolean;
 
+  @Output() closeMenu: EventEmitter<void> = new EventEmitter<void>();
+
   constructor(private store: Store) {}
 
   protected navLinks = {
@@ -22,5 +24,14 @@ export class MenuComponent {
 
   protected logout(): void {
     this.store.dispatch(signOut());
+    if (this.isMobile) {
+      this.closeMenu.emit();
+    }
+  }
+
+  protected onLinkClick(): void {
+    if (this.isMobile) {
+      this.closeMenu.emit(); // Закрываем меню при клике на ссылку
+    }
   }
 }
