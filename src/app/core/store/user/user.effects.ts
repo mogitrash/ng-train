@@ -58,7 +58,7 @@ export class UserEffects {
                 localStorage.clear();
                 localStorage.setItem('token', token);
               }),
-              mergeMap(({ token }) => {
+              switchMap(({ token }) => {
                 this.router.navigate(['/']);
                 return of(userActions.getToken({ token, role: 'user' }), userActions.clearError());
               }),
@@ -122,7 +122,7 @@ export class UserEffects {
           take(1),
           map((user) => {
             return userActions.saveUser({
-              name: user.name,
+              name: user.name ?? '',
               email: user.email,
               role: user.role,
             });
@@ -143,6 +143,7 @@ export class UserEffects {
           take(1),
           map(() => {
             localStorage.clear();
+            this.router.navigate(['/']);
             return userActions.successfulExit();
           }),
           catchError((error: UserError) => {
