@@ -43,7 +43,8 @@
   color: var(--success-green);
 }
 
-.status_cancelled {
+.status_rejected,
+.status_canceled {
   background-color: var(--red-light);
   color: var(--error-red);
 }

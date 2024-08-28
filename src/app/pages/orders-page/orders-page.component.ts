@@ -15,6 +15,7 @@ import {
   loadOrders,
   // loadRideById,
   loadStations,
+  loadUsers,
 } from '../../core/store/trips/trips.actions';
 import { Order } from '../../features/trips/models/order.model';
 import { selectAccess } from '../../core/store/user/user.selectors';
@@ -70,7 +71,11 @@ export class OrdersPageComponent implements OnInit {
       if (role === 'manager') this.store.dispatch(loadOrders({ all: true }));
       else if (role === 'user') this.store.dispatch(loadOrders({}));
     });
+    // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
     this.store.dispatch(loadCarriages());
+
+    // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
+    this.store.dispatch(loadUsers());
 
     combineLatest([this.orders$, this.stations$, this.carriages$, this.users$])
       .pipe(
@@ -193,7 +198,7 @@ export class OrdersPageComponent implements OnInit {
       const user = users.find((item) => {
         return item.id === userId;
       });
-      if (user) return user.name;
+      if (user) return user.name !== '' ? user.name : userId.toString();
     }
     return '';
   }
