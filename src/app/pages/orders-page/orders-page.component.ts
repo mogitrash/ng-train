@@ -54,15 +54,6 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
   constructor(private store: Store) {}
 
   ngOnInit(): void {
-    /**/
-    // ________________
-
-    // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
-    // this.store.dispatch(createOrder({ rideId: 2, seat: 91, stationStart: 41, stationEnd: 4 }));
-
-    // this.store.dispatch(createOrder({ rideId: 5, seat: 108, stationStart: 79, stationEnd: 71 }));
-
-    // ________________
 
     // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
     this.store.dispatch(loadStations());
@@ -71,6 +62,7 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
 
     // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
     this.store.dispatch(loadCarriages());
+
     // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
     this.store.dispatch(loadUsers());
 
@@ -132,7 +124,6 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
     const currentStation = stations.find((station) => {
       return station.id === number;
     });
-    console.log(stations);
     return currentStation ? currentStation.city : 'Unknown Station';
   }
 
