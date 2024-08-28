@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { combineLatest, map, Observable } from 'rxjs';
+import { combineLatest, map, Observable, Subject, switchMap, take, takeUntil } from 'rxjs';
 import { formatDate } from '@angular/common';
 import {
   selectCarriages,
   selectOrders,
-  // selectRides,
   selectStations,
   selectUsers,
 } from '../../core/store/trips/trips.selectors';
@@ -13,7 +12,6 @@ import {
   deleteOrder,
   loadCarriages,
   loadOrders,
-  // loadRideById,
   loadStations,
   loadUsers,
 } from '../../core/store/trips/trips.actions';
@@ -30,12 +28,13 @@ interface CarriageData {
   type: string;
   seat: number;
 }
+
 @Component({
   selector: 'app-orders-page',
   templateUrl: './orders-page.component.html',
-  styleUrl: './orders-page.component.scss',
+  styleUrls: ['./orders-page.component.scss'],
 })
-export class OrdersPageComponent implements OnInit {
+export class OrdersPageComponent implements OnInit, OnDestroy {
   orders$: Observable<Order[] | null> = this.store.select(selectOrders);
 
   stations$: Observable<Station[] | null> = this.store.select(selectStations);
@@ -50,6 +49,8 @@ export class OrdersPageComponent implements OnInit {
 
   warningOrderId: number | null = null;
 
+  private destroy$ = new Subject<void>();
+
   constructor(private store: Store) {}
 
   ngOnInit(): void {
@@ -63,29 +64,39 @@ export class OrdersPageComponent implements OnInit {
 
     // ________________
 
+    // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
+    this.store.dispatch(loadStations());
+
     this.role$ = this.store.select(selectAccess);
 
     // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
-    this.store.dispatch(loadStations());
-    this.role$.subscribe((role) => {
-      if (role === 'manager') this.store.dispatch(loadOrders({ all: true }));
-      else if (role === 'user') this.store.dispatch(loadOrders({}));
-    });
-    // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
     this.store.dispatch(loadCarriages());
-
     // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
     this.store.dispatch(loadUsers());
 
-    combineLatest([this.orders$, this.stations$, this.carriages$, this.users$])
+    this.role$
       .pipe(
+        switchMap((role) => {
+          if (role === 'manager') {
+            this.store.dispatch(loadOrders({ all: true }));
+          } else if (role === 'user') {
+            this.store.dispatch(loadOrders({}));
+          }
+          return combineLatest([this.orders$, this.stations$, this.carriages$, this.users$]);
+        }),
         map(([orders, stations, carriages, users]) => {
           return this.TransformOrders(orders, stations, carriages, users);
         }),
+        takeUntil(this.destroy$),
       )
       .subscribe((result) => {
         this.ordersForView = result;
       });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private TransformOrders(
@@ -97,7 +108,9 @@ export class OrdersPageComponent implements OnInit {
     if (!orders || !stations || !carriages || !users) {
       return [];
     }
-    const newOrders: OrderForView[] = orders!.map((order) => {
+
+    return orders.map((order) => {
+      const carriageData = this.getCarriageData(order, carriages);
       return {
         id: order.id,
         user: this.getUserName(order.userId, users),
@@ -106,24 +119,21 @@ export class OrdersPageComponent implements OnInit {
         endStation: this.getStationName(order.stationEnd, stations),
         endTime: this.getEndData(order),
         durationTrip: this.calculateDuration(order),
-        numberCarriage: this.getCarriageData(order, carriages).number,
-        typeCarriage: this.getCarriageData(order, carriages).type,
-        numberSeat: this.getCarriageData(order, carriages).seat,
-        price: this.calculateTotalPrice(order, this.getCarriageData(order, carriages).type),
+        numberCarriage: carriageData.number,
+        typeCarriage: carriageData.type,
+        numberSeat: carriageData.seat,
+        price: this.calculateTotalPrice(order, carriageData.type),
         status: order.status,
       };
     });
-    return newOrders;
   }
 
   private getStationName(number: number, stations: Station[]): string {
-    let currentStation = '';
-    stations.forEach((station) => {
-      if (station.id === number) {
-        currentStation = station.city;
-      }
+    const currentStation = stations.find((station) => {
+      return station.id === number;
     });
-    return currentStation;
+    console.log(stations);
+    return currentStation ? currentStation.city : 'Unknown Station';
   }
 
   private calculateDuration(order: Order): string {
@@ -146,7 +156,6 @@ export class OrdersPageComponent implements OnInit {
     order.schedule.segments.forEach((segment) => {
       totalPrice += segment.price[type];
     });
-
     return (totalPrice / 100).toFixed(2);
   }
 
@@ -155,27 +164,14 @@ export class OrdersPageComponent implements OnInit {
     let number = 1;
     let type = '';
 
-    if (carriages === null) {
-      return {
-        number: 0,
-        type: '',
-        seat: 0,
-      };
-    }
-
-    if (!Array.isArray(order.carriages)) {
-      return {
-        number: 0,
-        type: '',
-        seat: 0,
-      };
+    if (!carriages) {
+      return { number: 0, type: '', seat: 0 };
     }
 
     order.carriages.forEach((carriage) => {
       const carriageType = carriages.find((item) => {
         return item.code === carriage;
       });
-
       if (carriageType) {
         type = carriageType.name;
         const countSeats =
@@ -188,14 +184,10 @@ export class OrdersPageComponent implements OnInit {
       }
     });
 
-    return {
-      number,
-      type,
-      seat,
-    };
+    return { number, type, seat };
   }
 
-  private getUserName(userId: number, users: User[] | null) {
+  private getUserName(userId: number, users: User[] | null): string {
     if (users) {
       const user = users.find((item) => {
         return item.id === userId;
@@ -208,13 +200,13 @@ export class OrdersPageComponent implements OnInit {
   private getStartData(order: Order): string {
     const startStationIndex = order.path.indexOf(order.stationStart);
     const startTime = order.schedule.segments[startStationIndex].time[0];
-    return formatDate(new Date(startTime), 'MMMM dd hh:mm', 'en-US') as string;
+    return formatDate(new Date(startTime), 'MMMM dd hh:mm', 'en-US');
   }
 
   private getEndData(order: Order): string {
     const endStationIndex = order.path.indexOf(order.stationEnd);
     const endTime = order.schedule.segments[endStationIndex - 1].time[1];
-    return formatDate(new Date(endTime), 'MMMM dd hh:mm', 'en-US') as string;
+    return formatDate(new Date(endTime), 'MMMM dd hh:mm', 'en-US');
   }
 
   trackByOrderId(index: number, order: OrderForView): number {
@@ -232,10 +224,18 @@ export class OrdersPageComponent implements OnInit {
   deleteOrder(orderId: number): void {
     this.warningOrderId = null;
     this.store.dispatch(deleteOrder({ orderId }));
-    // Refresh orders after deleting
-    this.role$.subscribe((role) => {
-      if (role === 'manager') this.store.dispatch(loadOrders({ all: true }));
-      else if (role === 'user') this.store.dispatch(loadOrders({}));
-    });
+    this.role$
+      .pipe(
+        take(1),
+        switchMap((role) => {
+          if (role === 'manager') {
+            this.store.dispatch(loadOrders({ all: true }));
+          } else if (role === 'user') {
+            this.store.dispatch(loadOrders({}));
+          }
+          return [];
+        }),
+      )
+      .subscribe();
   }
 }
