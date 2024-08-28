@@ -122,6 +122,7 @@ export class UserEffects {
         return this.userService.getCurrentUser().pipe(
           take(1),
           map((user) => {
+            localStorage.setItem('role', user.role);
             return userActions.saveUser({
               name: user.name ?? '',
               email: user.email,
