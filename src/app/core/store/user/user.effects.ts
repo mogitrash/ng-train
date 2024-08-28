@@ -57,10 +57,11 @@ export class UserEffects {
               tap(({ token }) => {
                 localStorage.clear();
                 localStorage.setItem('token', token);
+                userActions.getToken({ token, role: 'user' });
               }),
-              switchMap(({ token }) => {
+              switchMap(() => {
                 this.router.navigate(['/']);
-                return of(userActions.getToken({ token, role: 'user' }), userActions.clearError());
+                return of(userActions.getUser(), userActions.clearError());
               }),
               catchError((error: UserError) => {
                 return of(userActions.getError({ error }));
