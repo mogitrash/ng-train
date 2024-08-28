@@ -15,7 +15,6 @@ export const adminGuard: CanActivateFn = () => {
     return store.select(selectAccess).pipe(
       take(1),
       map((currentAccess) => {
-        console.log(currentAccess);
         if (currentAccess === 'manager') {
           return true;
         }

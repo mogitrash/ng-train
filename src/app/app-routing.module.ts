@@ -8,7 +8,6 @@ import { SigninPageComponent } from './pages/signin-page/signin-page.component';
 import { SignupPageComponent } from './pages/signup-page/signup-page.component';
 import { MainPageComponent } from './pages/main-page/main-page.component';
 import { guestGuard } from './core/guards/guest.guard';
-import { userGuard } from './core/guards/user.guard';
 import { adminGuard } from './core/guards/admin.guard';
 import { adminUserGuard } from './core/guards/admin-user.guard';
 
