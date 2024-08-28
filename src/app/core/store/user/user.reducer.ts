@@ -15,7 +15,7 @@ import {
 } from './user.actions';
 
 const initialUserState: UserState = {
-  currentAccess: 'manager',
+  currentAccess: 'guest',
   currentUser: {
     email: '',
     name: '',
