@@ -57,7 +57,7 @@ export class OrdersPageComponent implements OnInit {
     // ________________
 
     // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
-    // this.store.dispatch(createOrder({ rideId: 1, seat: 1, stationStart: 41, stationEnd: 4 }));
+    // this.store.dispatch(createOrder({ rideId: 2, seat: 91, stationStart: 41, stationEnd: 4 }));
 
     // this.store.dispatch(createOrder({ rideId: 5, seat: 108, stationStart: 79, stationEnd: 71 }));
 
@@ -93,35 +93,37 @@ export class OrdersPageComponent implements OnInit {
     stations: Station[] | null,
     carriages: Carriage[] | null,
     users: User[] | null,
-  ) {
+  ): OrderForView[] {
+    if (!orders || !stations || !carriages || !users) {
+      return [];
+    }
     const newOrders: OrderForView[] = orders!.map((order) => {
       return {
         id: order.id,
         user: this.getUserName(order.userId, users),
-        startStation: this.getStationName(order.stationStart, stations) as string,
+        startStation: this.getStationName(order.stationStart, stations),
         startTime: this.getStartData(order),
-        endStation: this.getStationName(order.stationEnd, stations) as string,
+        endStation: this.getStationName(order.stationEnd, stations),
         endTime: this.getEndData(order),
         durationTrip: this.calculateDuration(order),
-        numberCarriage: this.getCarriageData(order, carriages).number as number,
-        typeCarriage: this.getCarriageData(order, carriages).type as string,
-        numberSeat: this.getCarriageData(order, carriages).seat as number,
-        price: this.calculateTotalPrice(
-          order,
-          this.getCarriageData(order, carriages).type,
-        ) as string,
-        status: order.status as string,
+        numberCarriage: this.getCarriageData(order, carriages).number,
+        typeCarriage: this.getCarriageData(order, carriages).type,
+        numberSeat: this.getCarriageData(order, carriages).seat,
+        price: this.calculateTotalPrice(order, this.getCarriageData(order, carriages).type),
+        status: order.status,
       };
     });
     return newOrders;
   }
 
-  private getStationName(number: number, stations: Station[] | null) {
-    if (stations != null)
-      return stations.find((station) => {
-        return station.id === number;
-      })?.city;
-    return '';
+  private getStationName(number: number, stations: Station[]): string {
+    let currentStation = '';
+    stations.forEach((station) => {
+      if (station.id === number) {
+        currentStation = station.city;
+      }
+    });
+    return currentStation;
   }
 
   private calculateDuration(order: Order): string {
