@@ -3,9 +3,12 @@
     <li><a [routerLink]="navLinks.guest.home" (click)="onLinkClick()">Home</a></li>
     <ng-container *ngIf="role !== 'guest'">
       <li><a [routerLink]="navLinks.user.profile" (click)="onLinkClick()">Profile</a></li>
+    </ng-container>
+    <ng-container *ngIf="role === 'user'">
       <li><a [routerLink]="navLinks.user.orders" (click)="onLinkClick()">My Orders</a></li>
     </ng-container>
     <ng-container *ngIf="role === 'manager'">
+      <li><a [routerLink]="navLinks.user.orders" (click)="onLinkClick()">Orders</a></li>
       <li><a [routerLink]="navLinks.admin.panel" (click)="onLinkClick()">Admin</a></li>
     </ng-container>
   </ul>
