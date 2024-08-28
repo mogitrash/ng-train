@@ -29,7 +29,7 @@ const routes: Routes = [
   {
     path: 'orders',
     component: OrdersPageComponent,
-    canActivate: [userGuard],
+    canActivate: [adminUserGuard],
   },
 
   // Only admin route
