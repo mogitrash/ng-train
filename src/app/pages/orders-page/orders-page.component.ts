@@ -10,7 +10,6 @@ import {
   selectUsers,
 } from '../../core/store/trips/trips.selectors';
 import {
-  createOrder,
   deleteOrder,
   loadCarriages,
   loadOrders,
@@ -24,7 +23,6 @@ import { Carriage } from '../../features/trips/models/carriage.model';
 import { Station } from '../../features/trips/models/station.model';
 import { OrderForView } from './order/order.component';
 import { User } from '../../features/trips/models/user.model';
-import { Schedule } from '../../features/trips/models/schedule.model';
 
 interface CarriageData {
   number: number;
@@ -77,7 +75,6 @@ export class OrdersPageComponent implements OnInit {
     combineLatest([this.orders$, this.stations$, this.carriages$, this.users$])
       .pipe(
         map(([orders, stations, carriages, users]) => {
-          console.log('stations', stations);
           return this.TransformOrders(orders, stations, carriages, users);
         }),
       )
@@ -100,10 +97,7 @@ export class OrdersPageComponent implements OnInit {
         startTime: this.getStartData(order),
         endStation: this.getStationName(order.stationEnd, stations) as string,
         endTime: this.getEndData(order),
-        durationTrip: this.calculateDuration(
-          new Date(order.schedule.segments[0].time[0]),
-          new Date(order.schedule.segments[order.schedule.segments.length - 1].time[1]),
-        ) as string,
+        durationTrip: this.calculateDuration(order),
         numberCarriage: this.getCarriageData(order, carriages).number as number,
         typeCarriage: this.getCarriageData(order, carriages).type as string,
         numberSeat: this.getCarriageData(order, carriages).seat as number,
@@ -125,7 +119,15 @@ export class OrdersPageComponent implements OnInit {
     return '';
   }
 
-  private calculateDuration(startDate: Date, endDate: Date): string {
+  private calculateDuration(order: Order): string {
+    const startStationIndex = order.path.indexOf(order.stationStart);
+    const startTime = order.schedule.segments[startStationIndex].time[0];
+    const startDate = new Date(startTime);
+
+    const endStationIndex = order.path.indexOf(order.stationEnd);
+    const endTime = order.schedule.segments[endStationIndex - 1].time[1];
+    const endDate = new Date(endTime);
+
     const durationMs = endDate.getTime() - startDate.getTime();
     const hours = Math.floor(durationMs / (1000 * 60 * 60));
     const minutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
@@ -197,25 +199,15 @@ export class OrdersPageComponent implements OnInit {
   }
 
   private getStartData(order: Order): string {
-    console.log('path', order.path);
-    console.log('segments', order.schedule.segments);
-    console.log('stationEnd', order.stationStart);
-    console.log('index in path', order.path.indexOf(order.stationStart));
-
-    console.log('____________');
-
     const startStationIndex = order.path.indexOf(order.stationStart);
-
-    console.log('нашлось ');
     const startTime = order.schedule.segments[startStationIndex].time[0];
     return formatDate(new Date(startTime), 'MMMM dd hh:mm', 'en-US') as string;
   }
 
   private getEndData(order: Order): string {
-    const startStationIndex = order.path.indexOf(order.stationEnd);
-
-    const startTime = order.schedule.segments[startStationIndex - 1].time[1];
-    return formatDate(new Date(startTime), 'MMMM dd hh:mm', 'en-US') as string;
+    const endStationIndex = order.path.indexOf(order.stationEnd);
+    const endTime = order.schedule.segments[endStationIndex - 1].time[1];
+    return formatDate(new Date(endTime), 'MMMM dd hh:mm', 'en-US') as string;
   }
 
   trackByOrderId(index: number, order: OrderForView): number {
