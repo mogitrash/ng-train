@@ -24,6 +24,7 @@ import { Carriage } from '../../features/trips/models/carriage.model';
 import { Station } from '../../features/trips/models/station.model';
 import { OrderForView } from './order/order.component';
 import { User } from '../../features/trips/models/user.model';
+import { Schedule } from '../../features/trips/models/schedule.model';
 
 interface CarriageData {
   number: number;
@@ -57,7 +58,7 @@ export class OrdersPageComponent implements OnInit {
     // ________________
 
     // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
-    this.store.dispatch(createOrder({ rideId: 1, seat: 1, stationStart: 41, stationEnd: 4 }));
+    // this.store.dispatch(createOrder({ rideId: 1, seat: 1, stationStart: 41, stationEnd: 4 }));
 
     // this.store.dispatch(createOrder({ rideId: 5, seat: 108, stationStart: 79, stationEnd: 71 }));
 
@@ -76,6 +77,7 @@ export class OrdersPageComponent implements OnInit {
     combineLatest([this.orders$, this.stations$, this.carriages$, this.users$])
       .pipe(
         map(([orders, stations, carriages, users]) => {
+          console.log('stations', stations);
           return this.TransformOrders(orders, stations, carriages, users);
         }),
       )
@@ -95,17 +97,9 @@ export class OrdersPageComponent implements OnInit {
         id: order.id,
         user: this.getUserName(order.userId, users),
         startStation: this.getStationName(order.stationStart, stations) as string,
-        startTime: formatDate(
-          new Date(order.schedule.segments[0].time[0]),
-          'MMMM dd hh:mm',
-          'en-US',
-        ) as string,
+        startTime: this.getStartData(order),
         endStation: this.getStationName(order.stationEnd, stations) as string,
-        endTime: formatDate(
-          new Date(order.schedule.segments[order.schedule.segments.length - 1].time[1]),
-          'MMMM dd hh:mm',
-          'en-US',
-        ) as string,
+        endTime: this.getEndData(order),
         durationTrip: this.calculateDuration(
           new Date(order.schedule.segments[0].time[0]),
           new Date(order.schedule.segments[order.schedule.segments.length - 1].time[1]),
@@ -200,6 +194,28 @@ export class OrdersPageComponent implements OnInit {
       if (user) return user.name;
     }
     return '';
+  }
+
+  private getStartData(order: Order): string {
+    console.log('path', order.path);
+    console.log('segments', order.schedule.segments);
+    console.log('stationEnd', order.stationStart);
+    console.log('index in path', order.path.indexOf(order.stationStart));
+
+    console.log('____________');
+
+    const startStationIndex = order.path.indexOf(order.stationStart);
+
+    console.log('нашлось ');
+    const startTime = order.schedule.segments[startStationIndex].time[0];
+    return formatDate(new Date(startTime), 'MMMM dd hh:mm', 'en-US') as string;
+  }
+
+  private getEndData(order: Order): string {
+    const startStationIndex = order.path.indexOf(order.stationEnd);
+
+    const startTime = order.schedule.segments[startStationIndex - 1].time[1];
+    return formatDate(new Date(startTime), 'MMMM dd hh:mm', 'en-US') as string;
   }
 
   trackByOrderId(index: number, order: OrderForView): number {
