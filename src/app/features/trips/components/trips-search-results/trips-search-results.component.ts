@@ -5,7 +5,7 @@ import {
   selectRidesGroupedByDates,
   selectSearchDate,
 } from '../../../../core/store/trips/trips.selectors';
-import { RidesGroup } from '../../../../core/models/trips.model';
+import { RideItemInfo } from '../../../../core/models/trips.model';
 import { getISOSDate } from '../../../../shared/utilities/getISOSDate.utility';
 
 @Component({
@@ -18,7 +18,7 @@ export class TripsSearchResultsComponent implements OnInit {
 
   private selectedDate$ = this.store.select(selectSearchDate);
 
-  private selectedGroup$!: Observable<RidesGroup[]>;
+  public selectedGroup$!: Observable<RideItemInfo[]>;
 
   constructor(private store: Store) {}
 
@@ -34,9 +34,5 @@ export class TripsSearchResultsComponent implements OnInit {
       }),
       take(1),
     );
-
-    this.selectedGroup$.subscribe((group) => {
-      console.log(group);
-    });
   }
 }

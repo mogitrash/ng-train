@@ -1,5 +1,6 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { take } from 'rxjs';
 import {
   selectSearchDate,
   selectSearchResponses,
@@ -24,14 +25,11 @@ export class TripsFilterComponent implements OnInit {
 
   public searchDate?: Date;
 
-  constructor(
-    private store: Store,
-    private destroyRef: DestroyRef,
-  ) {}
+  constructor(private store: Store) {}
 
   ngOnInit(): void {
     this.searchResponses$.subscribe(() => {
-      this.uniqueSearchDates$.subscribe((uniqueDates) => {
+      this.uniqueSearchDates$.pipe(take(1)).subscribe((uniqueDates) => {
         this.uniqueSearchDates = uniqueDates;
       });
 

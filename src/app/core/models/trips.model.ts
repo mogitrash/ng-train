@@ -3,7 +3,6 @@ import { Order } from '../../features/trips/models/order.model';
 import { Ride } from '../../features/trips/models/ride.model';
 import { Route } from '../../features/trips/models/route.model';
 import { SearchResponse } from '../../features/trips/models/searchResponse.model';
-import { Segment } from '../../features/trips/models/segment.model';
 import { Station } from '../../features/trips/models/station.model';
 import { User } from '../../features/trips/models/user.model';
 
@@ -19,11 +18,25 @@ export interface TripsState {
 }
 
 export interface GroupedRides {
-  [date: string]: RidesGroup[];
+  [date: string]: RideItemInfo[];
 }
 
-export interface RidesGroup {
+export interface RideItemInfo {
   rideId: number;
-  segments: Segment[];
-  routeId: number;
+  fromCity: string;
+  fromStationId: number;
+  toCity: string;
+  toStationId: number;
+}
+
+export interface RideItemConfig {
+  startTime: Date;
+  endTime: Date;
+  startCity: string;
+  endCity: string;
+  price: RideItemPrice;
+}
+
+export interface RideItemPrice {
+  [key: string]: number;
 }

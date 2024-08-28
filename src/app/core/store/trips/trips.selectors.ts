@@ -18,8 +18,10 @@ export const selectRidesGroupedByDates = createSelector(selectTripsState, (state
 
         groupedRides[startDate].push({
           rideId: schedule.rideId,
-          segments: schedule.segments,
-          routeId: route.id,
+          fromCity: lastResponse.from.city,
+          fromStationId: lastResponse.from.stationId,
+          toCity: lastResponse.to.city,
+          toStationId: lastResponse.to.stationId,
         });
       }
     });
@@ -31,11 +33,10 @@ export const selectRidesGroupedByDates = createSelector(selectTripsState, (state
 export const selectUniqueSearchDates = createSelector(selectTripsState, (state: TripsState) => {
   const dates: Set<string> = new Set();
   const lastResponse = state.searchResponses.at(state.searchResponses.length - 1);
+
   lastResponse?.routes.forEach((route) => {
     route.schedule.forEach((ride) => {
       const date = new Date(ride.segments[0].time[0]);
-
-      date.setHours(0, 0, 0, 0);
 
       if (date >= new Date()) {
         dates.add(getISOSDate(date));
@@ -43,13 +44,10 @@ export const selectUniqueSearchDates = createSelector(selectTripsState, (state: 
     });
   });
 
-  // NOTE: I use slice(0, 50) cause in response we get > 1500 results and
-  // lazy-loading of those tabs are not required :)
   return Array.from(dates)
     .map((date) => {
       return new Date(date);
     })
-    .slice(0, 50)
     .sort((a, b) => {
       return a.getTime() - b.getTime();
     });
@@ -85,4 +83,8 @@ export const selectUsers = createSelector(selectTripsState, (state: TripsState) 
 
 export const selectSearchResponses = createSelector(selectTripsState, (state: TripsState) => {
   return state.searchResponses;
+});
+
+export const selectLastSearchReponse = createSelector(selectTripsState, (state: TripsState) => {
+  return state.searchResponses.at(state.searchResponses.length - 1);
 });

@@ -7,7 +7,7 @@
     [selectedIndex]="selectedIndex"
   >
     @for (date of uniqueSearchDates; track date.getTime()) {
-      <mat-tab>
+      <mat-tab class="tab-content">
         <ng-template mat-tab-label>
           <div class="tab-label">
             <div class="tab-date">

@@ -1,1 +1,23 @@
-<p>trip-item works!</p>
+@let rides = rides$ | async;
+
+@if (rides) {
+  <div class="ride">
+    <div class="info">
+      <div class="info-time">
+        <div class="start">
+          <div class="time">{{ rideStartDate | date: 'shortTime' }}</div>
+          <div class="date">{{ rideStartDate | date: 'MMMM d' }}</div>
+          <div class="city">{{ rideStartStation }}</div>
+        </div>
+
+        <div class="end">
+          <div class="time">{{ rideEndDate | date: 'shortTime' }}</div>
+          <div class="date">{{ rideEndDate | date: 'MMMM d' }}</div>
+          <div class="city">{{ rideEndStation }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="price"></div>
+  </div>
+}

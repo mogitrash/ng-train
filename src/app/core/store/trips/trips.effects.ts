@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { catchError, exhaustMap, map, of, tap } from 'rxjs';
+import { catchError, exhaustMap, map, mergeMap, of, tap } from 'rxjs';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TripsService } from '../../../features/trips/services/trips.service';
@@ -21,6 +21,7 @@ export class TripsEffects {
           )
           .pipe(
             map((search) => {
+              // NOTE: implement converter logic
               return tripActions.searchLoadedSuccess({ search });
             }),
             catchError((error) => {
@@ -288,7 +289,7 @@ export class TripsEffects {
   loadRideById$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(tripActions.loadRideById),
-      exhaustMap((action) => {
+      mergeMap((action) => {
         return this.tripsService.getRideById(action.rideId).pipe(
           map((ride) => {
             return tripActions.rideLoadedByIdSuccess({ ride });

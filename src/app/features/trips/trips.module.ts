@@ -17,7 +17,12 @@ import { TripItemComponent } from './components/trips-search-results/trip-item/t
 
 @NgModule({
   providers: [provideNativeDateAdapter()],
-  declarations: [TripsSearchComponent, TripsFilterComponent, TripsSearchResultsComponent, TripItemComponent],
+  declarations: [
+    TripsSearchComponent,
+    TripsFilterComponent,
+    TripsSearchResultsComponent,
+    TripItemComponent,
+  ],
   imports: [
     CommonModule,
     MatFormFieldModule,

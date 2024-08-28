@@ -1,0 +1,14 @@
+.ride {
+  padding: 20px;
+  border: 1px solid var(--grey);
+  border-radius: 30px;
+  width: calc(100% - 2px);
+  min-height: 150px; // delete
+  display: flex;
+  justify-content: space-between;
+}
+
+.info-time {
+  display: flex;
+  gap: 100px;
+}
