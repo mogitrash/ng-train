@@ -163,3 +163,11 @@ export const createOrderSuccess = createAction(
   '[Trips] Create Order Success',
   props<{ id: string }>(),
 );
+export const loadDataForOrdersView = createAction(
+  '[Trips] Load Data For View Orders',
+  props<{ role: 'manager' | 'user' }>(),
+);
+export const loadDataForOrdersViewSuccess = createAction(
+  '[Trips] Load Data For View Orders Success',
+  props<{ carriages: Carriage[]; users: User[]; stations: Station[]; orders: Order[] }>(),
+);

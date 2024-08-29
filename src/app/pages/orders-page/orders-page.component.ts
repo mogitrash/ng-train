@@ -11,6 +11,7 @@ import {
 import {
   deleteOrder,
   loadCarriages,
+  loadDataForOrdersView,
   loadOrders,
   loadStations,
   loadUsers,
@@ -54,29 +55,18 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
   constructor(private store: Store) {}
 
   ngOnInit(): void {
-
-    // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
-    this.store.dispatch(loadStations());
-
     this.role$ = this.store.select(selectAccess);
-
-    // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
-    this.store.dispatch(loadCarriages());
-
-    // eslint-disable-next-line @ngrx/avoid-dispatching-multiple-actions-sequentially
-    this.store.dispatch(loadUsers());
 
     this.role$
       .pipe(
         switchMap((role) => {
-          if (role === 'manager') {
-            this.store.dispatch(loadOrders({ all: true }));
-          } else if (role === 'user') {
-            this.store.dispatch(loadOrders({}));
+          if (role !== 'guest') {
+            this.store.dispatch(loadDataForOrdersView({ role }));
           }
           return combineLatest([this.orders$, this.stations$, this.carriages$, this.users$]);
         }),
         map(([orders, stations, carriages, users]) => {
+          console.log('stations', stations);
           return this.TransformOrders(orders, stations, carriages, users);
         }),
         takeUntil(this.destroy$),
