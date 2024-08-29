@@ -1,5 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { catchError, throwError } from 'rxjs';
 import { Station } from '../models/station.model';
 import { Route } from '../models/route.model';
 import { Carriage } from '../models/carriage.model';
@@ -7,7 +8,6 @@ import { Order } from '../models/order.model';
 import { User } from '../models/user.model';
 import { Ride } from '../models/ride.model';
 import { SearchResponse } from '../models/searchResponse.model';
-import { catchError, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -104,7 +104,7 @@ export class TripsService {
   }
 
   public deleteOrder(orderId: number) {
-    console.log('1');
+    console.log('Calling deleteOrder with ID:', orderId);
     return this.http.delete<void>(`/api/order/${orderId}`).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 400) {
