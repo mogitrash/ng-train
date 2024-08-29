@@ -82,7 +82,8 @@ export const carriageUpdatedSuccess = createAction(
   props<{ code: string }>(),
 );
 
-export const loadOrders = createAction('[Trips] Load Orders');
+export const loadOrders = createAction('[Trips] Load Orders', props<{ all?: boolean }>());
+
 export const ordersLoadedSuccess = createAction(
   '[Trips] Orders Loaded Success',
   props<{ orders: Order[] }>(),
@@ -161,4 +162,12 @@ export const createOrder = createAction(
 export const createOrderSuccess = createAction(
   '[Trips] Create Order Success',
   props<{ id: string }>(),
+);
+export const loadDataForOrdersView = createAction(
+  '[Trips] Load Data For View Orders',
+  props<{ role: 'manager' | 'user' }>(),
+);
+export const loadDataForOrdersViewSuccess = createAction(
+  '[Trips] Load Data For View Orders Success',
+  props<{ carriages: Carriage[]; users: User[]; stations: Station[]; orders: Order[] }>(),
 );

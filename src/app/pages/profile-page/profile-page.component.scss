@@ -9,6 +9,11 @@
   width: var(--container-with);
   padding: 0.5rem 0;
   gap: 20px;
+  h1 {
+    width: 100%;
+    color: var(--primary-blue);
+    text-align: center;
+  }
   h2 {
     width: 100%;
     color: var(--primary-blue);

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { catchError, exhaustMap, map, of, tap } from 'rxjs';
+import { catchError, exhaustMap, forkJoin, map, of, switchMap, tap } from 'rxjs';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TripsService } from '../../../features/trips/services/trips.service';
@@ -188,8 +188,8 @@ export class TripsEffects {
   loadOrder$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(tripActions.loadOrders),
-      exhaustMap(() => {
-        return this.tripsService.getOrderList().pipe(
+      exhaustMap((action) => {
+        return this.tripsService.getOrderList(action.all).pipe(
           map((orders) => {
             return tripActions.ordersLoadedSuccess({ orders });
           }),
@@ -346,6 +346,32 @@ export class TripsEffects {
     },
     { functional: true, dispatch: false },
   );
+
+  loadDataForOrdersView$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(tripActions.loadDataForOrdersView),
+      switchMap((action) => {
+        const loadOrdersAction =
+          action.role === 'manager'
+            ? this.tripsService.getOrderList(true)
+            : this.tripsService.getOrderList();
+
+        return forkJoin({
+          carriages: this.tripsService.getCarriageList(),
+          users: this.tripsService.getUsersList(),
+          stations: this.tripsService.getStationList(),
+          orders: loadOrdersAction,
+        }).pipe(
+          map(({ carriages, users, stations, orders }) => {
+            return tripActions.loadDataForOrdersViewSuccess({ carriages, users, stations, orders });
+          }),
+          catchError((error) => {
+            return of(tripActions.failureSnackBar({ error }));
+          }),
+        );
+      }),
+    );
+  });
 
   constructor(
     private actions$: Actions,
