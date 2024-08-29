@@ -10,11 +10,8 @@ import {
 } from '../../core/store/trips/trips.selectors';
 import {
   deleteOrder,
-  loadCarriages,
   loadDataForOrdersView,
   loadOrders,
-  loadStations,
-  loadUsers,
 } from '../../core/store/trips/trips.actions';
 import { Order } from '../../features/trips/models/order.model';
 import { selectAccess } from '../../core/store/user/user.selectors';
@@ -66,7 +63,6 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
           return combineLatest([this.orders$, this.stations$, this.carriages$, this.users$]);
         }),
         map(([orders, stations, carriages, users]) => {
-          console.log('stations', stations);
           return this.TransformOrders(orders, stations, carriages, users);
         }),
         takeUntil(this.destroy$),
