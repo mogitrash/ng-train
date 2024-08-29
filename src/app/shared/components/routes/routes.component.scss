@@ -1,6 +1,8 @@
 @import './../../../../styles.scss';
 
 :host {
+  width: calc(100% - 4rem);
+  padding: 0.5rem 2rem;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -24,32 +26,48 @@
     border-radius: 15px;
     display: flex;
     flex-direction: column;
-    &-header {
-      display: flex;
-      justify-content: space-between;
-      h3 {
-        color: var(--primary-blue);
-        font-size: 24px;
+  }
+
+  .route-header {
+    display: flex;
+    justify-content: space-between;
+    @media (max-width: 500px) {
+      flex-direction: column;
+    }
+    h3 {
+      color: var(--primary-blue);
+      font-size: 24px;
+      @media (max-width: 500px) {
+        text-align: center;
       }
-      &-buttons {
-        position: relative;
-        display: flex;
-        gap: 10px;
-        button {
-          padding: 5px 6px 0;
-          margin-bottom: 23px;
-          span {
-            position: absolute;
-            top: 103%;
-            left: 0%;
-            font-size: 8px;
-            color: var(--primary-blue);
+    }
+    &-buttons {
+      position: relative;
+      display: flex;
+      gap: 10px;
+      @media (max-width: 500px) {
+        justify-content: space-evenly;
+      }
+      button {
+        padding: 5px 6px 0;
+        margin-bottom: 23px;
+        @media (max-width: 500px) {
+          width: 13%;
+        }
+        span {
+          position: absolute;
+          top: 103%;
+          left: 0%;
+          font-size: 8px;
+          color: var(--primary-blue);
+          @media (max-width: 500px) {
+            left: 25%;
           }
         }
       }
     }
-    .cities {
-      margin-bottom: 15px;
-    }
+  }
+  .cities {
+    margin-bottom: 15px;
   }
 }
