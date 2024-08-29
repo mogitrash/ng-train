@@ -104,17 +104,19 @@ export class TripsService {
   }
 
   public deleteOrder(orderId: number) {
-    console.log('Calling deleteOrder with ID:', orderId);
     return this.http.delete<void>(`/api/order/${orderId}`).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 400) {
-          console.log('2');
-          return throwError({
-            message: error.error?.message || 'Unknown error',
-            reason: error.error?.reason || 'unknownError',
+          return throwError(() => {
+            return {
+              message: error.error?.message || 'Unknown error',
+              reason: error.error?.reason || 'unknownError',
+            };
           });
         }
-        return throwError(error);
+        return throwError(() => {
+          return error;
+        });
       }),
     );
   }
