@@ -81,7 +81,6 @@ import { UserEffects } from './core/store/user/user.effects';
     MatProgressSpinnerModule,
     MatDividerModule,
     SharedModule,
-
   ],
   providers: [
     provideAnimationsAsync(),

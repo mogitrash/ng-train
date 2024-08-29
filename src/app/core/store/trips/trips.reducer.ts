@@ -30,7 +30,7 @@ export const tripsReducer = createReducer(
     return { ...state, searchResponses: [...state.searchResponses, search] };
   }),
   on(stationsLoadedSuccess, (state, { stations }): TripsState => {
-    return { ...state, stations,loading:false };
+    return { ...state, stations, loading: false };
   }),
   on(routesLoadedSuccess, (state, { routes }): TripsState => {
     return { ...state, routes };
@@ -58,5 +58,5 @@ export const tripsReducer = createReducer(
   }),
   on(loadingFinished, (state): TripsState => {
     return { ...state, loading: false };
-  })
+  }),
 );

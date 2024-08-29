@@ -36,9 +36,9 @@ export class TripsEffects {
             }),
             catchError((error) => {
               return of(tripActions.failureSnackBar(error));
-            })
+            }),
           );
-      })
+      }),
     );
   });
 
@@ -57,12 +57,12 @@ export class TripsEffects {
               coordinate.longitude,
               action.station.latitude,
               action.station.longitude,
-              now
+              now,
             )
             .pipe(
               map((route) => {
                 return route.routes.length > 0;
-              })
+              }),
             );
         });
 
@@ -81,18 +81,17 @@ export class TripsEffects {
                   message: 'Cannot delete station with active rides',
                   reason: 'Cannot delete station with active rides',
                 },
-              })
+              }),
             );
           }),
           catchError((error) => {
             return of(tripActions.failureSnackBar(error));
           }),
-          startWith(tripActions.loadingStarted())
+          startWith(tripActions.loadingStarted()),
         );
-      })
+      }),
     );
   });
-
 
   loadStations$ = createEffect(() => {
     return this.actions$.pipe(
@@ -106,9 +105,9 @@ export class TripsEffects {
             return of(tripActions.failureSnackBar(error));
           }),
           startWith(tripActions.loadingStarted()),
-          endWith(tripActions.loadingFinished())
+          endWith(tripActions.loadingFinished()),
         );
-      })
+      }),
     );
   });
 
@@ -123,9 +122,9 @@ export class TripsEffects {
           catchError((error) => {
             return of(tripActions.failureSnackBar(error));
           }),
-          startWith(tripActions.loadingStarted())
+          startWith(tripActions.loadingStarted()),
         );
-      })
+      }),
     );
   });
 
@@ -134,7 +133,7 @@ export class TripsEffects {
       ofType(tripActions.stationDeleteSuccess),
       map(() => {
         return tripActions.loadStations();
-      })
+      }),
     );
   });
 
@@ -148,10 +147,9 @@ export class TripsEffects {
           }),
           catchError((error) => {
             return of(tripActions.failureSnackBar(error));
-          })
+          }),
         );
-      })
-
+      }),
     );
   });
 
@@ -159,17 +157,15 @@ export class TripsEffects {
     return this.actions$.pipe(
       ofType(tripActions.createRoute),
       exhaustMap((action) => {
-        return this.tripsService
-          .createRoute(action.path, action.carriages)
-          .pipe(
-            map((id) => {
-              return tripActions.routeCreatedSuccess(id);
-            }),
-            catchError((error) => {
-              return of(tripActions.failureSnackBar(error));
-            })
-          );
-      })
+        return this.tripsService.createRoute(action.path, action.carriages).pipe(
+          map((id) => {
+            return tripActions.routeCreatedSuccess(id);
+          }),
+          catchError((error) => {
+            return of(tripActions.failureSnackBar(error));
+          }),
+        );
+      }),
     );
   });
 
@@ -177,17 +173,15 @@ export class TripsEffects {
     return this.actions$.pipe(
       ofType(tripActions.updateRoute),
       exhaustMap((action) => {
-        return this.tripsService
-          .updateRoute(action.id, action.path, action.carriages)
-          .pipe(
-            map((id) => {
-              return tripActions.routeUpdatedSuccess(id);
-            }),
-            catchError((error) => {
-              return of(tripActions.failureSnackBar(error));
-            })
-          );
-      })
+        return this.tripsService.updateRoute(action.id, action.path, action.carriages).pipe(
+          map((id) => {
+            return tripActions.routeUpdatedSuccess(id);
+          }),
+          catchError((error) => {
+            return of(tripActions.failureSnackBar(error));
+          }),
+        );
+      }),
     );
   });
 
@@ -201,9 +195,9 @@ export class TripsEffects {
           }),
           catchError((error) => {
             return of(tripActions.failureSnackBar(error));
-          })
+          }),
         );
-      })
+      }),
     );
   });
 
@@ -217,9 +211,9 @@ export class TripsEffects {
           }),
           catchError((error) => {
             return of(tripActions.failureSnackBar(error));
-          })
+          }),
         );
-      })
+      }),
     );
   });
 
@@ -228,21 +222,16 @@ export class TripsEffects {
       ofType(tripActions.createCarriage),
       exhaustMap((action) => {
         return this.tripsService
-          .createCarriageType(
-            action.name,
-            action.rows,
-            action.leftSeats,
-            action.rightSeats
-          )
+          .createCarriageType(action.name, action.rows, action.leftSeats, action.rightSeats)
           .pipe(
             map((code) => {
               return tripActions.carriagesCreatedSuccess(code);
             }),
             catchError((error) => {
               return of(tripActions.failureSnackBar(error));
-            })
+            }),
           );
-      })
+      }),
     );
   });
 
@@ -256,7 +245,7 @@ export class TripsEffects {
             action.name,
             action.rows,
             action.leftSeats,
-            action.rightSeats
+            action.rightSeats,
           )
           .pipe(
             map((code) => {
@@ -264,9 +253,9 @@ export class TripsEffects {
             }),
             catchError((error) => {
               return of(tripActions.failureSnackBar(error));
-            })
+            }),
           );
-      })
+      }),
     );
   });
 
@@ -280,9 +269,9 @@ export class TripsEffects {
           }),
           catchError((error) => {
             return of(tripActions.failureSnackBar(error));
-          })
+          }),
         );
-      })
+      }),
     );
   });
 
@@ -291,21 +280,16 @@ export class TripsEffects {
       ofType(tripActions.createOrder),
       exhaustMap((action) => {
         return this.tripsService
-          .createOrder(
-            action.rideId,
-            action.seat,
-            action.stationStart,
-            action.stationEnd
-          )
+          .createOrder(action.rideId, action.seat, action.stationStart, action.stationEnd)
           .pipe(
             map((response) => {
               return tripActions.createOrderSuccess(response);
             }),
             catchError((error) => {
               return of(tripActions.failureSnackBar(error));
-            })
+            }),
           );
-      })
+      }),
     );
   });
 
@@ -321,7 +305,7 @@ export class TripsEffects {
             return of(tripActions.failureSnackBar(error));
           }),
         );
-      })
+      }),
     );
   });
 
@@ -335,9 +319,9 @@ export class TripsEffects {
           }),
           catchError((error) => {
             return of(tripActions.failureSnackBar(error));
-          })
+          }),
         );
-      })
+      }),
     );
   });
 
@@ -353,7 +337,7 @@ export class TripsEffects {
             return of(tripActions.failureSnackBar(error));
           }),
         );
-      })
+      }),
     );
   });
 
@@ -362,12 +346,7 @@ export class TripsEffects {
       ofType(tripActions.createStation),
       exhaustMap((action) => {
         return this.tripsService
-          .createStation(
-            action.city,
-            action.latitude,
-            action.longitude,
-            action.relations
-          )
+          .createStation(action.city, action.latitude, action.longitude, action.relations)
           .pipe(
             map(() => {
               return tripActions.createStationSuccess();
@@ -375,9 +354,9 @@ export class TripsEffects {
             catchError((error) => {
               return of(tripActions.failureSnackBar(error));
             }),
-            startWith(tripActions.loadingStarted())
+            startWith(tripActions.loadingStarted()),
           );
-      })
+      }),
     );
   });
 
@@ -386,8 +365,7 @@ export class TripsEffects {
       ofType(tripActions.createStationSuccess),
       map(() => {
         return tripActions.loadStations();
-      })
-
+      }),
     );
   });
 
@@ -403,7 +381,7 @@ export class TripsEffects {
             return of(tripActions.failureSnackBar(error));
           }),
         );
-      })
+      }),
     );
   });
 
@@ -411,17 +389,15 @@ export class TripsEffects {
     return this.actions$.pipe(
       ofType(tripActions.createRide),
       exhaustMap((action) => {
-        return this.tripsService
-          .createRide(action.routeId, action.segments)
-          .pipe(
-            map((id) => {
-              return tripActions.createRideSuccess(id);
-            }),
-            catchError((error) => {
-              return of(tripActions.failureSnackBar(error));
-            })
-          );
-      })
+        return this.tripsService.createRide(action.routeId, action.segments).pipe(
+          map((id) => {
+            return tripActions.createRideSuccess(id);
+          }),
+          catchError((error) => {
+            return of(tripActions.failureSnackBar(error));
+          }),
+        );
+      }),
     );
   });
 
@@ -429,17 +405,15 @@ export class TripsEffects {
     return this.actions$.pipe(
       ofType(tripActions.updateRide),
       exhaustMap((action) => {
-        return this.tripsService
-          .updateRide(action.routeId, action.rideId, action.segments)
-          .pipe(
-            map(() => {
-              return tripActions.updateRideSuccess();
-            }),
-            catchError((error) => {
-              return of(tripActions.failureSnackBar(error));
-            })
-          );
-      })
+        return this.tripsService.updateRide(action.routeId, action.rideId, action.segments).pipe(
+          map(() => {
+            return tripActions.updateRideSuccess();
+          }),
+          catchError((error) => {
+            return of(tripActions.failureSnackBar(error));
+          }),
+        );
+      }),
     );
   });
 
@@ -452,7 +426,7 @@ export class TripsEffects {
             duration: 5000,
           });
           tripActions.loadingFinished();
-        })
+        }),
       );
     },
     { functional: true, dispatch: false },
@@ -461,6 +435,6 @@ export class TripsEffects {
   constructor(
     private actions$: Actions,
     private tripsService: TripsService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
   ) {}
 }

@@ -7,12 +7,12 @@ import { Station } from '../../features/trips/models/station.model';
 import { User } from '../../features/trips/models/user.model';
 
 export interface TripsState {
-    stations:Station[],
-    routes:Route[],
-    carriages:Carriage[],
-    orders:Order[],
-    rides:Ride[],
-    users:User[],
-    searchResponses:SearchResponse[],
-    loading:boolean
+  stations: Station[];
+  routes: Route[];
+  carriages: Carriage[];
+  orders: Order[];
+  rides: Ride[];
+  users: User[];
+  searchResponses: SearchResponse[];
+  loading: boolean;
 }

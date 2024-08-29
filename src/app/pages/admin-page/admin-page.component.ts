@@ -1,35 +1,16 @@
-import {
-  AfterViewInit,
-  Component,
-  DestroyRef,
-  ViewChild,
-  inject,
-} from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, ViewChild, inject } from '@angular/core';
 import * as L from 'leaflet';
 import { Observable, Subscription } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import {
-  AbstractControl,
-  FormArray,
-  FormBuilder,
-  FormControl,
-  Validators,
-} from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, Validators } from '@angular/forms';
 
 import { Station } from '../../features/trips/models/station.model';
 import { PopUpService } from '../../features/admin/services/popup.service';
-import {
-  canDelete,
-  createStation,
-  loadStations,
-} from '../../core/store/trips/trips.actions';
-import {
-  selectLoading,
-  selectStations,
-} from '../../core/store/trips/trips.selectors';
+import { canDelete, createStation, loadStations } from '../../core/store/trips/trips.actions';
+import { selectLoading, selectStations } from '../../core/store/trips/trips.selectors';
 
 const iconRetinaUrl = 'assets/marker-icon-2x.png';
 const iconUrl = 'assets/marker-icon.png';
@@ -47,8 +28,7 @@ const iconDefault = L.icon({
 const redIcon = new L.Icon({
   iconUrl:
     'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-  shadowUrl:
-    'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -84,21 +64,15 @@ export class AdminPageComponent implements AfterViewInit {
 
   protected stationForm = this.formBuilder.nonNullable.group({
     city: ['', Validators.required],
-    latitude: [
-      0,
-      [Validators.required, Validators.min(-180), Validators.max(180)],
-    ],
-    longitude: [
-      0,
-      [Validators.required, Validators.min(-180), Validators.max(180)],
-    ],
+    latitude: [0, [Validators.required, Validators.min(-180), Validators.max(180)]],
+    longitude: [0, [Validators.required, Validators.min(-180), Validators.max(180)]],
     relations: this.formBuilder.array([this.createRelation(0)]),
   });
 
   constructor(
     private store: Store,
     private popupService: PopUpService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {
     this.destroyRef = inject(DestroyRef);
     this.store.dispatch(loadStations());
@@ -108,11 +82,9 @@ export class AdminPageComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.initMap();
-    this.stations$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((stations) => {
-        this.updateMap(stations);
-      });
+    this.stations$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((stations) => {
+      this.updateMap(stations);
+    });
   }
 
   get relations(): FormArray {
@@ -124,15 +96,11 @@ export class AdminPageComponent implements AfterViewInit {
       center: [39.8282, -98.5795],
       zoom: 3,
     });
-    const tiles = L.tileLayer(
-      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      {
-        maxZoom: 18,
-        minZoom: 3,
-        attribution:
-          '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      }
-    );
+    const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      minZoom: 3,
+      attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    });
     tiles.addTo(this.map);
     const southWest = L.latLng(-90, -180);
     const northEast = L.latLng(90, 180);
@@ -235,7 +203,7 @@ export class AdminPageComponent implements AfterViewInit {
           latitude: formValue.latitude,
           longitude: formValue.longitude,
           relations: formValue.relations,
-        })
+        }),
       );
       if (this.marker) {
         this.map.removeLayer(this.marker);
@@ -258,10 +226,7 @@ export class AdminPageComponent implements AfterViewInit {
       return control.value;
     });
     this.relations.controls.forEach((control) => {
-      control.setValidators([
-        Validators.required,
-        this.forbidSelectedValues(selectedValues),
-      ]);
+      control.setValidators([Validators.required, this.forbidSelectedValues(selectedValues)]);
       control.updateValueAndValidity();
     });
   }

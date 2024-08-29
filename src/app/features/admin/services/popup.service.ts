@@ -4,11 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class PopUpService {
-
-  makeCapitalPopup(title:string): string {
-    return (
-      `` +
-      `<div>Station: ${title}</div>`
-    );
+  makeCapitalPopup(title: string): string {
+    return `<div>Station: ${title}</div>`;
   }
 }

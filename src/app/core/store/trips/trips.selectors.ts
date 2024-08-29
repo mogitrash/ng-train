@@ -3,44 +3,33 @@ import { TripsState } from '../../models/trips.model';
 
 const selectTripsState = createFeatureSelector<TripsState>('trips');
 
-export const selectStations = createSelector(
-  selectTripsState,
-  (state: TripsState) => {return state.stations}
-);
+export const selectStations = createSelector(selectTripsState, (state: TripsState) => {
+  return state.stations;
+});
 
-export const selectRoutes = createSelector(
-  selectTripsState,
-  (state: TripsState) => {return state.routes}
-);
+export const selectRoutes = createSelector(selectTripsState, (state: TripsState) => {
+  return state.routes;
+});
 
-export const selectCarriages = createSelector(
-  selectTripsState,
-  (state: TripsState) => {return state.carriages}
-);
+export const selectCarriages = createSelector(selectTripsState, (state: TripsState) => {
+  return state.carriages;
+});
 
-export const selectOrders = createSelector(
-  selectTripsState,
-  (state: TripsState) => {return state.orders}
-);
+export const selectOrders = createSelector(selectTripsState, (state: TripsState) => {
+  return state.orders;
+});
 
-export const selectRides = createSelector(
-  selectTripsState,
-  (state: TripsState) => {return state.rides}
-);
+export const selectRides = createSelector(selectTripsState, (state: TripsState) => {
+  return state.rides;
+});
 
-export const selectUsers = createSelector(
-  selectTripsState,
-  (state: TripsState) => {return state.users}
-);
+export const selectUsers = createSelector(selectTripsState, (state: TripsState) => {
+  return state.users;
+});
 
-export const selectSearchResponses = createSelector(
-  selectTripsState,
-  (state: TripsState) => {return state.searchResponses}
-);
-export const selectLoading = createSelector(
-  selectTripsState,
-  (state: TripsState) => {
-    return state.loading;
-  }
-);
-
+export const selectSearchResponses = createSelector(selectTripsState, (state: TripsState) => {
+  return state.searchResponses;
+});
+export const selectLoading = createSelector(selectTripsState, (state: TripsState) => {
+  return state.loading;
+});

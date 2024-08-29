@@ -47,12 +47,7 @@ export class TripsService {
     return this.http.get<Station[]>('/api/station');
   }
 
-  public createStation(
-    city: string,
-    latitude: number,
-    longitude: number,
-    relations: number[]
-  ) {
+  public createStation(city: string, latitude: number, longitude: number, relations: number[]) {
     return this.http.post<{ id: number }>('/api/station', {
       city,
       latitude,
@@ -88,12 +83,7 @@ export class TripsService {
     return this.http.get<Carriage[]>('/api/carriage');
   }
 
-  public createCarriageType(
-    name: string,
-    rows: number,
-    leftSeats: number,
-    rightSeats: number
-  ) {
+  public createCarriageType(name: string, rows: number, leftSeats: number, rightSeats: number) {
     return this.http.post<{ code: string }>('/api/carriage', {
       name,
       rows,
@@ -125,12 +115,7 @@ export class TripsService {
     return this.http.get<Order[]>('/api/order', { params });
   }
 
-  public createOrder(
-    rideId: number,
-    seat: number,
-    stationStart: number,
-    stationEnd: number
-  ) {
+  public createOrder(rideId: number, seat: number, stationStart: number, stationEnd: number) {
     return this.http.post<{ id: string }>('/api/order', {
       rideId,
       seat,

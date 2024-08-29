@@ -35,9 +35,8 @@ export const canDelete = createAction(
       latitude: number;
       longitude: number;
     }[];
-  }>()
+  }>(),
 );
-
 
 export const deleteStation = createAction('[Trips] Delete Station', props<{ id: number }>());
 export const stationDeleteSuccess = createAction('[Trips] Station Deleted Success');
@@ -66,7 +65,6 @@ export const routeUpdatedSuccess = createAction(
   props<{ id: number }>(),
 );
 
-
 export const deleteRoute = createAction('[Trips] Delete Routes', props<{ id: number }>());
 export const routeDeletedSuccess = createAction('[Trips] Route Deleted Success');
 
@@ -94,15 +92,11 @@ export const carriageUpdatedSuccess = createAction(
   props<{ code: string }>(),
 );
 
-export const loadOrders = createAction(
-  '[Trips] Load Orders',
-  props<{ all?: boolean }>()
-);
+export const loadOrders = createAction('[Trips] Load Orders', props<{ all?: boolean }>());
 export const ordersLoadedSuccess = createAction(
   '[Trips] Orders Loaded Success',
   props<{ orders: Order[] }>(),
 );
-
 
 export const deleteOrder = createAction('[Trips] Delete Order', props<{ orderId: number }>());
 export const orderDeletedSuccess = createAction('[Trips] Order Deleted Success');
@@ -115,7 +109,6 @@ export const usersLoadedSuccess = createAction(
   '[Trips] Users Loaded Success',
   props<{ users: User[] }>(),
 );
-
 
 export const loadRouteById = createAction('[Trips] Load Route By Id', props<{ id: number }>());
 export const routeLoadedByIdSuccess = createAction(
@@ -147,7 +140,6 @@ export const createRide = createAction(
       time: [string, string];
       price: { [key: string]: number };
     }[];
-
   }>(),
 );
 export const createRideSuccess = createAction(
@@ -181,3 +173,5 @@ export const createOrderSuccess = createAction(
   '[Trips] Create Order Success',
   props<{ id: string }>(),
 );
+export const loadingFinished = createAction('[Trips] Load finished');
+export const loadingStarted = createAction('[Trips] Load started');
