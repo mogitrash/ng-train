@@ -7,7 +7,7 @@
 .content-container {
   display: grid;
   grid-template-columns: 3fr 1fr;
-  gap: 16px; /* Опционально, для отступа между элементами */
+  gap: 16px;
 }
 img.huechange {
   filter: hue-rotate(120deg);
@@ -29,5 +29,5 @@ img.huechange {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Убедитесь, что значение z-index достаточно высокое */
+  z-index: 1000; 
 }

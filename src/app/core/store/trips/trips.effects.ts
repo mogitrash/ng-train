@@ -53,10 +53,10 @@ export class TripsEffects {
           const now = Date.now();
           return this.tripsService
             .search(
-              action.station.latitude,
-              action.station.longitude,
               coordinate.latitude,
               coordinate.longitude,
+              action.station.latitude,
+              action.station.longitude,
               now
             )
             .pipe(

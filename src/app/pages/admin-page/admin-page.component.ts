@@ -268,8 +268,12 @@ export class AdminPageComponent implements AfterViewInit {
 
   private resetRelations() {
     const relationsArray = this.stationForm.get('relations') as FormArray;
-    while (relationsArray.length !== 0) {
+    while (relationsArray.length) {
       relationsArray.removeAt(0);
+      const subscription = this.formGroupSubscriptions[0];
+      if (subscription) {
+        subscription.unsubscribe();
+      }
     }
     relationsArray.push(this.createRelation(0));
   }
