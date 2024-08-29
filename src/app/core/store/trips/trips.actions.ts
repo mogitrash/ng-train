@@ -169,5 +169,5 @@ export const loadDataForOrdersView = createAction(
 );
 export const loadDataForOrdersViewSuccess = createAction(
   '[Trips] Load Data For View Orders Success',
-  props<{ carriages: Carriage[]; users: User[]; stations: Station[]; orders: Order[] }>(),
+  props<{ carriages: Carriage[]; stations: Station[]; orders: Order[]; users?: User[] }>(),
 );

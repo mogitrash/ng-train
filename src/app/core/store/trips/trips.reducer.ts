@@ -48,11 +48,10 @@ export const tripsReducer = createReducer(
   on(rideLoadedByIdSuccess, (state, { ride }): TripsState => {
     return { ...state, rides: [...state.rides, ride] };
   }),
-  on(loadDataForOrdersViewSuccess, (state, { carriages, users, stations, orders }): TripsState => {
+  on(loadDataForOrdersViewSuccess, (state, { carriages, stations, orders }): TripsState => {
     return {
       ...state,
       carriages,
-      users,
       stations,
       orders,
     };

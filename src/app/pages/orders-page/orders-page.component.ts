@@ -9,9 +9,11 @@ import {
   selectUsers,
 } from '../../core/store/trips/trips.selectors';
 import {
+  createOrder,
   deleteOrder,
   loadDataForOrdersView,
   loadOrders,
+  loadUsers,
 } from '../../core/store/trips/trips.actions';
 import { Order } from '../../features/trips/models/order.model';
 import { selectAccess } from '../../core/store/user/user.selectors';
@@ -52,6 +54,8 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
   constructor(private store: Store) {}
 
   ngOnInit(): void {
+    this.store.dispatch(createOrder({ rideId: 1, seat: 6, stationStart: 44, stationEnd: 5 }));
+
     this.role$ = this.store.select(selectAccess);
 
     this.role$
@@ -59,6 +63,9 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
         switchMap((role) => {
           if (role !== 'guest') {
             this.store.dispatch(loadDataForOrdersView({ role }));
+          }
+          if (role !== 'manager') {
+            this.store.dispatch(loadUsers());
           }
           return combineLatest([this.orders$, this.stations$, this.carriages$, this.users$]);
         }),

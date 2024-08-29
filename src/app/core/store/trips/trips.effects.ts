@@ -358,12 +358,11 @@ export class TripsEffects {
 
         return forkJoin({
           carriages: this.tripsService.getCarriageList(),
-          users: this.tripsService.getUsersList(),
           stations: this.tripsService.getStationList(),
           orders: loadOrdersAction,
         }).pipe(
-          map(({ carriages, users, stations, orders }) => {
-            return tripActions.loadDataForOrdersViewSuccess({ carriages, users, stations, orders });
+          map(({ carriages, stations, orders }) => {
+            return tripActions.loadDataForOrdersViewSuccess({ carriages, stations, orders });
           }),
           catchError((error) => {
             return of(tripActions.failureSnackBar({ error }));
