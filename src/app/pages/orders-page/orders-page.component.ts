@@ -33,19 +33,19 @@ interface CarriageData {
   styleUrls: ['./orders-page.component.scss'],
 })
 export class OrdersPageComponent implements OnInit, OnDestroy {
-  orders$: Observable<Order[] | null> = this.store.select(selectOrders);
+  private orders$: Observable<Order[] | null> = this.store.select(selectOrders);
 
-  stations$: Observable<Station[] | null> = this.store.select(selectStations);
+  private stations$: Observable<Station[] | null> = this.store.select(selectStations);
 
-  carriages$: Observable<Carriage[] | null> = this.store.select(selectCarriages);
+  private carriages$: Observable<Carriage[] | null> = this.store.select(selectCarriages);
 
-  users$: Observable<User[] | null> = this.store.select(selectUsers);
+  private users$: Observable<User[] | null> = this.store.select(selectUsers);
 
-  role$!: Observable<Access>;
+  protected role$!: Observable<Access>;
 
-  ordersForView!: OrderForView[];
+  protected ordersForView!: OrderForView[];
 
-  warningOrderId: number | null = null;
+  protected warningOrderId: number | null = null;
 
   private destroy$ = new Subject<void>();
 
@@ -188,19 +188,19 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
     return formatDate(new Date(endTime), 'MMMM dd hh:mm', 'en-US');
   }
 
-  trackByOrderId(index: number, order: OrderForView): number {
+  protected trackByOrderId(index: number, order: OrderForView): number {
     return order.id;
   }
 
-  onDeleteOrder(orderId: number): void {
+  protected onDeleteOrder(orderId: number): void {
     this.warningOrderId = orderId;
   }
 
-  closeWarning(): void {
+  protected closeWarning(): void {
     this.warningOrderId = null;
   }
 
-  deleteOrder(orderId: number): void {
+  protected deleteOrder(orderId: number): void {
     this.warningOrderId = null;
     this.store.dispatch(deleteOrder({ orderId }));
     this.role$
