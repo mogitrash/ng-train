@@ -28,7 +28,7 @@ export class TripsEffects {
             action.fromLongitude,
             action.toLatitude,
             action.toLongitude,
-            action.time
+            action.time,
           )
           .pipe(
             map((search) => {
@@ -93,6 +93,7 @@ export class TripsEffects {
     );
   });
 
+
   loadStations$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(tripActions.loadStations),
@@ -150,6 +151,7 @@ export class TripsEffects {
           })
         );
       })
+
     );
   });
 
@@ -317,7 +319,7 @@ export class TripsEffects {
           }),
           catchError((error) => {
             return of(tripActions.failureSnackBar(error));
-          })
+          }),
         );
       })
     );
@@ -349,7 +351,7 @@ export class TripsEffects {
           }),
           catchError((error) => {
             return of(tripActions.failureSnackBar(error));
-          })
+          }),
         );
       })
     );
@@ -385,6 +387,7 @@ export class TripsEffects {
       map(() => {
         return tripActions.loadStations();
       })
+
     );
   });
 
@@ -398,7 +401,7 @@ export class TripsEffects {
           }),
           catchError((error) => {
             return of(tripActions.failureSnackBar(error));
-          })
+          }),
         );
       })
     );
@@ -452,7 +455,7 @@ export class TripsEffects {
         })
       );
     },
-    { functional: true, dispatch: false }
+    { functional: true, dispatch: false },
   );
 
   constructor(

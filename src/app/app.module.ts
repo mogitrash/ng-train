@@ -11,11 +11,12 @@ import { MatCardModule } from '@angular/material/card';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
-import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDividerModule } from '@angular/material/divider';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -34,8 +35,10 @@ import { OrdersPageComponent } from './pages/orders-page/orders-page.component';
 import { UserOrdersPageComponent } from './pages/user-orders-page/user-orders-page.component';
 import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
 import { SigninPageComponent } from './pages/signin-page/signin-page.component';
-import { SignupPageComponent } from './pages/signup-page/signup-page.component';
 import { MainPageComponent } from './pages/main-page/main-page.component';
+
+import { SignupPageComponent } from './pages/signup-page/signup-page.component';
+import { SharedModule } from './shared/shared.module';
 import { UserEffects } from './core/store/user/user.effects';
 
 @NgModule({
@@ -76,14 +79,14 @@ import { UserEffects } from './core/store/user/user.effects';
     MatSelectModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
+    MatDividerModule,
+    SharedModule,
+
   ],
   providers: [
     provideAnimationsAsync(),
     provideHttpClient(withInterceptors([addTokenInterceptor])),
-    {
-      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-      useValue: { appearance: 'outline' },
-    },
+    FormControl,
   ],
   bootstrap: [AppComponent],
 })

@@ -55,9 +55,13 @@ header {
 .menu-closed {
   transform: translateX(100%);
 }
-
+.large-icon {
+  display: flex;
+  align-items: center;
+}
 .large-icon mat-icon {
   font-size: 2rem;
   height: 2rem;
   width: 2rem;
+  margin-left: -3px;
 }

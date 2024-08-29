@@ -16,6 +16,6 @@ export const adminGuard: CanActivateFn = () => {
       }
       router.navigate(['/signin']);
       return false;
-    })
+    }),
   );
 };

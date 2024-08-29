@@ -19,7 +19,7 @@ export class TripsService {
     fromLongitude: number,
     toLatitude: number,
     toLongitude: number,
-    time?: number
+    time?: number,
   ) {
     const params: {
       fromLatitude: number;
@@ -107,7 +107,7 @@ export class TripsService {
     name: string,
     rows: number,
     leftSeats: number,
-    rightSeats: number
+    rightSeats: number,
   ) {
     return this.http.put<{ code: string }>(`/api/carriage/${code}`, {
       name,
@@ -160,11 +160,9 @@ export class TripsService {
     segments: {
       time: [string, string];
       price: { [key: string]: number };
-    }[]
+    }[],
   ) {
-    return this.http.post<{ id: number }>(`/api/route/${routeId}/ride`, {
-      segments,
-    });
+    return this.http.post<{ id: number }>(`/api/route/${routeId}/ride`, { segments });
   }
 
   public updateRide(
@@ -173,7 +171,7 @@ export class TripsService {
     segments: {
       time: [string, string];
       price: { [key: string]: number };
-    }[]
+    }[],
   ) {
     return this.http.put(`/api/route/${routeId}/ride/${rideId}`, { segments });
   }

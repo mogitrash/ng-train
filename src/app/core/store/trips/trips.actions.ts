@@ -15,17 +15,17 @@ export const loadSearch = createAction(
     toLatitude: number;
     toLongitude: number;
     time?: number;
-  }>()
+  }>(),
 );
 export const searchLoadedSuccess = createAction(
   '[Trips] Search Loaded Success',
-  props<{ search: SearchResponse }>()
+  props<{ search: SearchResponse }>(),
 );
 
 export const loadStations = createAction('[Trips] Load Stations');
 export const stationsLoadedSuccess = createAction(
   '[Trips] Stations Loaded Success',
-  props<{ stations: Station[] }>()
+  props<{ stations: Station[] }>(),
 );
 export const canDelete = createAction(
   '[Trips] Can Delete',
@@ -38,74 +38,60 @@ export const canDelete = createAction(
   }>()
 );
 
-export const deleteStation = createAction(
-  '[Trips] Delete Station',
-  props<{ id: number }>()
-);
-export const stationDeleteSuccess = createAction(
-  '[Trips] Station Deleted Success'
-);
+
+export const deleteStation = createAction('[Trips] Delete Station', props<{ id: number }>());
+export const stationDeleteSuccess = createAction('[Trips] Station Deleted Success');
 
 export const loadRoutes = createAction('[Trips] Load Routes');
 export const routesLoadedSuccess = createAction(
   '[Trips] Routes Loaded Success',
-  props<{ routes: Route[] }>()
+  props<{ routes: Route[] }>(),
 );
 
 export const createRoute = createAction(
   '[Trips] Create Routes',
-  props<{ path: number[]; carriages: string[] }>()
+  props<{ path: number[]; carriages: string[] }>(),
 );
 export const routeCreatedSuccess = createAction(
   '[Trips] Route Created Success',
-  props<{ id: number }>()
+  props<{ id: number }>(),
 );
 
 export const updateRoute = createAction(
   '[Trips] Update Routes',
-  props<{ id: number; path: number[]; carriages: string[] }>()
+  props<{ id: number; path: number[]; carriages: string[] }>(),
 );
 export const routeUpdatedSuccess = createAction(
   '[Trips] Route Updated Success',
-  props<{ id: number }>()
+  props<{ id: number }>(),
 );
 
-export const deleteRoute = createAction(
-  '[Trips] Delete Routes',
-  props<{ id: number }>()
-);
-export const routeDeletedSuccess = createAction(
-  '[Trips] Route Deleted Success'
-);
+
+export const deleteRoute = createAction('[Trips] Delete Routes', props<{ id: number }>());
+export const routeDeletedSuccess = createAction('[Trips] Route Deleted Success');
 
 export const loadCarriages = createAction('[Trips] Load Carriages');
 export const carriagesLoadedSuccess = createAction(
   '[Trips] Carriages Loaded Success',
-  props<{ carriages: Carriage[] }>()
+  props<{ carriages: Carriage[] }>(),
 );
 
 export const createCarriage = createAction(
   '[Trips] Create Carriage',
-  props<{ name: string; rows: number; leftSeats: number; rightSeats: number }>()
+  props<{ name: string; rows: number; leftSeats: number; rightSeats: number }>(),
 );
 export const carriagesCreatedSuccess = createAction(
   '[Trips] Carriage Created Success',
-  props<{ code: string }>()
+  props<{ code: string }>(),
 );
 
 export const updateCarriage = createAction(
   '[Trips] Update Carriages',
-  props<{
-    code: string;
-    name: string;
-    rows: number;
-    leftSeats: number;
-    rightSeats: number;
-  }>()
+  props<{ code: string; name: string; rows: number; leftSeats: number; rightSeats: number }>(),
 );
 export const carriageUpdatedSuccess = createAction(
   '[Trips] Carriage Updated Success',
-  props<{ code: string }>()
+  props<{ code: string }>(),
 );
 
 export const loadOrders = createAction(
@@ -114,56 +100,43 @@ export const loadOrders = createAction(
 );
 export const ordersLoadedSuccess = createAction(
   '[Trips] Orders Loaded Success',
-  props<{ orders: Order[] }>()
+  props<{ orders: Order[] }>(),
 );
 
-export const deleteOrder = createAction(
-  '[Trips] Delete Order',
-  props<{ orderId: number }>()
-);
-export const orderDeletedSuccess = createAction(
-  '[Trips] Order Deleted Success'
-);
+
+export const deleteOrder = createAction('[Trips] Delete Order', props<{ orderId: number }>());
+export const orderDeletedSuccess = createAction('[Trips] Order Deleted Success');
 export const failureSnackBar = createAction(
   '[Trips] Failure SnackBar',
-  props<{ error: { message: string; reason: string } }>()
+  props<{ error: { message: string; reason: string } }>(),
 );
 export const loadUsers = createAction('[Trips] Load Users');
 export const usersLoadedSuccess = createAction(
   '[Trips] Users Loaded Success',
-  props<{ users: User[] }>()
+  props<{ users: User[] }>(),
 );
 
-export const loadRouteById = createAction(
-  '[Trips] Load Route By Id',
-  props<{ id: number }>()
-);
+
+export const loadRouteById = createAction('[Trips] Load Route By Id', props<{ id: number }>());
 export const routeLoadedByIdSuccess = createAction(
   '[Trips] Route Loaded By Id Success',
-  props<{ route: Route }>()
+  props<{ route: Route }>(),
 );
 
 export const createStation = createAction(
   '[Trips] Create Station',
-  props<{
-    city: string;
-    latitude: number;
-    longitude: number;
-    relations: number[];
-  }>()
+
+  props<{ city: string; latitude: number; longitude: number; relations: number[] }>(),
 );
 export const createStationSuccess = createAction(
   '[Trips] Create Station Success',
-  props<{ id: number }>
+  props<{ id: number }>,
 );
 
-export const loadRideById = createAction(
-  '[Trips] Load Ride By Id',
-  props<{ rideId: number }>()
-);
+export const loadRideById = createAction('[Trips] Load Ride By Id', props<{ rideId: number }>());
 export const rideLoadedByIdSuccess = createAction(
   '[Trips] Ride Loaded By Id Success',
-  props<{ ride: Ride }>()
+  props<{ ride: Ride }>(),
 );
 
 export const createRide = createAction(
@@ -174,11 +147,12 @@ export const createRide = createAction(
       time: [string, string];
       price: { [key: string]: number };
     }[];
-  }>()
+
+  }>(),
 );
 export const createRideSuccess = createAction(
   '[Trips] Create Ride Success',
-  props<{ id: number }>()
+  props<{ id: number }>(),
 );
 
 export const updateRide = createAction(
@@ -190,7 +164,7 @@ export const updateRide = createAction(
       time: [string, string];
       price: { [key: string]: number };
     }[];
-  }>()
+  }>(),
 );
 export const updateRideSuccess = createAction('[Trips] Update Ride Success');
 
@@ -201,11 +175,9 @@ export const createOrder = createAction(
     seat: number;
     stationStart: number;
     stationEnd: number;
-  }>()
+  }>(),
 );
 export const createOrderSuccess = createAction(
   '[Trips] Create Order Success',
-  props<{ id: string }>()
+  props<{ id: string }>(),
 );
-export const loadingFinished = createAction('[Trips] Load finished');
-export const loadingStarted = createAction('[Trips] Load started');
