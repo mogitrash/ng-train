@@ -6,3 +6,8 @@ export interface Route {
   carriages: string[];
   schedule?: Schedule[];
 }
+
+export interface CityInfo {
+  id: number;
+  name: string;
+}

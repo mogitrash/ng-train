@@ -1,2 +1,61 @@
-<button mat-icon-button>Create</button>
-<!-- <div class="routes" @for (route of routes)></div> -->
+<button type="button" mat-button [ngStyle]="{ 'min-width.px': 100 }" (click)="changeCreateMode()">
+  Create
+</button>
+
+<form [formGroup]="routeForm" (ngSubmit)="onSubmit()" *ngIf="createMode">
+  <div class="stations">
+    <h2>Stations</h2>
+    <select id="stations" name="stations">
+      <option [value]="station.city" *ngFor="let station of stations | async">
+        {{ station.city }}
+      </option>
+    </select>
+  </div>
+  <div class="carriages">
+    <h2>Carriages</h2>
+    <select id="carriages" name="carriages">
+      <option [value]="carriage.name" *ngFor="let carriage of carriages | async">
+        {{ carriage.name }}
+      </option>
+    </select>
+  </div>
+  <button mat-button>Create new Route</button>
+</form>
+<mat-divider></mat-divider>
+<div class="route" *ngFor="let route of routes | async; index as i">
+  <div class="route-header">
+    <h3>Route {{ i + 1 }}</h3>
+    <div
+      class="route-header-buttons"
+      (mousemove)="showButtonsGoal()"
+      (mouseleave)="hideButtonsGoal()"
+    >
+      <button mat-icon-button title="Update">
+        <mat-icon color="primary">autorenew</mat-icon>
+        <span *ngIf="showMode">Update ride</span>
+      </button>
+      <button mat-icon-button title="Assign ride">
+        <mat-icon color="primary">train</mat-icon>
+        <span *ngIf="showMode">Assign ride</span>
+      </button>
+      <button mat-icon-button title="Delete ride">
+        <mat-icon color="primary">delete</mat-icon>
+        <span *ngIf="showMode">Delete ride</span>
+      </button>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="cities">
+    <h4>Cities:</h4>
+    <span *ngFor="let city of getCities(route.path); last as isLast"
+      >{{ isLast ? city : city + ' -' }}
+    </span>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="carriages-types">
+    <h4>Carriages Types:</h4>
+    <span *ngFor="let type of getCarriageTypes(route.carriages); last as isLast">{{
+      isLast ? type : type + ' -'
+    }}</span>
+  </div>
+</div>

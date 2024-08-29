@@ -1,0 +1,55 @@
+@import './../../../../styles.scss';
+
+:host {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  button {
+    width: 30%;
+    border: 2px solid var(--primary-blue);
+    margin-bottom: 3%;
+  }
+
+  form {
+    position: absolute;
+    background-color: var(--blue-extra-light);
+  }
+
+  .route {
+    padding: 2% 3% 3%;
+    margin: 2% auto;
+    border: 2px solid var(--primary-blue);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    &-header {
+      display: flex;
+      justify-content: space-between;
+      h3 {
+        color: var(--primary-blue);
+        font-size: 24px;
+      }
+      &-buttons {
+        position: relative;
+        display: flex;
+        gap: 10px;
+        button {
+          padding: 5px 6px 0;
+          margin-bottom: 23px;
+          span {
+            position: absolute;
+            top: 103%;
+            left: 0%;
+            font-size: 8px;
+            color: var(--primary-blue);
+          }
+        }
+      }
+    }
+    .cities {
+      margin-bottom: 15px;
+    }
+  }
+}
