@@ -169,7 +169,9 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
       const user = users.find((item) => {
         return item.id === userId;
       });
-      if (user) return user.name !== '' ? user.name : userId.toString();
+      if (user) {
+        return user.name !== null ? user.name : `id#${userId.toString(10)}`;
+      }
     }
     return '';
   }

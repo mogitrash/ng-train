@@ -14,7 +14,7 @@
           <div class="warning">
             <h2>Are you sure?</h2>
             <p>
-              Are you sure you want to delete the order #{{ order.id }}
+              Are you sure you want to delete the order {{ order.id }}
               <ng-container *ngIf="role === 'manager'"> by customer {{ order.user }}</ng-container>
               ?
             </p>
