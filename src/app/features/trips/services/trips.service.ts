@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Station } from '../models/station.model';
 import { Route } from '../models/route.model';
@@ -7,6 +7,7 @@ import { Order } from '../models/order.model';
 import { User } from '../models/user.model';
 import { Ride } from '../models/ride.model';
 import { SearchResponse } from '../models/searchResponse.model';
+import { catchError, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -103,7 +104,19 @@ export class TripsService {
   }
 
   public deleteOrder(orderId: number) {
-    return this.http.delete(`/api/order/${orderId}`);
+    console.log('1');
+    return this.http.delete<void>(`/api/order/${orderId}`).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 400) {
+          console.log('2');
+          return throwError({
+            message: error.error?.message || 'Unknown error',
+            reason: error.error?.reason || 'unknownError',
+          });
+        }
+        return throwError(error);
+      }),
+    );
   }
 
   public getUsersList() {
