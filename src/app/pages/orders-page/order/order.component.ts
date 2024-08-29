@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { createOrder } from '../../../core/store/trips/trips.actions';
 
 export interface OrderForView {
   id: number;
@@ -69,10 +68,6 @@ export class OrderComponent implements OnInit {
     this.price = this.order.price;
 
     this.status = this.order.status;
-  }
-
-  createOrder() {
-    this.store.dispatch(createOrder({ rideId: 2, seat: 91, stationStart: 41, stationEnd: 4 }));
   }
 
   deleteOrder() {

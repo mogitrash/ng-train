@@ -9,6 +9,7 @@ import {
   selectUsers,
 } from '../../core/store/trips/trips.selectors';
 import {
+  createOrder,
   deleteOrder,
   loadDataForOrdersView,
   loadOrders,
@@ -220,5 +221,9 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
         }),
       )
       .subscribe();
+  }
+
+  createOrder() {
+    this.store.dispatch(createOrder({ rideId: 2, seat: 91, stationStart: 5, stationEnd: 6 }));
   }
 }
