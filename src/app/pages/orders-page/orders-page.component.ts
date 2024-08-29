@@ -224,6 +224,6 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
   }
 
   createOrder() {
-    this.store.dispatch(createOrder({ rideId: 2, seat: 91, stationStart: 5, stationEnd: 6 }));
+    this.store.dispatch(createOrder({ rideId: 1, seat: 91, stationStart: 1, stationEnd: 19 }));
   }
 }
