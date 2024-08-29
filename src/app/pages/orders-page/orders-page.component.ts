@@ -12,6 +12,7 @@ import {
   deleteOrder,
   loadDataForOrdersView,
   loadOrders,
+  loadUsers,
 } from '../../core/store/trips/trips.actions';
 import { Order } from '../../features/trips/models/order.model';
 import { selectAccess } from '../../core/store/user/user.selectors';
@@ -59,6 +60,9 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
         switchMap((role) => {
           if (role !== 'guest') {
             this.store.dispatch(loadDataForOrdersView({ role }));
+          }
+          if (role !== 'manager') {
+            this.store.dispatch(loadUsers());
           }
           return combineLatest([this.orders$, this.stations$, this.carriages$, this.users$]);
         }),
