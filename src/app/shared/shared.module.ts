@@ -7,6 +7,6 @@ import { RoutesComponent } from './components/routes/routes.component';
 @NgModule({
   declarations: [CarriageComponent, SplitSeatsPipe, RoutesComponent],
   imports: [CommonModule],
-  exports: [CarriageComponent],
+  exports: [CarriageComponent, RoutesComponent],
 })
 export class SharedModule {}
