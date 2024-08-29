@@ -225,10 +225,15 @@ export class TripsEffects {
       exhaustMap((action) => {
         return this.tripsService.deleteOrder(action.orderId).pipe(
           map(() => {
-            return tripActions.orderDeletedSuccess();
+            return tripActions.orderDeletedSuccess({ orderId: action.orderId });
           }),
           catchError((error) => {
-            return of(tripActions.failureSnackBar(error));
+            const errorMessage = error.message || 'Failed to delete order';
+            return of(
+              tripActions.failureSnackBar({
+                error: { message: errorMessage, reason: error.reason },
+              }),
+            );
           }),
         );
       }),

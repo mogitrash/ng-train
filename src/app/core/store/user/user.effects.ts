@@ -57,7 +57,6 @@ export class UserEffects {
               tap(({ token }) => {
                 localStorage.clear();
                 localStorage.setItem('token', token);
-                userActions.getToken({ token, role: 'user' });
               }),
               switchMap(() => {
                 this.router.navigate(['/']);
@@ -121,13 +120,17 @@ export class UserEffects {
       exhaustMap(() => {
         return this.userService.getCurrentUser().pipe(
           take(1),
-          map((user) => {
+          switchMap((user) => {
+            const token = localStorage.getItem('token');
             localStorage.setItem('role', user.role);
-            return userActions.saveUser({
-              name: user.name ?? '',
-              email: user.email,
-              role: user.role,
-            });
+            return of(
+              userActions.saveUser({
+                name: user.name ?? '',
+                email: user.email,
+                role: user.role,
+              }),
+              userActions.getToken({ token: token || '' }),
+            );
           }),
           catchError((error: UserError) => {
             return of(userActions.getError({ error }));

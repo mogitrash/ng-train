@@ -11,10 +11,7 @@ export const signIn = createAction(
   props<{ email: string; password: string }>(),
 );
 
-export const getToken = createAction(
-  '[User] User gets Token ',
-  props<{ role: 'guest' | 'user' | 'manager'; token: string }>(),
-);
+export const getToken = createAction('[User] User gets Token ', props<{ token: string }>());
 
 export const getUser = createAction('[User] get User');
 
