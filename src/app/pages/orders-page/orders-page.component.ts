@@ -61,7 +61,7 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
           if (role !== 'guest') {
             this.store.dispatch(loadDataForOrdersView({ role }));
           }
-          if (role !== 'manager') {
+          if (role === 'manager') {
             this.store.dispatch(loadUsers());
           }
           return combineLatest([this.orders$, this.stations$, this.carriages$, this.users$]);
