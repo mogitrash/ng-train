@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 export interface UserState {
   currentAccess: Access;
   currentUser: CurrentUser;
-  token: string | null;
+  token: string;
   hasError: UserError;
 }
 

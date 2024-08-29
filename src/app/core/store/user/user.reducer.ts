@@ -22,7 +22,7 @@ const initialUserState: UserState = {
     name: '',
     password: '',
   },
-  token: null,
+  token: '',
   hasError: {
     message: '',
     reason: '',
@@ -40,8 +40,8 @@ export const userReducer = createReducer(
       currentUser: { email, name: '', password },
     };
   }),
-  on(getToken, (state, { role, token }): UserState => {
-    return { ...state, currentAccess: role, token };
+  on(getToken, (state, { token }): UserState => {
+    return { ...state, token };
   }),
   on(getUser, (state): UserState => {
     return { ...state };
@@ -77,7 +77,7 @@ export const userReducer = createReducer(
       ...state,
       currentAccess: 'guest',
       currentUser: { email: '', name: '', password: '' },
-      token: null,
+      token: '',
     };
   }),
   on(successfulExit, (state): UserState => {
