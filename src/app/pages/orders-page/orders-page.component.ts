@@ -9,7 +9,6 @@ import {
   selectUsers,
 } from '../../core/store/trips/trips.selectors';
 import {
-  createOrder,
   deleteOrder,
   loadDataForOrdersView,
   loadOrders,
@@ -54,8 +53,6 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
   constructor(private store: Store) {}
 
   ngOnInit(): void {
-    this.store.dispatch(createOrder({ rideId: 1, seat: 6, stationStart: 44, stationEnd: 5 }));
-
     this.role$ = this.store.select(selectAccess);
 
     this.role$
