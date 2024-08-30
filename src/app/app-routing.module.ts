@@ -3,15 +3,15 @@ import { RouterModule, Routes } from '@angular/router';
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { OrdersPageComponent } from './pages/orders-page/orders-page.component';
-import { UserOrdersPageComponent } from './pages/user-orders-page/user-orders-page.component';
 import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
 import { SigninPageComponent } from './pages/signin-page/signin-page.component';
 import { SignupPageComponent } from './pages/signup-page/signup-page.component';
 import { MainPageComponent } from './pages/main-page/main-page.component';
 import { guestGuard } from './core/guards/guest.guard';
-import { userGuard } from './core/guards/user.guard';
 import { adminGuard } from './core/guards/admin.guard';
 import { adminUserGuard } from './core/guards/admin-user.guard';
+import { CarriageComponent } from './shared/components/carriage/carriage.component';
+import { RoutesComponent } from './shared/components/routes/routes.component';
 
 const routes: Routes = [
   // Common routes
@@ -21,21 +21,38 @@ const routes: Routes = [
   { path: 'signup', component: SignupPageComponent, canActivate: [guestGuard] },
   { path: 'signin', component: SigninPageComponent, canActivate: [guestGuard] },
 
-  // Users routes
+  //  Admin and Users routes
   {
     path: 'profile',
     component: ProfilePageComponent,
     canActivate: [adminUserGuard],
   },
   {
-    path: 'my-orders',
-    component: UserOrdersPageComponent,
-    canActivate: [userGuard],
+    path: 'orders',
+    component: OrdersPageComponent,
+    canActivate: [adminUserGuard],
   },
 
-  // Admin routes
-  { path: 'orders', component: OrdersPageComponent, canActivate: [adminGuard] },
-  { path: 'admin', component: AdminPageComponent, canActivate: [adminGuard] },
+  // Only admin route
+  {
+    path: 'admin',
+    component: AdminPageComponent,
+    canActivate: [adminGuard],
+    children: [
+      {
+        path: 'carriages',
+        component: CarriageComponent,
+      },
+      {
+        path: 'routes',
+        component: RoutesComponent,
+      },
+      {
+        path: 'stations',
+        component: CarriageComponent,
+      },
+    ],
+  },
 
   // not found
   {
