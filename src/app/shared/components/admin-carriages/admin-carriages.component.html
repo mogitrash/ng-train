@@ -1,0 +1,5 @@
+<ol>
+  <li *ngFor="let carriage of carriages$ | async">
+    <app-carriage-card [carriage]="carriage"></app-carriage-card>
+  </li>
+</ol>

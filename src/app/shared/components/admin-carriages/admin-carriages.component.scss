@@ -1,0 +1,12 @@
+:host {
+  ol {
+    li {
+      margin-bottom: 2rem;
+      &::marker {
+        color: var(--primary-blue);
+        font-weight: bold;
+        font-size: 1.25em;
+      }
+    }
+  }
+}
