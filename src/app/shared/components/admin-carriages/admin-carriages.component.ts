@@ -17,6 +17,8 @@ export class AdminCarriagesComponent implements OnInit {
 
   protected isOpenForm: boolean = false;
 
+  protected formType: 'create' | 'update' = 'create';
+
   constructor(private store: Store) {}
 
   ngOnInit(): void {
@@ -25,6 +27,11 @@ export class AdminCarriagesComponent implements OnInit {
 
   onSelectedUpdateCarriage(carriage: Carriage) {
     this.isOpenForm = true;
-    console.log('Selected carriage:', carriage);
+    this.formType = 'update';
+    this.updatedCarriage = carriage;
+  }
+
+  toggleOpenForm() {
+    this.isOpenForm = !this.isOpenForm;
   }
 }

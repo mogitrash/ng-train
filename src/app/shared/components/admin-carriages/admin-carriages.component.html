@@ -1,3 +1,18 @@
+<h1>Carriage management</h1>
+<button
+  mat-flat-button
+  color="primary"
+  type="submit"
+  (click)="toggleOpenForm()"
+  class="button-create"
+>
+  Create carriage
+</button>
+<ng-container *ngIf="isOpenForm">
+  <app-carriage-form *ngIf="updatedCarriage" [carriage]="updatedCarriage"></app-carriage-form>
+  <app-carriage-form *ngIf="!updatedCarriage"></app-carriage-form>
+</ng-container>
+
 <ol>
   <li *ngFor="let carriage of carriages$ | async">
     <app-carriage-card

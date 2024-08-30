@@ -1,0 +1,17 @@
+mat-card-content {
+  display: flex;
+  gap: 3rem;
+  justify-content: flex-start;
+  app-carriage-simple {
+    transform: scale(0.7);
+  }
+}
+mat-card-title {
+  padding: 1rem;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  max-width: 240px;
+  align-items: center;
+}
