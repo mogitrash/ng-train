@@ -22,6 +22,7 @@ const routes: Routes = [
   { path: 'signin', component: SigninPageComponent, canActivate: [guestGuard] },
 
   //  Admin and Users routes
+  //  Admin and Users routes
   {
     path: 'profile',
     component: ProfilePageComponent,

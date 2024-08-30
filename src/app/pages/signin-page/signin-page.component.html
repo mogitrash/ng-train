@@ -1,4 +1,4 @@
-<h2>SighIn</h2>
+<h1>SignIn</h1>
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" [ngClass]="firstContact ? 'active' : null">
   <mat-form-field appearance="outline">
     <mat-label for="email">Email</mat-label>
@@ -41,7 +41,7 @@
     >
       Sign In
     </button>
-    <button type="button" mat-flat-button [ngStyle]="{ 'min-width.px': 100 }" (click)="goSignUp()">
+    <button type="button" mat-button [ngStyle]="{ 'min-width.px': 100 }" (click)="goSignUp()">
       Sign Up
     </button>
   </div>

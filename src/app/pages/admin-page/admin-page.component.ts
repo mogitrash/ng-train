@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   styleUrl: './admin-page.component.scss',
 })
 export class AdminPageComponent {
-  public activeButtons: 'stations' | 'carriages' | 'routes' = 'stations';
+  public activeButtons: 'stations' | 'carriages' | 'routes' | '' = '';
 
   public makeActive(activeButtons: 'stations' | 'carriages' | 'routes') {
     this.activeButtons = activeButtons;

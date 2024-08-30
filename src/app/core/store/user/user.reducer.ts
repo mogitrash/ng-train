@@ -35,7 +35,10 @@ export const userReducer = createReducer(
     return { ...state, currentUser: { email, name: '', password } };
   }),
   on(signIn, (state, { email, password }): UserState => {
-    return { ...state, currentUser: { email, name: '', password } };
+    return {
+      ...state,
+      currentUser: { email, name: '', password },
+    };
   }),
   on(getToken, (state, { token }): UserState => {
     return { ...state, token };

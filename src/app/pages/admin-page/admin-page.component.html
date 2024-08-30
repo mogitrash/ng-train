@@ -3,11 +3,7 @@
     mat-button
     routerLink="stations"
     (click)="makeActive('stations')"
-    [ngStyle]="
-      activeButtons === 'stations'
-        ? { 'background-color': '#9ca3af' }
-        : { 'background-color': '#f2f2f2' }
-    "
+    [ngClass]="activeButtons === 'stations' ? 'active' : 'non-active'"
   >
     Stations
   </button>
@@ -15,11 +11,7 @@
     mat-button
     routerLink="routes"
     (click)="makeActive('routes')"
-    [ngStyle]="
-      activeButtons === 'routes'
-        ? { 'background-color': '#9ca3af' }
-        : { 'background-color': '#f2f2f2' }
-    "
+    [ngClass]="activeButtons === 'routes' ? 'active' : 'non-active'"
   >
     Routes
   </button>
@@ -27,11 +19,7 @@
     mat-button
     routerLink="carriages"
     (click)="makeActive('carriages')"
-    [ngStyle]="
-      activeButtons === 'carriages'
-        ? { 'background-color': '#9ca3af' }
-        : { 'background-color': '#f2f2f2' }
-    "
+    [ngClass]="activeButtons === 'carriages' ? 'active' : 'non-active'"
   >
     Carriages
   </button>
