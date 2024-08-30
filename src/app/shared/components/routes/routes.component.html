@@ -2,14 +2,21 @@
   Create
 </button>
 
-<form [formGroup]="routeForm" (ngSubmit)="onSubmit()" *ngIf="createMode">
+<form [formGroup]="routeForm" (ngSubmit)="onSubmit()" *ngIf="createMode || updateMode">
   <div class="stations">
     <h2>Stations</h2>
-    <select id="stations" name="stations">
+    <select id="stations" name="stations" *ngIf="createMode; else updateSelect">
       <option [value]="station.city" *ngFor="let station of stations | async">
         {{ station.city }}
       </option>
     </select>
+    <ng-template #updateSelect>
+      <select id="stations" name="stations" *ngFor="let city of currentRoute.path">
+        <option [value]="station.city" *ngFor="let station of stations | async">
+          {{ station.city }}
+        </option>
+      </select>
+    </ng-template>
   </div>
   <div class="carriages">
     <h2>Carriages</h2>
@@ -24,13 +31,13 @@
 <mat-divider></mat-divider>
 <div class="route" *ngFor="let route of routes | async; index as i">
   <div class="route-header">
-    <h3>Route {{ i + 1 }}</h3>
+    <h3>Route {{ route.id }}</h3>
     <div
       class="route-header-buttons"
       (mousemove)="showButtonsGoal()"
       (mouseleave)="hideButtonsGoal()"
     >
-      <button mat-icon-button title="Update">
+      <button mat-icon-button title="Update" (click)="updateRoute(route.id)">
         <mat-icon color="primary">autorenew</mat-icon>
         <span *ngIf="showMode">Update ride</span>
       </button>

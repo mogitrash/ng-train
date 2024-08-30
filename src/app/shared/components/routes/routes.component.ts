@@ -22,9 +22,13 @@ export class RoutesComponent implements OnInit, OnDestroy {
 
   public createMode: boolean = false;
 
+  public updateMode: boolean = false;
+
   public showMode: boolean = false;
 
   public citiesList: CityInfo[] = [];
+
+  public currentRoute: Route;
 
   private readonly destroyRef: DestroyRef;
 
@@ -35,6 +39,7 @@ export class RoutesComponent implements OnInit, OnDestroy {
     this.stations = tripsService.getStationList();
     this.carriages = tripsService.getCarriageList();
     this.destroyRef = inject(DestroyRef);
+    this.currentRoute = { id: 0, path: [], carriages: [] };
   }
 
   ngOnInit() {
@@ -67,6 +72,10 @@ export class RoutesComponent implements OnInit, OnDestroy {
       }
     });
     return list;
+  }
+
+  protected updateRoute(id: number) {
+    this.tripsService.getRouteById(id);
   }
 
   public showButtonsGoal() {
