@@ -12,7 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
-
+import { MatExpansionModule } from '@angular/material/expansion';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -70,6 +70,7 @@ import { UserEffects } from './core/store/user/user.effects';
     MatInputModule,
     MatDividerModule,
     MatCardModule,
+    MatExpansionModule,
     ReactiveFormsModule,
   ],
   providers: [

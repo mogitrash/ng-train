@@ -1,0 +1,24 @@
+<form [formGroup]="updateForm" (ngSubmit)="onSubmit()">
+  <div class="stations">
+    <h2>Stations</h2>
+    <select id="`station.id`" name="station" *ngFor="let city of cities">
+      <option [value]="city" *ngFor="let city of cities">
+        {{ city }}
+      </option>
+    </select>
+  </div>
+  <div class="carriages">
+    <h2>Carriages</h2>
+    <select
+      id="`${carriages+i}`"
+      name="carriage"
+      *ngFor="let carriage of currentRoute!.carriages; index as i"
+      value="carriage"
+    >
+      <option [value]="carriage" *ngFor="let carriage of carriages | async">
+        {{ carriage.code }}
+      </option>
+    </select>
+  </div>
+  <button mat-button>Save update Route</button>
+</form>

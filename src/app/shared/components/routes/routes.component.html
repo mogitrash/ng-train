@@ -1,33 +1,18 @@
-<button type="button" mat-button [ngStyle]="{ 'min-width.px': 100 }" (click)="changeCreateMode()">
-  Create
-</button>
+<mat-accordion>
+  <mat-expansion-panel hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Create new route </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-create-form></app-create-form>
+  </mat-expansion-panel>
+</mat-accordion>
 
-<form [formGroup]="routeForm" (ngSubmit)="onSubmit()" *ngIf="createMode || updateMode">
-  <div class="stations">
-    <h2>Stations</h2>
-    <select id="stations" name="stations" *ngIf="createMode; else updateSelect">
-      <option [value]="station.city" *ngFor="let station of stations | async">
-        {{ station.city }}
-      </option>
-    </select>
-    <ng-template #updateSelect>
-      <select id="stations" name="stations" *ngFor="let city of currentRoute.path">
-        <option [value]="station.city" *ngFor="let station of stations | async">
-          {{ station.city }}
-        </option>
-      </select>
-    </ng-template>
-  </div>
-  <div class="carriages">
-    <h2>Carriages</h2>
-    <select id="carriages" name="carriages">
-      <option [value]="carriage.name" *ngFor="let carriage of carriages | async">
-        {{ carriage.name }}
-      </option>
-    </select>
-  </div>
-  <button mat-button>Create new Route</button>
-</form>
+<app-update-form
+  [currentRoute]="currentRoute"
+  [cities]="getCities(currentRoute.path)"
+  *ngIf="updateMode"
+></app-update-form>
+
 <mat-divider></mat-divider>
 <div class="route" *ngFor="let route of routes | async; index as i">
   <div class="route-header">
@@ -37,7 +22,7 @@
       (mousemove)="showButtonsGoal()"
       (mouseleave)="hideButtonsGoal()"
     >
-      <button mat-icon-button title="Update" (click)="updateRoute(route.id)">
+      <button mat-icon-button title="Update" (click)="updateRoute(route)">
         <mat-icon color="primary">autorenew</mat-icon>
         <span *ngIf="showMode">Update ride</span>
       </button>

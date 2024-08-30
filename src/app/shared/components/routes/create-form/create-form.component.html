@@ -1,0 +1,19 @@
+<form [formGroup]="createForm" (ngSubmit)="onSubmit()">
+  <div class="stations">
+    <h2>Stations</h2>
+    <select id="stations" name="stations">
+      <option [value]="station.city" *ngFor="let station of stations | async">
+        {{ station.city }}
+      </option>
+    </select>
+  </div>
+  <div class="carriages">
+    <h2>Carriages</h2>
+    <select id="carriages" name="carriages">
+      <option [value]="carriage.name" *ngFor="let carriage of carriages | async">
+        {{ carriage.name }}
+      </option>
+    </select>
+  </div>
+  <button mat-button>Create new Route</button>
+</form>

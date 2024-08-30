@@ -17,5 +17,11 @@
         width: 30%;
       }
     }
+    .non-active {
+      background-color: var(--grey-light);
+    }
+    .active {
+      background-color: var(--grey);
+    }
   }
 }

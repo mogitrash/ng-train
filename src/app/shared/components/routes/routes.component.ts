@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+// import { FormGroup, FormControl } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { Station } from '../../../features/trips/models/station.model';
 import { TripsService } from '../../../features/trips/services/trips.service';
@@ -12,7 +12,7 @@ import { CityInfo, Route } from '../../../features/trips/models/route.model';
   styleUrl: './routes.component.scss',
 })
 export class RoutesComponent implements OnInit, OnDestroy {
-  public routeForm: FormGroup = new FormGroup({});
+  // public routeForm: FormGroup = new FormGroup({});
 
   public routes: Observable<Route[]>;
 
@@ -43,15 +43,6 @@ export class RoutesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.routeForm = new FormGroup({
-      stations: new FormGroup({
-        station: new FormControl(''),
-      }),
-      carriages: new FormGroup({
-        carriage: new FormControl(''),
-      }),
-    });
-
     this.subscription = this.stations.subscribe((stations) => {
       stations.forEach((station) => {
         this.citiesList?.push({ id: station.id, name: station.city });
@@ -74,8 +65,10 @@ export class RoutesComponent implements OnInit, OnDestroy {
     return list;
   }
 
-  protected updateRoute(id: number) {
-    this.tripsService.getRouteById(id);
+  protected updateRoute(route: Route): void {
+    this.currentRoute = { ...route };
+    console.log(this.currentRoute);
+    this.updateMode = true;
   }
 
   public showButtonsGoal() {
@@ -84,10 +77,6 @@ export class RoutesComponent implements OnInit, OnDestroy {
 
   public hideButtonsGoal() {
     this.showMode = false;
-  }
-
-  public onSubmit() {
-    console.log(this.routeForm.value);
   }
 
   public changeCreateMode(): void {

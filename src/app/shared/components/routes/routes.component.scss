@@ -3,7 +3,6 @@
 :host {
   width: calc(100% - 4rem);
   padding: 0.5rem 2rem;
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -14,15 +13,22 @@
     margin-bottom: 3%;
   }
 
+  .mat-accordion {
+    width: 92%;
+    margin: 2% auto;
+    .mat-expansion-panel {
+      background-color: var(--grey);
+      .mat-expansion-panel-header-title {
+        color: var(--grey-extra-light);
+      }
+    }
+  }
+
   form {
-    position: absolute;
     background-color: var(--grey-light);
     width: 95%;
-    left: 3%;
-    top: 0%;
     border-radius: 15px;
     padding: 3%;
-    z-index: 999;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
