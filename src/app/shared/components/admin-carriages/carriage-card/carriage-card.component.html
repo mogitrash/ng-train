@@ -1,8 +1,13 @@
 <mat-card appearance="outlined">
   <mat-card-content>
     <div class="title-row">
-      <div class="tipe">Type: {{ carriage.name }}</div>
-      <div class="count-seats">Seats: {{ countOfSeats }}</div>
+      <div class="title-row-info">
+        <div class="tipe">Type: {{ carriage.name }}</div>
+        <div class="count-seats">Seats: {{ countOfSeats }}</div>
+      </div>
+      <button mat-button (click)="onUpdateCarriage(carriage)" disabled="{{ isDisabled }}">
+        <mat-icon>edit</mat-icon>Update
+      </button>
     </div>
     <div class="carriage">
       <ng-container

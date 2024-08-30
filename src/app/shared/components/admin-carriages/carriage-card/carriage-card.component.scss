@@ -1,6 +1,7 @@
 .title-row {
   display: flex;
   align-items: flex-end;
+  justify-content: space-between;
   gap: 2rem;
   color: var(--primary-blue);
   font-size: 1.175rem;
@@ -8,6 +9,11 @@
   font-weight: 600;
   margin-bottom: 1rem;
   margin-left: 1rem;
+}
+.title-row-info {
+  display: flex;
+  align-items: flex-end;
+  gap: 2rem;
 }
 
 .free-seats {

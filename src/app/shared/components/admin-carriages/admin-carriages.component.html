@@ -1,5 +1,9 @@
 <ol>
   <li *ngFor="let carriage of carriages$ | async">
-    <app-carriage-card [carriage]="carriage"></app-carriage-card>
+    <app-carriage-card
+      [carriage]="carriage"
+      [isDisabled]="isOpenForm"
+      (updatedCarriage)="onSelectedUpdateCarriage($event)"
+    ></app-carriage-card>
   </li>
 </ol>

@@ -13,9 +13,18 @@ import { loadCarriages } from '../../../core/store/trips/trips.actions';
 export class AdminCarriagesComponent implements OnInit {
   protected carriages$: Observable<Carriage[] | null> = this.store.select(selectCarriages);
 
+  protected updatedCarriage: Carriage | null = null;
+
+  protected isOpenForm: boolean = false;
+
   constructor(private store: Store) {}
 
   ngOnInit(): void {
     this.store.dispatch(loadCarriages());
+  }
+
+  onSelectedUpdateCarriage(carriage: Carriage) {
+    this.isOpenForm = true;
+    console.log('Selected carriage:', carriage);
   }
 }

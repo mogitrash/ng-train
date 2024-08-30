@@ -1,7 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Carriage } from '../../../../features/trips/models/carriage.model';
 import { Seat, SeatStatus } from '../../carriage/carriage.component';
-import { OnIdentifyEffects } from '@ngrx/effects';
 
 @Component({
   selector: 'app-carriage-card',
@@ -10,6 +9,10 @@ import { OnIdentifyEffects } from '@ngrx/effects';
 })
 export class CarriageCardComponent implements OnInit {
   @Input({ required: true }) carriage!: Carriage;
+
+  @Input({ required: true }) isDisabled!: boolean;
+
+  @Output() updatedCarriage = new EventEmitter<Carriage>();
 
   countOfSeats!: number;
 
@@ -38,5 +41,9 @@ export class CarriageCardComponent implements OnInit {
 
   trackBySeat(index: number, seat: Seat): number {
     return seat.numberInCarriage;
+  }
+
+  onUpdateCarriage(carriage: Carriage) {
+    this.updatedCarriage.emit(carriage);
   }
 }
