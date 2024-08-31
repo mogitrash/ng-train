@@ -12,6 +12,7 @@ import { adminGuard } from './core/guards/admin.guard';
 import { adminUserGuard } from './core/guards/admin-user.guard';
 import { CarriageComponent } from './shared/components/carriage/carriage.component';
 import { RoutesComponent } from './shared/components/routes/routes.component';
+import { StationsComponent } from './shared/components/stations/stations.component';
 
 const routes: Routes = [
   // Common routes
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'signup', component: SignupPageComponent, canActivate: [guestGuard] },
   { path: 'signin', component: SigninPageComponent, canActivate: [guestGuard] },
 
+  //  Admin and Users routes
   //  Admin and Users routes
   {
     path: 'profile',
@@ -49,7 +51,7 @@ const routes: Routes = [
       },
       {
         path: 'stations',
-        component: CarriageComponent,
+        component: StationsComponent,
       },
     ],
   },

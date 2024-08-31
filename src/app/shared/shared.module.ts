@@ -43,6 +43,6 @@ import { CreateFormComponent } from './components/routes/create-form/create-form
     MatDividerModule,
     MatExpansionModule,
   ],
-  exports: [CarriageComponent, StationsComponent],
+  exports: [CarriageComponent, StationsComponent, RoutesComponent],
 })
 export class SharedModule {}
