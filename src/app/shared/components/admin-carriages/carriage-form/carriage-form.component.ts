@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Carriage } from '../../../../features/trips/models/carriage.model';
 
@@ -10,7 +10,9 @@ import { Carriage } from '../../../../features/trips/models/carriage.model';
 export class CarriageFormComponent implements OnInit {
   @Input() carriage!: Carriage;
 
-  carriageForm!: FormGroup;
+  protected carriageForm!: FormGroup;
+
+  protected prototypeCarriage!: Carriage;
 
   constructor(private fb: FormBuilder) {}
 
@@ -22,32 +24,45 @@ export class CarriageFormComponent implements OnInit {
       ],
       rowCount: [
         this.carriage?.rows || '',
-        [
-          Validators.required,
-          Validators.min(1),
-          Validators.max(20),
-          Validators.pattern('^[1-9][0-9]*$'),
-        ],
+        [Validators.required, Validators.min(1), Validators.pattern('^[1-9][0-9]*$')],
       ],
       leftSeats: [
         this.carriage?.leftSeats || '',
 
-        [
-          Validators.required,
-          Validators.min(1),
-          Validators.max(6),
-          Validators.pattern('^[1-9][0-9]*$'),
-        ],
+        [Validators.required, Validators.min(1), Validators.pattern('^[1-9][0-9]*$')],
       ],
       rightSeats: [
         this.carriage?.rightSeats || '',
-        [
-          Validators.required,
-          Validators.min(1),
-          Validators.max(6),
-          Validators.pattern('^[1-9][0-9]*$'),
-        ],
+        [Validators.required, Validators.min(1), Validators.pattern('^[1-9][0-9]*$')],
       ],
+    });
+
+    this.prototypeCarriage = {
+      code: this.carriage?.code || '',
+      name: this.carriage?.name || '',
+      rows: this.carriage?.rows || 0,
+      leftSeats: this.carriage?.leftSeats || 0,
+      rightSeats: this.carriage?.rightSeats || 0,
+    };
+
+    this.carriageForm.valueChanges.subscribe((formValues) => {
+      console.log(this.prototypeCarriage);
+      if (
+        formValues.carriageName &&
+        formValues.rowCount &&
+        formValues.leftSeats &&
+        formValues.rightSeats
+      ) {
+        this.prototypeCarriage = {
+          ...this.prototypeCarriage,
+          name: formValues.carriageName,
+          rows: formValues.rowCount,
+          leftSeats: formValues.leftSeats,
+          rightSeats: formValues.rightSeats,
+        };
+      }
+
+      console.log(this.prototypeCarriage);
     });
   }
 

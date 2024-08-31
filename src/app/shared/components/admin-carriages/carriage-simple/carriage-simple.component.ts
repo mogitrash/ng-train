@@ -1,25 +1,29 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Carriage } from '../../../../features/trips/models/carriage.model';
 import { Seat, SeatStatus } from '../../carriage/carriage.component';
 
 @Component({
   selector: 'app-carriage-simple',
   templateUrl: './carriage-simple.component.html',
-  styleUrl: './carriage-simple.component.scss',
+  styleUrls: ['./carriage-simple.component.scss'],
 })
-export class CarriageSimpleComponent implements OnInit {
+export class CarriageSimpleComponent implements OnChanges {
   @Input({ required: true }) carriage!: Carriage;
 
   protected seats: Seat[] = [];
 
   countOfSeats!: number;
 
-  ngOnInit(): void {
-    this.countOfSeats = this.calcCountTotalNumberOfSeats();
-    this.createSeats();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['carriage']) {
+      this.countOfSeats = this.calcCountTotalNumberOfSeats();
+      this.createSeats();
+    }
   }
 
   private createSeats() {
+    this.seats = [];
+
     for (let i = 0; i < this.countOfSeats; i += 1) {
       const seat: Seat = {
         numberInCarriage: i + 1,
