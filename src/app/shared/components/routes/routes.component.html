@@ -30,7 +30,7 @@
         <mat-icon color="primary">train</mat-icon>
         <span *ngIf="showMode">Assign ride</span>
       </button>
-      <button mat-icon-button title="Delete ride">
+      <button mat-icon-button title="Delete ride" (click)="onDeleteRoute(route.id)">
         <mat-icon color="primary">delete</mat-icon>
         <span *ngIf="showMode">Delete ride</span>
       </button>

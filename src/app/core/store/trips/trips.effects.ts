@@ -352,6 +352,22 @@ export class TripsEffects {
     { functional: true, dispatch: false },
   );
 
+  loadDataForRoutesView$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(tripActions.loadDataForRoutesView),
+      switchMap(() => {
+        return of(
+          tripActions.loadStations(),
+          tripActions.loadRoutes(),
+          tripActions.loadCarriages(),
+        );
+      }),
+      catchError((error) => {
+        return of(tripActions.failureSnackBar({ error }));
+      }),
+    );
+  });
+
   loadDataForOrdersView$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(tripActions.loadDataForOrdersView),

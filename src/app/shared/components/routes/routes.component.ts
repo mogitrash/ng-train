@@ -1,10 +1,15 @@
 import { Component, DestroyRef, inject, OnDestroy, OnInit } from '@angular/core';
-// import { FormGroup, FormControl } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
 import { Station } from '../../../features/trips/models/station.model';
-import { TripsService } from '../../../features/trips/services/trips.service';
 import { Carriage } from '../../../features/trips/models/carriage.model';
 import { CityInfo, Route } from '../../../features/trips/models/route.model';
+import {
+  selectCarriages,
+  selectRoutes,
+  selectStations,
+} from '../../../core/store/trips/trips.selectors';
+import { deleteRoute, loadDataForRoutesView } from '../../../core/store/trips/trips.actions';
 
 @Component({
   selector: 'app-routes',
@@ -12,8 +17,6 @@ import { CityInfo, Route } from '../../../features/trips/models/route.model';
   styleUrl: './routes.component.scss',
 })
 export class RoutesComponent implements OnInit, OnDestroy {
-  // public routeForm: FormGroup = new FormGroup({});
-
   public routes: Observable<Route[]>;
 
   public stations: Observable<Station[]>;
@@ -34,21 +37,16 @@ export class RoutesComponent implements OnInit, OnDestroy {
 
   private subscription: Subscription | undefined;
 
-  constructor(private readonly tripsService: TripsService) {
-    this.routes = tripsService.getRouteList();
-    this.stations = tripsService.getStationList();
-    this.carriages = tripsService.getCarriageList();
+  constructor(private readonly store: Store) {
+    this.routes = this.store.select(selectRoutes);
+    this.stations = this.store.select(selectStations);
+    this.carriages = this.store.select(selectCarriages);
     this.destroyRef = inject(DestroyRef);
     this.currentRoute = { id: 0, path: [], carriages: [] };
   }
 
   ngOnInit() {
-    this.subscription = this.stations.subscribe((stations) => {
-      stations.forEach((station) => {
-        this.citiesList?.push({ id: station.id, name: station.city });
-      });
-      console.log(this.citiesList);
-    });
+    this.store.dispatch(loadDataForRoutesView());
   }
 
   public getCarriageTypes(carriages: string[]): Set<string> {
@@ -82,6 +80,10 @@ export class RoutesComponent implements OnInit, OnDestroy {
   public changeCreateMode(): void {
     this.createMode = !this.createMode;
     console.log(this.createMode);
+  }
+
+  protected onDeleteRoute(id: number) {
+    this.store.dispatch(deleteRoute({ id }));
   }
 
   ngOnDestroy(): void {
