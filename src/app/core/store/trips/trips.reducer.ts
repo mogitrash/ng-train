@@ -4,6 +4,8 @@ import {
   carriagesLoadedSuccess,
   loadingFinished,
   loadingStarted,
+  loadDataForOrdersViewSuccess,
+  orderDeletedSuccess,
   ordersLoadedSuccess,
   rideLoadedByIdSuccess,
   routeLoadedByIdSuccess,
@@ -58,5 +60,20 @@ export const tripsReducer = createReducer(
   }),
   on(loadingFinished, (state): TripsState => {
     return { ...state, loading: false };
+  on(loadDataForOrdersViewSuccess, (state, { carriages, stations, orders }): TripsState => {
+    return {
+      ...state,
+      carriages,
+      stations,
+      orders,
+    };
+  }),
+  on(orderDeletedSuccess, (state, { orderId }): TripsState => {
+    return {
+      ...state,
+      orders: state.orders.map((order) => {
+        return order.id === orderId ? { ...order, status: 'canceled' } : order;
+      }),
+    };
   }),
 );

@@ -58,9 +58,9 @@ export class UserEffects {
                 localStorage.clear();
                 localStorage.setItem('token', token);
               }),
-              switchMap(({ token }) => {
+              switchMap(() => {
                 this.router.navigate(['/']);
-                return of(userActions.getToken({ token, role: 'user' }), userActions.clearError());
+                return of(userActions.getUser(), userActions.clearError());
               }),
               catchError((error: UserError) => {
                 return of(userActions.getError({ error }));
@@ -120,12 +120,17 @@ export class UserEffects {
       exhaustMap(() => {
         return this.userService.getCurrentUser().pipe(
           take(1),
-          map((user) => {
-            return userActions.saveUser({
-              name: user.name ?? '',
-              email: user.email,
-              role: user.role,
-            });
+          switchMap((user) => {
+            const token = localStorage.getItem('token');
+            localStorage.setItem('role', user.role);
+            return of(
+              userActions.saveUser({
+                name: user.name ?? '',
+                email: user.email,
+                role: user.role,
+              }),
+              userActions.getToken({ token: token || '' }),
+            );
           }),
           catchError((error: UserError) => {
             return of(userActions.getError({ error }));
