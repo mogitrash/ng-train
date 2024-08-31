@@ -111,6 +111,6 @@ export class CarriageFormComponent implements OnInit {
   }
 
   generateName(): string {
-    return `carriage${this.countCarriages}`;
+    return `carriage${this.countCarriages + 1}`;
   }
 }
