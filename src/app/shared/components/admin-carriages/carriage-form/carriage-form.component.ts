@@ -33,16 +33,27 @@ export class CarriageFormComponent implements OnInit {
       ],
       rowCount: [
         this.carriage?.rows || '',
-        [Validators.required, Validators.min(1), Validators.pattern('^[1-9][0-9]*$')],
+        [
+          Validators.required,
+          Validators.min(1),
+          Validators.pattern('^[1-9][0-9]*$'),
+          Validators.max(22),
+        ],
       ],
       leftSeats: [
         this.carriage?.leftSeats || '',
 
-        [Validators.required, Validators.min(1), Validators.pattern('^[1-9][0-9]*$')],
+        [
+          Validators.required,
+          Validators.min(1),
+          Validators.pattern('^[1-9][0-9]*$'),
+          Validators.max(10),
+        ],
       ],
       rightSeats: [
         this.carriage?.rightSeats || '',
         [Validators.required, Validators.min(1), Validators.pattern('^[1-9][0-9]*$')],
+        Validators.max(10),
       ],
     });
 

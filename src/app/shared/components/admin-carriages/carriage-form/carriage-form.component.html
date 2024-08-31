@@ -22,6 +22,9 @@
         <mat-error *ngIf="carriageForm.get('rowCount')?.hasError('min')">
           Row count must be at least 1
         </mat-error>
+        <mat-error *ngIf="carriageForm.get('rowCount')?.hasError('max')">
+          There should be no more than 22 rows
+        </mat-error>
         <mat-error *ngIf="carriageForm.get('rowCount')?.hasError('pattern')">
           Row count must be a positive integer
         </mat-error>
@@ -36,6 +39,9 @@
         <mat-error *ngIf="carriageForm.get('rightSeats')?.hasError('min')">
           Columns right must be at least 1
         </mat-error>
+        <mat-error *ngIf="carriageForm.get('rightSeats')?.hasError('max')">
+          There should be no more than 10 column
+        </mat-error>
         <mat-error *ngIf="carriageForm.get('rightSeats')?.hasError('pattern')">
           Row count must be a positive integer
         </mat-error>
@@ -49,6 +55,9 @@
         </mat-error>
         <mat-error *ngIf="carriageForm.get('leftSeats')?.hasError('min')">
           Columns left must be at least 1
+        </mat-error>
+        <mat-error *ngIf="carriageForm.get('leftSeats')?.hasError('max')">
+          There should be no more than 10 column
         </mat-error>
         <mat-error *ngIf="carriageForm.get('leftSeats')?.hasError('pattern')">
           Row count must be a positive integer
