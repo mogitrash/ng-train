@@ -1,5 +1,6 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { Carriage } from '../../../features/trips/models/carriage.model';
 import { selectCarriages } from '../../../core/store/trips/trips.selectors';
@@ -10,7 +11,7 @@ import { loadCarriages } from '../../../core/store/trips/trips.actions';
   templateUrl: './admin-carriages.component.html',
   styleUrl: './admin-carriages.component.scss',
 })
-export class AdminCarriagesComponent implements OnInit {
+export class AdminCarriagesComponent implements OnInit, OnDestroy {
   @ViewChild('formElement') formElement!: ElementRef;
 
   protected carriages$: Observable<Carriage[] | null> = this.store.select(selectCarriages);
@@ -23,13 +24,20 @@ export class AdminCarriagesComponent implements OnInit {
 
   protected carriagesCount = 0;
 
+  private destroy$ = new Subject<void>();
+
   constructor(private store: Store) {}
 
   ngOnInit(): void {
     this.store.dispatch(loadCarriages());
-    this.carriages$.subscribe((carriages) => {
+    this.carriages$.pipe(takeUntil(this.destroy$)).subscribe((carriages) => {
       if (carriages) this.carriagesCount = carriages.length;
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   onSelectedUpdateCarriage(carriage: Carriage) {

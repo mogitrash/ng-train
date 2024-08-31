@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { Subject, takeUntil } from 'rxjs';
 import { Carriage } from '../../../../features/trips/models/carriage.model';
 import { createCarriage, updateCarriage } from '../../../../core/store/trips/trips.actions';
 
@@ -9,7 +10,7 @@ import { createCarriage, updateCarriage } from '../../../../core/store/trips/tri
   templateUrl: './carriage-form.component.html',
   styleUrl: './carriage-form.component.scss',
 })
-export class CarriageFormComponent implements OnInit {
+export class CarriageFormComponent implements OnInit, OnDestroy {
   @Input() carriage!: Carriage | null;
 
   @Input({ required: true }) countCarriages!: number;
@@ -21,6 +22,8 @@ export class CarriageFormComponent implements OnInit {
   protected carriageForm!: FormGroup;
 
   protected prototypeCarriage!: Carriage;
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -67,7 +70,7 @@ export class CarriageFormComponent implements OnInit {
       rightSeats: this.carriage?.rightSeats || 0,
     };
 
-    this.carriageForm.valueChanges.subscribe((formValues) => {
+    this.carriageForm.valueChanges.pipe(takeUntil(this.destroy$)).subscribe((formValues) => {
       if (formValues.rowCount && formValues.leftSeats && formValues.rightSeats) {
         this.prototypeCarriage = {
           ...this.prototypeCarriage,
@@ -112,5 +115,10 @@ export class CarriageFormComponent implements OnInit {
 
   generateName(): string {
     return `carriage${this.countCarriages + 1}`;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
