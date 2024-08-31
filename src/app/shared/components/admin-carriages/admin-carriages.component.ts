@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Carriage } from '../../../features/trips/models/carriage.model';
@@ -11,6 +11,8 @@ import { loadCarriages } from '../../../core/store/trips/trips.actions';
   styleUrl: './admin-carriages.component.scss',
 })
 export class AdminCarriagesComponent implements OnInit {
+  @ViewChild('formElement') formElement!: ElementRef;
+
   protected carriages$: Observable<Carriage[] | null> = this.store.select(selectCarriages);
 
   protected updatedCarriage: Carriage | null = null;
@@ -29,9 +31,16 @@ export class AdminCarriagesComponent implements OnInit {
     this.isOpenForm = true;
     this.formType = 'update';
     this.updatedCarriage = carriage;
+    if (this.isOpenForm) {
+      this.scrollToForm();
+    }
   }
 
   toggleOpenForm() {
     this.isOpenForm = !this.isOpenForm;
+  }
+
+  scrollToForm() {
+    this.formElement.nativeElement.scrollIntoView({ behavior: 'smooth' });
   }
 }
