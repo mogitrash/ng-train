@@ -1,5 +1,16 @@
 import { Injectable } from '@angular/core';
-import { catchError, exhaustMap, forkJoin, map, of, switchMap, tap } from 'rxjs';
+import {
+  catchError,
+  delay,
+  endWith,
+  exhaustMap,
+  forkJoin,
+  map,
+  of,
+  startWith,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TripsService } from '../../../features/trips/services/trips.service';
@@ -32,6 +43,57 @@ export class TripsEffects {
     );
   });
 
+  canDelete$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(tripActions.canDelete),
+      exhaustMap((action) => {
+        if (action.coordinates.length === 0) {
+          return of(tripActions.deleteStation(action.station));
+        }
+        const searchRequests = action.coordinates.map((coordinate) => {
+          const now = Date.now();
+          return this.tripsService
+            .search(
+              coordinate.latitude,
+              coordinate.longitude,
+              action.station.latitude,
+              action.station.longitude,
+              now,
+            )
+            .pipe(
+              map((route) => {
+                return route.routes.length > 0;
+              }),
+            );
+        });
+
+        return forkJoin(searchRequests).pipe(
+          delay(1000),
+          switchMap((results) => {
+            const canDelete = !results.some((hasRoutes) => {
+              return hasRoutes;
+            });
+            if (canDelete) {
+              return of(tripActions.deleteStation(action.station));
+            }
+            return of(
+              tripActions.failureSnackBar({
+                error: {
+                  message: 'Cannot delete station with active rides',
+                  reason: 'Cannot delete station with active rides',
+                },
+              }),
+            );
+          }),
+          catchError((error) => {
+            return of(tripActions.failureSnackBar(error));
+          }),
+          startWith(tripActions.loadingStarted()),
+        );
+      }),
+    );
+  });
+
   loadStations$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(tripActions.loadStations),
@@ -43,6 +105,8 @@ export class TripsEffects {
           catchError((error) => {
             return of(tripActions.failureSnackBar(error));
           }),
+          startWith(tripActions.loadingStarted()),
+          endWith(tripActions.loadingFinished()),
         );
       }),
     );
@@ -59,7 +123,17 @@ export class TripsEffects {
           catchError((error) => {
             return of(tripActions.failureSnackBar(error));
           }),
+          startWith(tripActions.loadingStarted()),
         );
+      }),
+    );
+  });
+
+  loadStationsAfterDelete$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(tripActions.stationDeleteSuccess),
+      map(() => {
+        return tripActions.loadStations();
       }),
     );
   });
@@ -300,7 +374,17 @@ export class TripsEffects {
             catchError((error) => {
               return of(tripActions.failureSnackBar(error));
             }),
+            startWith(tripActions.loadingStarted()),
           );
+      }),
+    );
+  });
+
+  loadStationsAfterCreate$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(tripActions.createStationSuccess),
+      map(() => {
+        return tripActions.loadStations();
       }),
     );
   });
@@ -361,6 +445,7 @@ export class TripsEffects {
           this.snackBar.open(error.error.message, 'Close', {
             duration: 5000,
           });
+          tripActions.loadingFinished();
         }),
       );
     },

@@ -29,6 +29,16 @@ export const stationsLoadedSuccess = createAction(
   '[Trips] Stations Loaded Success',
   props<{ stations: Station[] }>(),
 );
+export const canDelete = createAction(
+  '[Trips] Can Delete',
+  props<{
+    station: Station;
+    coordinates: {
+      latitude: number;
+      longitude: number;
+    }[];
+  }>(),
+);
 
 export const deleteStation = createAction('[Trips] Delete Station', props<{ id: number }>());
 export const stationDeleteSuccess = createAction('[Trips] Station Deleted Success');
@@ -183,3 +193,5 @@ export const failureSnackBar = createAction(
   '[Trips] Failure SnackBar',
   props<{ error: { message: string; reason: string } }>(),
 );
+export const loadingFinished = createAction('[Trips] Load finished');
+export const loadingStarted = createAction('[Trips] Load started');
