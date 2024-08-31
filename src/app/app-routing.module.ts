@@ -10,6 +10,8 @@ import { MainPageComponent } from './pages/main-page/main-page.component';
 import { guestGuard } from './core/guards/guest.guard';
 import { adminGuard } from './core/guards/admin.guard';
 import { adminUserGuard } from './core/guards/admin-user.guard';
+import { CarriageComponent } from './shared/components/carriage/carriage.component';
+import { RoutesComponent } from './shared/components/routes/routes.component';
 
 const routes: Routes = [
   // Common routes
@@ -19,6 +21,7 @@ const routes: Routes = [
   { path: 'signup', component: SignupPageComponent, canActivate: [guestGuard] },
   { path: 'signin', component: SigninPageComponent, canActivate: [guestGuard] },
 
+  //  Admin and Users routes
   //  Admin and Users routes
   {
     path: 'profile',
@@ -32,7 +35,25 @@ const routes: Routes = [
   },
 
   // Only admin route
-  { path: 'admin', component: AdminPageComponent, canActivate: [adminGuard] },
+  {
+    path: 'admin',
+    component: AdminPageComponent,
+    canActivate: [adminGuard],
+    children: [
+      {
+        path: 'carriages',
+        component: CarriageComponent,
+      },
+      {
+        path: 'routes',
+        component: RoutesComponent,
+      },
+      {
+        path: 'stations',
+        component: CarriageComponent,
+      },
+    ],
+  },
 
   // not found
   {
