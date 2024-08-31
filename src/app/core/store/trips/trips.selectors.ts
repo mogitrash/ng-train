@@ -38,3 +38,7 @@ export const selectSearchResponses = createSelector(selectTripsState, (state: Tr
 export const selectLastSearchReponse = createSelector(selectTripsState, (state: TripsState) => {
   return state.searchResponses.at(state.searchResponses.length - 1)!;
 });
+
+export const selectLoading = createSelector(selectTripsState, (state: TripsState) => {
+  return state.loading;
+});

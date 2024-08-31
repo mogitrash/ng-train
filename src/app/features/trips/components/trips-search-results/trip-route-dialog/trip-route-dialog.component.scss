@@ -48,9 +48,23 @@
   }
 }
 
-.route {
+.route-legend,
+.route-wrapper {
+  width: 100px;
+}
+.time-legend,
+.time-wrapper {
+  width: 90px;
+}
+.station-legend,
+.station-wrapper {
+  text-align: right;
+  width: 90px;
+}
+
+.route-wrapper {
+  width: 100px;
   position: relative;
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -61,7 +75,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  height: 95%;
+  height: calc(100% - 10px);
   background-color: var(--primary-blue);
   width: 3px;
 
@@ -71,9 +85,13 @@
 }
 
 .time-wrapper,
-.stations-wrapper {
+.station-wrapper {
   display: flex;
   flex-direction: column;
+}
+
+.station-wrapper {
+  align-items: flex-end;
 }
 
 .time-item,

@@ -16,6 +16,7 @@ export interface TripsState {
   users: User[];
   searchResponses: SearchResponse[];
   searchDate?: Date;
+  loading: boolean;
 }
 
 export interface SearchResponse {

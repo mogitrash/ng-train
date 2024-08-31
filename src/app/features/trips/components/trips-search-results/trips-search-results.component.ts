@@ -22,7 +22,7 @@ export class TripsSearchResultsComponent implements OnInit {
   ngOnInit(): void {
     this.selectedGroup$ = this.searchResponse$.pipe(
       map((response) => {
-        return response[getStringDate(this.searchDate)];
+        return response[getStringDate(this.searchDate)] ?? Object.entries(response)[0][1];
       }),
     );
   }

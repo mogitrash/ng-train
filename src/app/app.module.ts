@@ -6,12 +6,14 @@ import { EffectsModule } from '@ngrx/effects';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
-import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatCardModule } from '@angular/material/card';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCardModule } from '@angular/material/card';
+import { MatTableModule } from '@angular/material/table';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
@@ -66,13 +68,15 @@ import { SharedModule } from './shared/shared.module';
     StoreDevtoolsModule.instrument(),
     UserModule,
     MatButtonModule,
-    MatIconModule,
-    SharedModule,
+    MatCardModule,
+    MatTableModule,
     MatFormFieldModule,
     MatInputModule,
-    MatDividerModule,
-    MatCardModule,
+    MatIconModule,
+    MatSelectModule,
     ReactiveFormsModule,
+    MatDividerModule,
+    SharedModule,
   ],
   providers: [
     provideAnimationsAsync(),

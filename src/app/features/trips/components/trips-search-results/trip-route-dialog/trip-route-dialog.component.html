@@ -10,9 +10,9 @@
   <mat-divider></mat-divider>
 
   <div class="legend">
-    <div>Time</div>
-    <div></div>
-    <div>Station</div>
+    <div class="time-legend">Time</div>
+    <div class="route-legend"></div>
+    <div class="station-legend">Station</div>
   </div>
 
   <div class="wrapper">
@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <div class="route">
+    <div class="route-wrapper">
       <div class="line"></div>
 
       <div class="start-station">
@@ -54,7 +54,7 @@
       </div>
     </div>
 
-    <div class="stations-wrapper">
+    <div class="station-wrapper">
       <div class="station-item start-station">start</div>
 
       @for (item of segments; track $index) {
