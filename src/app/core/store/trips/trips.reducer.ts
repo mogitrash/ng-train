@@ -2,6 +2,8 @@ import { createReducer, on } from '@ngrx/store';
 import { TripsState } from '../../models/trips.model';
 import {
   carriagesLoadedSuccess,
+  loadingFinished,
+  loadingStarted,
   loadDataForOrdersViewSuccess,
   loadDataForRoutesView,
   orderDeletedSuccess,
@@ -22,6 +24,7 @@ const inititalTripState: TripsState = {
   rides: [],
   users: [],
   searchResponses: [],
+  loading: false,
 };
 
 export const tripsReducer = createReducer(
@@ -30,7 +33,7 @@ export const tripsReducer = createReducer(
     return { ...state, searchResponses: [...state.searchResponses, search] };
   }),
   on(stationsLoadedSuccess, (state, { stations }): TripsState => {
-    return { ...state, stations };
+    return { ...state, stations, loading: false };
   }),
   on(routesLoadedSuccess, (state, { routes }): TripsState => {
     return { ...state, routes };
@@ -49,6 +52,15 @@ export const tripsReducer = createReducer(
   }),
   on(rideLoadedByIdSuccess, (state, { ride }): TripsState => {
     return { ...state, rides: [...state.rides, ride] };
+  }),
+  on(rideLoadedByIdSuccess, (state, { ride }): TripsState => {
+    return { ...state, rides: [...state.rides, ride] };
+  }),
+  on(loadingStarted, (state): TripsState => {
+    return { ...state, loading: true };
+  }),
+  on(loadingFinished, (state): TripsState => {
+    return { ...state, loading: false };
   }),
   on(loadDataForOrdersViewSuccess, (state, { carriages, stations, orders }): TripsState => {
     return {
