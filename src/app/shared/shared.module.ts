@@ -11,6 +11,7 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { StationsComponent } from './components/stations/stations.component';
 import { SplitSeatsPipe } from './pipes/split-seats.pipe';
 import { RoutesComponent } from './components/routes/routes.component';
