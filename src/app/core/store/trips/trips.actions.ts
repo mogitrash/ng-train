@@ -143,11 +143,6 @@ export const usersLoadedSuccess = createAction(
   props<{ users: User[] }>(),
 );
 
-export const loadRideById = createAction('[Trips] Load Ride By Id', props<{ rideId: number }>());
-export const rideLoadedByIdSuccess = createAction(
-  '[Trips] Ride Loaded By Id Success',
-  props<{ ride: Ride }>(),
-);
 
 // Rides
 export const createRide = createAction(
@@ -165,6 +160,16 @@ export const createRideSuccess = createAction(
   props<{ id: number }>(),
 );
 
+export const loadRideById = createAction('[Trips] Load Ride By Id', props<{ rideId: number }>());
+export const rideLoadedByIdSuccess = createAction(
+  '[Trips] Ride Loaded By Id Success',
+  props<{ ride: Ride }>(),
+);
+
+export const ridesLoadedByRouteSuccess = createAction(
+  '[Trips] Rides Loaded By Route Success',
+  props<{ rides: Ride[] }>(),
+);
 export const updateRide = createAction(
   '[Trips] Update Ride',
   props<{

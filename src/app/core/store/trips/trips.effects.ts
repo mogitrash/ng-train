@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { catchError, exhaustMap, forkJoin, map, of, switchMap, tap } from 'rxjs';
+import { catchError, exhaustMap, forkJoin, map, mergeMap, of, switchMap, tap } from 'rxjs';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TripsService } from '../../../features/trips/services/trips.service';
 import * as tripActions from './trips.actions';
+import { Ride } from '../../../features/trips/models/ride.model';
 
 @Injectable()
 export class TripsEffects {
@@ -265,8 +266,35 @@ export class TripsEffects {
             return tripActions.routeLoadedByIdSuccess({ route });
           }),
           catchError((error) => {
-            return of(tripActions.failureSnackBar(error));
+            return of(tripActions.failureSnackBar({ error }));
           }),
+        );
+      }),
+    );
+  });
+
+  loadRidesForRoutes$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(tripActions.routeLoadedByIdSuccess),
+      mergeMap((action) => {
+        const schedule = action.route.schedule || [];
+        return forkJoin(
+          schedule.map((item) =>
+            {return this.tripsService.getRideById(item.rideId).pipe(
+              map((ride) => {return { ride }}),
+              catchError((error) => {return of({ error, rideId: item.rideId })}),
+            )},
+          ),
+        ).pipe(
+          map((results) => {
+            const successfulRides = results.filter(
+              (result): result is { ride: Ride } => {return 'ride' in result},
+            );
+            return tripActions.ridesLoadedByRouteSuccess({
+              rides: successfulRides.map((result) => {return result.ride}),
+            });
+          }),
+          catchError((error) => {return of(tripActions.failureSnackBar({ error }))}),
         );
       }),
     );

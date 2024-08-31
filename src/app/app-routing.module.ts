@@ -10,6 +10,7 @@ import { MainPageComponent } from './pages/main-page/main-page.component';
 import { guestGuard } from './core/guards/guest.guard';
 import { adminGuard } from './core/guards/admin.guard';
 import { adminUserGuard } from './core/guards/admin-user.guard';
+import { ScheduleComponent } from './shared/components/schedule/schedule.component';
 
 const routes: Routes = [
   // Common routes
@@ -18,6 +19,8 @@ const routes: Routes = [
   // Guest routes
   { path: 'signup', component: SignupPageComponent, canActivate: [guestGuard] },
   { path: 'signin', component: SigninPageComponent, canActivate: [guestGuard] },
+
+  { path: 'routes/:id', component: ScheduleComponent },
 
   //  Admin and Users routes
   {

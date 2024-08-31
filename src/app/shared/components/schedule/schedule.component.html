@@ -1,1 +1,18 @@
-<p>schedule works!</p>
+@if (route$ | async; as routes) {
+  @for (route of routes; track route.id) {
+    @for (ride of rides$ | async; track ride.rideId) {
+      <mat-card appearance="outlined">
+        <mat-card-header> Ride {{ ride.rideId }}</mat-card-header>
+        @if (stations$ | async; as stations) {
+          <mat-card-content>
+            @for (path of ride.path; track path) {
+              {{ findStationNameById(path, stations) }}
+
+              <mat-divider></mat-divider>
+            }
+          </mat-card-content>
+        }
+      </mat-card>
+    }
+  }
+}

@@ -6,6 +6,7 @@ import {
   orderDeletedSuccess,
   ordersLoadedSuccess,
   rideLoadedByIdSuccess,
+  ridesLoadedByRouteSuccess,
   routeLoadedByIdSuccess,
   routesLoadedSuccess,
   searchLoadedSuccess,
@@ -48,6 +49,9 @@ export const tripsReducer = createReducer(
   }),
   on(rideLoadedByIdSuccess, (state, { ride }): TripsState => {
     return { ...state, rides: [...state.rides, ride] };
+  }),
+  on(ridesLoadedByRouteSuccess, (state, { rides }): TripsState => {
+    return { ...state, rides };
   }),
   on(loadDataForOrdersViewSuccess, (state, { carriages, stations, orders }): TripsState => {
     return {
