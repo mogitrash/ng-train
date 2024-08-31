@@ -37,6 +37,9 @@ export class AdminCarriagesComponent implements OnInit {
   }
 
   toggleOpenForm() {
+    if (!this.isOpenForm) {
+      this.updatedCarriage = null;
+    }
     this.isOpenForm = !this.isOpenForm;
   }
 

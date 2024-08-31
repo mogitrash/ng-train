@@ -10,7 +10,7 @@ import { createCarriage, updateCarriage } from '../../../../core/store/trips/tri
   styleUrl: './carriage-form.component.scss',
 })
 export class CarriageFormComponent implements OnInit {
-  @Input() carriage!: Carriage;
+  @Input() carriage!: Carriage | null;
 
   @Output() formSubmitted = new EventEmitter<void>();
 
@@ -88,9 +88,18 @@ export class CarriageFormComponent implements OnInit {
       }
     }
     this.formSubmitted.emit();
+    this.resetForm();
   }
 
   closeForm() {
     this.formClosed.emit();
+    this.resetForm();
+  }
+
+  resetForm() {
+    this.carriageForm.reset();
+    this.carriageForm.markAsPristine();
+    this.carriageForm.markAsUntouched();
+    this.carriageForm.updateValueAndValidity();
   }
 }
