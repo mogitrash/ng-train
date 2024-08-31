@@ -279,22 +279,30 @@ export class TripsEffects {
       mergeMap((action) => {
         const schedule = action.route.schedule || [];
         return forkJoin(
-          schedule.map((item) =>
-            {return this.tripsService.getRideById(item.rideId).pipe(
-              map((ride) => {return { ride }}),
-              catchError((error) => {return of({ error, rideId: item.rideId })}),
-            )},
-          ),
+          schedule.map((item) => {
+            return this.tripsService.getRideById(item.rideId).pipe(
+              map((ride) => {
+                return { ride };
+              }),
+              catchError((error) => {
+                return of({ error, rideId: item.rideId });
+              }),
+            );
+          }),
         ).pipe(
           map((results) => {
-            const successfulRides = results.filter(
-              (result): result is { ride: Ride } => {return 'ride' in result},
-            );
+            const successfulRides = results.filter((result): result is { ride: Ride } => {
+              return 'ride' in result;
+            });
             return tripActions.ridesLoadedByRouteSuccess({
-              rides: successfulRides.map((result) => {return result.ride}),
+              rides: successfulRides.map((result) => {
+                return result.ride;
+              }),
             });
           }),
-          catchError((error) => {return of(tripActions.failureSnackBar({ error }))}),
+          catchError((error) => {
+            return of(tripActions.failureSnackBar({ error }));
+          }),
         );
       }),
     );

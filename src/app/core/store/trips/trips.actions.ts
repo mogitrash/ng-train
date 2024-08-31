@@ -143,7 +143,6 @@ export const usersLoadedSuccess = createAction(
   props<{ users: User[] }>(),
 );
 
-
 // Rides
 export const createRide = createAction(
   '[Trips] Create Ride',
