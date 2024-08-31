@@ -17,10 +17,8 @@
                     Departure: {{ ride.schedule.segments[idx].time[0] | date: 'yyyy-MM-dd HH:mm' }}
                   } @else if ($index < ride.path.length - 1) {
                     Arrival:
-                    {{
-                      ride.schedule.segments[idx - 1].time[1] | date: 'yyyy-MM-dd HH:mm'
-                    }}
-                    <br>
+                    {{ ride.schedule.segments[idx - 1].time[1] | date: 'yyyy-MM-dd HH:mm' }}
+                    <br />
                     Departure:
                     {{ ride.schedule.segments[idx].time[0] | date: 'yyyy-MM-dd HH:mm' }}
                   } @else {
@@ -32,16 +30,20 @@
                   @if ($index < ride.path.length - 1) {
                     Price
                     <div *ngFor="let key of getKeys(ride.schedule.segments[idx].price)">
-                      {{ key }}: {{ ride.schedule.segments[idx].price[key] /100 | currency:'USD':'symbol':'1.2-2' }}
+                      {{ key }}:
+                      {{
+                        ride.schedule.segments[idx].price[key] / 100
+                          | currency: 'USD' : 'symbol' : '1.2-2'
+                      }}
                     </div>
                   }
                 </div>
               </div>
-          }
+            }
           }
         </mat-card-content>
       </mat-card>
-      <br>
+      <br />
     }
   }
 }
