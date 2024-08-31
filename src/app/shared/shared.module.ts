@@ -13,11 +13,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { StationsComponent } from './components/stations/stations.component';
 import { SplitSeatsPipe } from './pipes/split-seats.pipe';
 import { RoutesComponent } from './components/routes/routes.component';
+import { CarriageComponent } from './components/carriage/carriage.component';
 
 @NgModule({
-  declarations: [CarriageComponent, SplitSeatsPipe, RoutesComponent, StationsComponen],
-  imports: [CommonModule,   
-            MatCardModule,
+  declarations: [CarriageComponent, SplitSeatsPipe, RoutesComponent, StationsComponent],
+  imports: [
+    CommonModule,
+    MatCardModule,
     MatSelectModule,
     MatIconModule,
     MatPaginatorModule,
@@ -26,8 +28,8 @@ import { RoutesComponent } from './components/routes/routes.component';
     LeafletModule,
     MatFormFieldModule,
     MatButtonModule,
-    MatInputModule,],
-  exports: [CarriageComponent, StationsComponent],
-
+    MatInputModule,
+  ],
+  exports: [CarriageComponent, StationsComponent, RoutesComponent],
 })
 export class SharedModule {}

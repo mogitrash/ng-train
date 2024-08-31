@@ -60,6 +60,7 @@ export const tripsReducer = createReducer(
   }),
   on(loadingFinished, (state): TripsState => {
     return { ...state, loading: false };
+  }),
   on(loadDataForOrdersViewSuccess, (state, { carriages, stations, orders }): TripsState => {
     return {
       ...state,
