@@ -9,12 +9,19 @@
 
 <app-update-form
   [currentRoute]="currentRoute"
-  [cities]="getCities(currentRoute.path)"
+  [cities]="getCities(currentRoute.path) | async"
   *ngIf="updateMode"
 ></app-update-form>
 
+<div class="overlay" *ngIf="isLoading$ | async">
+  <mat-spinner></mat-spinner>
+</div>
+
 <mat-divider></mat-divider>
-<div class="route" *ngFor="let route of routes | async; index as i">
+<div
+  class="route"
+  *ngFor="let route of (routes$ | async)!.slice((NumberPage - 1) * 5, NumberPage * 5); index as i"
+>
   <div class="route-header">
     <h3>Route {{ route.id }}</h3>
     <div
@@ -39,7 +46,7 @@
   <mat-divider></mat-divider>
   <div class="cities">
     <h4>Cities:</h4>
-    <span *ngFor="let city of getCities(route.path); last as isLast"
+    <span *ngFor="let city of getCities(route.path) | async; last as isLast"
       >{{ isLast ? city : city + ' -' }}
     </span>
   </div>
@@ -50,4 +57,27 @@
       isLast ? type : type + ' -'
     }}</span>
   </div>
+</div>
+<div class="pagination">
+  <button mat-icon-button [disabled]="!(NumberPage - 10 > 0)" (click)="changePage('minus', 10)">
+    <mat-icon>keyboard_double_arrow_left</mat-icon>
+  </button>
+  <button mat-icon-button [disabled]="!(NumberPage - 1 > 0)" (click)="changePage('minus', 1)">
+    <mat-icon>keyboard_arrow_left</mat-icon>
+  </button>
+  <span>{{ NumberPage }}</span>
+  <button
+    mat-icon-button
+    [disabled]="!(NumberPage + 1 < (routes$ | async)!.length)"
+    (click)="changePage('plus', 1)"
+  >
+    <mat-icon>keyboard_arrow_right</mat-icon>
+  </button>
+  <button
+    mat-icon-button
+    [disabled]="!(NumberPage + 10 < (routes$ | async)!.length)"
+    (click)="changePage('plus', 10)"
+  >
+    <mat-icon>keyboard_double_arrow_right</mat-icon>
+  </button>
 </div>

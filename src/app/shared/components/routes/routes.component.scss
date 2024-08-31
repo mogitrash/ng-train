@@ -1,4 +1,5 @@
 @import './../../../../styles.scss';
+@import './../stations/stations.component.scss';
 
 :host {
   width: calc(100% - 4rem);
@@ -101,5 +102,26 @@
   }
   .cities {
     margin-bottom: 15px;
+  }
+
+  .pagination {
+    margin: 2% auto;
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    span {
+      width: 13%;
+      margin: 0 3%;
+      text-align: center;
+      color: var(--primary-blue);
+      font-size: 14px;
+      font-weight: 600;
+    }
+    button {
+      border: none;
+      margin: 0 3%;
+      width: 13%;
+    }
   }
 }

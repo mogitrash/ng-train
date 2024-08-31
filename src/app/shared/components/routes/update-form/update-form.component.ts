@@ -15,7 +15,7 @@ export class UpdateFormComponent implements OnInit {
 
   @Input() public currentRoute: Route | undefined;
 
-  @Input() public cities: string[] | undefined;
+  @Input() public cities: string[] | null = null;
 
   public carriages: Observable<Carriage[]>;
 
