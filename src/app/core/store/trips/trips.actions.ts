@@ -98,7 +98,7 @@ export const updateCarriage = createAction(
 );
 export const carriageUpdatedSuccess = createAction(
   '[Trips] Carriage Updated Success',
-  props<{ code: string }>(),
+  props<{ updatedCarriage: Carriage }>(),
 );
 
 // Orders
