@@ -26,7 +26,7 @@
 </div>
 
 <ol>
-  <li *ngFor="let carriage of carriages$ | async">
+  <li *ngFor="let carriage of carriages$ | async | reverse">
     <app-carriage-card
       [carriage]="carriage"
       [isDisabled]="isOpenForm"

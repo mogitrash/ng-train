@@ -13,6 +13,7 @@ import { AdminCarriagesComponent } from './components/admin-carriages/admin-carr
 import { CarriageCardComponent } from './components/admin-carriages/carriage-card/carriage-card.component';
 import { CarriageFormComponent } from './components/admin-carriages/carriage-form/carriage-form.component';
 import { CarriageSimpleComponent } from './components/admin-carriages/carriage-simple/carriage-simple.component';
+import { ReversePipe } from './pipes/reverse.pipe';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { CarriageSimpleComponent } from './components/admin-carriages/carriage-s
     CarriageCardComponent,
     CarriageFormComponent,
     CarriageSimpleComponent,
+    ReversePipe,
   ],
   imports: [
     CommonModule,
