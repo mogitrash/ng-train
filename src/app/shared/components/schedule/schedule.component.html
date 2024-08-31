@@ -3,8 +3,15 @@
     @for (ride of rides$ | async; track ride.rideId) {
       <mat-card appearance="outlined">
         <mat-card-header
-          ><h5 class="font-weight:bold;">Ride {{ ride.rideId }}</h5></mat-card-header
-        >
+          ><h5 class="font-weight:bold;">Ride {{ ride.rideId }}</h5>
+          <button mat-button (click)="openDialog(ride.rideId)">
+            <mat-icon
+              aria-hidden="false"
+              aria-label="delete ride icon"
+              fontIcon="delete"
+            ></mat-icon>
+          </button>
+        </mat-card-header>
         <mat-card-content>
           @if (stations$ | async; as stations) {
             @for (path of ride.path; track path; let idx = $index) {

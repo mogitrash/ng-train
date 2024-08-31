@@ -2,6 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 import { TripsState } from '../../models/trips.model';
 import {
   carriagesLoadedSuccess,
+  deleteRideByIdSuccess,
   loadDataForOrdersViewSuccess,
   orderDeletedSuccess,
   ordersLoadedSuccess,
@@ -52,6 +53,9 @@ export const tripsReducer = createReducer(
   }),
   on(ridesLoadedByRouteSuccess, (state, { rides }): TripsState => {
     return { ...state, rides };
+  }),
+  on(deleteRideByIdSuccess, (state, { rideId }): TripsState => {
+    return { ...state, rides: state.rides.filter((ride) => {return ride.rideId !== rideId}) };
   }),
   on(loadDataForOrdersViewSuccess, (state, { carriages, stations, orders }): TripsState => {
     return {

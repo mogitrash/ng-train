@@ -374,6 +374,22 @@ export class TripsEffects {
     );
   });
 
+  deleteRide$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(tripActions.deleteRideById),
+      exhaustMap((action) => {
+        return this.tripsService.deleteRide(action.routeId, action.rideId).pipe(
+          map(() => {
+            return tripActions.deleteRideByIdSuccess({ rideId: action.rideId });
+          }),
+          catchError((error) => {
+            return of(tripActions.failureSnackBar(error));
+          }),
+        );
+      }),
+    );
+  });
+
   displayErrorSnackBar = createEffect(
     () => {
       return this.actions$.pipe(

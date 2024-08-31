@@ -153,4 +153,11 @@ export class TripsService {
   ) {
     return this.http.put(`/api/route/${routeId}/ride/${rideId}`, { segments });
   }
+
+  public deleteRide(
+    routeId: number,
+    rideId: number,
+  ) {
+    return this.http.delete<void>(`/api/route/${routeId}/ride/${rideId}`);
+  }
 }

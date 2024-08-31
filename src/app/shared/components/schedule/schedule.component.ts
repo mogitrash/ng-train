@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
+import { MatDialog } from '@angular/material/dialog';
 import { Route } from '../../../features/trips/models/route.model';
 import { createRide, loadRouteById, loadStations } from '../../../core/store/trips/trips.actions';
 import {
@@ -11,6 +12,7 @@ import {
 } from '../../../core/store/trips/trips.selectors';
 import { Station } from '../../../features/trips/models/station.model';
 import { Ride } from '../../../features/trips/models/ride.model';
+import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
   selector: 'app-schedule',
@@ -18,6 +20,8 @@ import { Ride } from '../../../features/trips/models/ride.model';
   styleUrl: './schedule.component.scss',
 })
 export class ScheduleComponent implements OnInit {
+  readonly dialog = inject(MatDialog);
+
   protected route$!: Observable<Route[]>;
 
   protected stations$: Observable<Station[]>;
@@ -48,7 +52,7 @@ export class ScheduleComponent implements OnInit {
     return foundStation ? foundStation.city : 'Station not found';
   }
 
-  private onCreateNewRide(
+  private onCreateRide(
     routeId: number,
     segments: {
       time: [string, string];
@@ -60,5 +64,15 @@ export class ScheduleComponent implements OnInit {
 
   getKeys(obj: { [key: string]: number }): string[] {
     return Object.keys(obj);
+  }
+
+  openDialog(rideId: number) {
+    this.dialog.open(DialogComponent, {
+      data: {
+        routeId: this.selectedId,
+        rideId,
+      },
+    });
+  
   }
 }

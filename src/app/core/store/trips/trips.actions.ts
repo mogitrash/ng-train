@@ -182,6 +182,15 @@ export const updateRide = createAction(
 );
 export const updateRideSuccess = createAction('[Trips] Update Ride Success');
 
+export const deleteRideById = createAction(
+  '[Trips] Delete Ride',
+  props<{ routeId: number; rideId: number }>(),
+);
+export const deleteRideByIdSuccess = createAction(
+  '[Trips] Delete Ride Success',
+  props<{ rideId: number }>(),
+);
+
 // Fail
 export const failureSnackBar = createAction(
   '[Trips] Failure SnackBar',
