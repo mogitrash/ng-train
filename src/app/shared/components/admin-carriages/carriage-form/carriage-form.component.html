@@ -55,10 +55,13 @@
         </mat-error>
       </mat-form-field>
 
-      <button mat-flat-button color="primary" type="submit" [disabled]="carriageForm.invalid">
-        <ng-container *ngIf="!carriage">Save</ng-container>
-        <ng-container *ngIf="carriage">Update</ng-container>
-      </button>
+      <div class="button-row">
+        <button mat-flat-button color="primary" type="submit" [disabled]="carriageForm.invalid">
+          <ng-container *ngIf="!carriage">Save</ng-container>
+          <ng-container *ngIf="carriage">Update</ng-container>
+        </button>
+        <button mat-button color="primary" type="button" (click)="closeForm()">Cancel</button>
+      </div>
     </form>
     <div class="prototype">
       <div class="subtitle">Prototype:</div>

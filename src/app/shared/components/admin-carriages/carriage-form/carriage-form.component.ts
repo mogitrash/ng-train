@@ -14,6 +14,8 @@ export class CarriageFormComponent implements OnInit {
 
   @Output() formSubmitted = new EventEmitter<void>();
 
+  @Output() formClosed = new EventEmitter<void>();
+
   protected carriageForm!: FormGroup;
 
   protected prototypeCarriage!: Carriage;
@@ -86,5 +88,9 @@ export class CarriageFormComponent implements OnInit {
       }
     }
     this.formSubmitted.emit();
+  }
+
+  closeForm() {
+    this.formClosed.emit();
   }
 }
