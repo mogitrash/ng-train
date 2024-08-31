@@ -36,8 +36,8 @@ export class CarriageFormComponent implements OnInit {
         [
           Validators.required,
           Validators.min(1),
-          Validators.pattern('^[1-9][0-9]*$'),
           Validators.max(22),
+          Validators.pattern('^[1-9][0-9]*$'),
         ],
       ],
       leftSeats: [
@@ -46,14 +46,18 @@ export class CarriageFormComponent implements OnInit {
         [
           Validators.required,
           Validators.min(1),
-          Validators.pattern('^[1-9][0-9]*$'),
           Validators.max(10),
+          Validators.pattern('^[1-9][0-9]*$'),
         ],
       ],
       rightSeats: [
         this.carriage?.rightSeats || '',
-        [Validators.required, Validators.min(1), Validators.pattern('^[1-9][0-9]*$')],
-        Validators.max(10),
+        [
+          Validators.required,
+          Validators.min(1),
+          Validators.max(10),
+          Validators.pattern('^[1-9][0-9]*$'),
+        ],
       ],
     });
 

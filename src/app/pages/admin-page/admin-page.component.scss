@@ -8,22 +8,23 @@
 
   .content-wrapper {
     padding-left: 2rem;
+    width: 100%;
     @media (max-width: 500px) {
       padding-left: 0;
       padding-top: 2rem;
     }
   }
   .buttons-wrapper {
-    width: 20%;
+    width: fit-content;
     display: flex;
     flex-direction: column;
     gap: 15px;
+    button {
+      width: 10rem;
+    }
     @media (max-width: 500px) {
       width: 100%;
       flex-direction: row;
-      button {
-        width: 30%;
-      }
     }
     .non-active {
       background-color: var(--grey-light);
