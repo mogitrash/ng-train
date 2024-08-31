@@ -2,6 +2,8 @@ import { createReducer, on } from '@ngrx/store';
 import { TripsState } from '../../models/trips.model';
 import {
   carriagesLoadedSuccess,
+  loadDataForOrdersViewSuccess,
+  orderDeletedSuccess,
   ordersLoadedSuccess,
   rideLoadedByIdSuccess,
   routeLoadedByIdSuccess,
@@ -50,5 +52,21 @@ export const tripsReducer = createReducer(
   }),
   on(rideLoadedByIdSuccess, (state, { ride }): TripsState => {
     return { ...state, rides: [...state.rides, ride] };
+  }),
+  on(loadDataForOrdersViewSuccess, (state, { carriages, stations, orders }): TripsState => {
+    return {
+      ...state,
+      carriages,
+      stations,
+      orders,
+    };
+  }),
+  on(orderDeletedSuccess, (state, { orderId }): TripsState => {
+    return {
+      ...state,
+      orders: state.orders.map((order) => {
+        return order.id === orderId ? { ...order, status: 'canceled' } : order;
+      }),
+    };
   }),
 );

@@ -1,4 +1,5 @@
 import { Store } from '@ngrx/store';
+import { MatDialog } from '@angular/material/dialog';
 import { Component, DestroyRef, Input, OnInit } from '@angular/core';
 import { loadRideById } from '../../../../../core/store/trips/trips.actions';
 import { selectRides, selectStations } from '../../../../../core/store/trips/trips.selectors';
@@ -6,6 +7,7 @@ import { Ride } from '../../../models/ride.model';
 import { Segment } from '../../../models/segment.model';
 import { Station } from '../../../models/station.model';
 import { RideInfo } from '../../../../../core/models/trips.model';
+import { TripRouteDialogComponent } from '../trip-route-dialog/trip-route-dialog.component';
 
 @Component({
   selector: 'app-trip-item',
@@ -37,9 +39,12 @@ export class TripItemComponent implements OnInit {
 
   public routeEndStation!: Station;
 
+  public prices!: [string, string][];
+
   constructor(
     private store: Store,
     private destroyRef: DestroyRef,
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -67,6 +72,12 @@ export class TripItemComponent implements OnInit {
     });
   }
 
+  public openRouteDialog() {
+    this.dialog.open(TripRouteDialogComponent, {
+      data: { rideId: this.ride?.rideId, segments: this.getRideSegments(this.ride!) },
+    });
+  }
+
   private initViewData(rideSegments: Segment[]) {
     const [firstSegment] = rideSegments;
     const lastSegment = rideSegments.at(rideSegments.length - 1)!;
@@ -78,6 +89,10 @@ export class TripItemComponent implements OnInit {
 
     this.rideStartStation = this.rideItemInfo.from.city;
     this.rideEndStation = this.rideItemInfo.to.city;
+
+    this.prices = Object.entries(firstSegment.price).map((price) => {
+      return [price[0], (price[1] / 100).toFixed(2)];
+    });
 
     if (this.stations) {
       this.initRouteStations();

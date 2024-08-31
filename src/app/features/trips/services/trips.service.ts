@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, catchError, throwError } from 'rxjs';
 import { Station } from '../models/station.model';
 import { Carriage } from '../models/carriage.model';
 import { Order } from '../models/order.model';
@@ -114,7 +114,21 @@ export class TripsService {
   }
 
   public deleteOrder(orderId: number) {
-    return this.http.delete(`/api/order/${orderId}`);
+    return this.http.delete<void>(`/api/order/${orderId}`).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 400) {
+          return throwError(() => {
+            return {
+              message: error.error?.message || 'Unknown error',
+              reason: error.error?.reason || 'unknownError',
+            };
+          });
+        }
+        return throwError(() => {
+          return error;
+        });
+      }),
+    );
   }
 
   public getUsersList() {

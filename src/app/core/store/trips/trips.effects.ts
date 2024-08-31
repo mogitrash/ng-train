@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { catchError, exhaustMap, map, mergeMap, of, tap } from 'rxjs';
+import { catchError, exhaustMap, forkJoin, map, mergeMap, of, switchMap, tap } from 'rxjs';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TripsService } from '../../../features/trips/services/trips.service';
@@ -216,8 +216,8 @@ export class TripsEffects {
   loadOrder$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(tripActions.loadOrders),
-      exhaustMap(() => {
-        return this.tripsService.getOrderList().pipe(
+      exhaustMap((action) => {
+        return this.tripsService.getOrderList(action.all).pipe(
           map((orders) => {
             return tripActions.ordersLoadedSuccess({ orders });
           }),
@@ -253,10 +253,15 @@ export class TripsEffects {
       exhaustMap((action) => {
         return this.tripsService.deleteOrder(action.orderId).pipe(
           map(() => {
-            return tripActions.orderDeletedSuccess();
+            return tripActions.orderDeletedSuccess({ orderId: action.orderId });
           }),
           catchError((error) => {
-            return of(tripActions.failureSnackBar(error));
+            const errorMessage = error.message || 'Failed to delete order';
+            return of(
+              tripActions.failureSnackBar({
+                error: { message: errorMessage, reason: error.reason },
+              }),
+            );
           }),
         );
       }),
@@ -374,6 +379,31 @@ export class TripsEffects {
     },
     { functional: true, dispatch: false },
   );
+
+  loadDataForOrdersView$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(tripActions.loadDataForOrdersView),
+      switchMap((action) => {
+        const loadOrdersAction =
+          action.role === 'manager'
+            ? this.tripsService.getOrderList(true)
+            : this.tripsService.getOrderList();
+
+        return forkJoin({
+          carriages: this.tripsService.getCarriageList(),
+          stations: this.tripsService.getStationList(),
+          orders: loadOrdersAction,
+        }).pipe(
+          map(({ carriages, stations, orders }) => {
+            return tripActions.loadDataForOrdersViewSuccess({ carriages, stations, orders });
+          }),
+          catchError((error) => {
+            return of(tripActions.failureSnackBar({ error }));
+          }),
+        );
+      }),
+    );
+  });
 
   constructor(
     private actions$: Actions,
