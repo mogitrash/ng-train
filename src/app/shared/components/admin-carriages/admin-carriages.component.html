@@ -14,9 +14,14 @@
     <app-carriage-form
       *ngIf="updatedCarriage"
       [carriage]="updatedCarriage"
+      (formSubmitted)="toggleOpenForm()"
       #anchorElement
     ></app-carriage-form>
-    <app-carriage-form *ngIf="!updatedCarriage" #anchorElement></app-carriage-form>
+    <app-carriage-form
+      *ngIf="!updatedCarriage"
+      (formSubmitted)="toggleOpenForm()"
+      #anchorElement
+    ></app-carriage-form>
   </ng-container>
 </div>
 

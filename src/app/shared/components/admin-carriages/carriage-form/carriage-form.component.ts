@@ -1,6 +1,8 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
 import { Carriage } from '../../../../features/trips/models/carriage.model';
+import { createCarriage, updateCarriage } from '../../../../core/store/trips/trips.actions';
 
 @Component({
   selector: 'app-carriage-form',
@@ -10,11 +12,16 @@ import { Carriage } from '../../../../features/trips/models/carriage.model';
 export class CarriageFormComponent implements OnInit {
   @Input() carriage!: Carriage;
 
+  @Output() formSubmitted = new EventEmitter<void>();
+
   protected carriageForm!: FormGroup;
 
   protected prototypeCarriage!: Carriage;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private store: Store,
+  ) {}
 
   ngOnInit(): void {
     this.carriageForm = this.fb.group({
@@ -46,7 +53,6 @@ export class CarriageFormComponent implements OnInit {
     };
 
     this.carriageForm.valueChanges.subscribe((formValues) => {
-      console.log(this.prototypeCarriage);
       if (
         formValues.carriageName &&
         formValues.rowCount &&
@@ -61,14 +67,24 @@ export class CarriageFormComponent implements OnInit {
           rightSeats: formValues.rightSeats,
         };
       }
-
-      console.log(this.prototypeCarriage);
     });
   }
 
   onSubmit(): void {
     if (this.carriageForm.valid) {
-      // console.log(this.carriageForm.value);
+      if (this.carriage) {
+        this.store.dispatch(updateCarriage(this.prototypeCarriage));
+      } else {
+        this.store.dispatch(
+          createCarriage({
+            name: this.prototypeCarriage.name,
+            rows: this.prototypeCarriage.rows,
+            leftSeats: this.prototypeCarriage.leftSeats,
+            rightSeats: this.prototypeCarriage.rightSeats,
+          }),
+        );
+      }
     }
+    this.formSubmitted.emit();
   }
 }

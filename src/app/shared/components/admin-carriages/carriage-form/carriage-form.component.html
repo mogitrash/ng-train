@@ -28,20 +28,6 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Left Seats</mat-label>
-        <input matInput type="number" formControlName="leftSeats" />
-        <mat-error *ngIf="carriageForm.get('leftSeats')?.hasError('required')">
-          Columns left is required
-        </mat-error>
-        <mat-error *ngIf="carriageForm.get('leftSeats')?.hasError('min')">
-          Columns left must be at least 1
-        </mat-error>
-        <mat-error *ngIf="carriageForm.get('leftSeats')?.hasError('pattern')">
-          Row count must be a positive integer
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
         <mat-label>Right Seats</mat-label>
         <input matInput type="number" formControlName="rightSeats" />
         <mat-error *ngIf="carriageForm.get('rightSeats')?.hasError('required')">
@@ -51,6 +37,20 @@
           Columns right must be at least 1
         </mat-error>
         <mat-error *ngIf="carriageForm.get('rightSeats')?.hasError('pattern')">
+          Row count must be a positive integer
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Left Seats</mat-label>
+        <input matInput type="number" formControlName="leftSeats" />
+        <mat-error *ngIf="carriageForm.get('leftSeats')?.hasError('required')">
+          Columns left is required
+        </mat-error>
+        <mat-error *ngIf="carriageForm.get('leftSeats')?.hasError('min')">
+          Columns left must be at least 1
+        </mat-error>
+        <mat-error *ngIf="carriageForm.get('leftSeats')?.hasError('pattern')">
           Row count must be a positive integer
         </mat-error>
       </mat-form-field>
