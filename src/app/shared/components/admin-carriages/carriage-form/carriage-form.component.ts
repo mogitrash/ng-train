@@ -12,6 +12,8 @@ import { createCarriage, updateCarriage } from '../../../../core/store/trips/tri
 export class CarriageFormComponent implements OnInit {
   @Input() carriage!: Carriage | null;
 
+  @Input({ required: true }) countCarriages!: number;
+
   @Output() formSubmitted = new EventEmitter<void>();
 
   @Output() formClosed = new EventEmitter<void>();
@@ -27,10 +29,6 @@ export class CarriageFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.carriageForm = this.fb.group({
-      carriageName: [
-        this.carriage?.name || '',
-        [Validators.required, Validators.min(1), Validators.max(36)],
-      ],
       rowCount: [
         this.carriage?.rows || '',
         [
@@ -63,22 +61,16 @@ export class CarriageFormComponent implements OnInit {
 
     this.prototypeCarriage = {
       code: this.carriage?.code || '',
-      name: this.carriage?.name || '',
+      name: this.carriage?.name || this.generateName(),
       rows: this.carriage?.rows || 0,
       leftSeats: this.carriage?.leftSeats || 0,
       rightSeats: this.carriage?.rightSeats || 0,
     };
 
     this.carriageForm.valueChanges.subscribe((formValues) => {
-      if (
-        formValues.carriageName &&
-        formValues.rowCount &&
-        formValues.leftSeats &&
-        formValues.rightSeats
-      ) {
+      if (formValues.rowCount && formValues.leftSeats && formValues.rightSeats) {
         this.prototypeCarriage = {
           ...this.prototypeCarriage,
-          name: formValues.carriageName,
           rows: formValues.rowCount,
           leftSeats: formValues.leftSeats,
           rightSeats: formValues.rightSeats,
@@ -116,5 +108,9 @@ export class CarriageFormComponent implements OnInit {
     this.carriageForm.markAsPristine();
     this.carriageForm.markAsUntouched();
     this.carriageForm.updateValueAndValidity();
+  }
+
+  generateName(): string {
+    return `carriage${this.countCarriages}`;
   }
 }

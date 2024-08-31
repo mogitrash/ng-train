@@ -135,6 +135,7 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
   private calculateTotalPrice(order: Order, type: string): string {
     let totalPrice = 0;
     order.schedule.segments.forEach((segment) => {
+      console.log(segment.price);
       totalPrice += segment.price[type];
     });
     return (totalPrice / 100).toFixed(2);

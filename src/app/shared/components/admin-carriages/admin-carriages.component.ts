@@ -21,10 +21,15 @@ export class AdminCarriagesComponent implements OnInit {
 
   protected formType: 'create' | 'update' = 'create';
 
+  protected carriagesCount = 0;
+
   constructor(private store: Store) {}
 
   ngOnInit(): void {
     this.store.dispatch(loadCarriages());
+    this.carriages$.subscribe((carriages) => {
+      if (carriages) this.carriagesCount = carriages.length;
+    });
   }
 
   onSelectedUpdateCarriage(carriage: Carriage) {

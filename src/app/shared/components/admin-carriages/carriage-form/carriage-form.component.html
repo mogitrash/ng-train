@@ -6,14 +6,6 @@
   <mat-card-content>
     <form [formGroup]="carriageForm" (ngSubmit)="onSubmit()">
       <mat-form-field appearance="outline">
-        <mat-label>Carriage Name</mat-label>
-        <input matInput formControlName="carriageName" />
-        <mat-error *ngIf="carriageForm.get('carriageName')?.hasError('required')">
-          Carriage name is required
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
         <mat-label>Rows Count</mat-label>
         <input matInput type="number" formControlName="rowCount" />
         <mat-error *ngIf="carriageForm.get('rowCount')?.hasError('required')">

@@ -1,5 +1,4 @@
-<h1>Carriage management</h1>
-
+<h1>Carriages management</h1>
 <button
   mat-flat-button
   color="primary"
@@ -14,6 +13,7 @@
   <ng-container *ngIf="isOpenForm">
     <app-carriage-form
       [carriage]="updatedCarriage"
+      [countCarriages]="carriagesCount"
       (formSubmitted)="toggleOpenForm()"
       (formClosed)="toggleOpenForm()"
       #anchorElement
