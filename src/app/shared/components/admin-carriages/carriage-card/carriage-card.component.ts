@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Carriage } from '../../../../features/trips/models/carriage.model';
-import { Seat, SeatStatus } from '../../carriage/carriage.component';
 
 @Component({
   selector: 'app-carriage-card',
