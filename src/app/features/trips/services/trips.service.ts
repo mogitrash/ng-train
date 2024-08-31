@@ -2,18 +2,18 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Station } from '../models/station.model';
-import { Route } from '../models/route.model';
 import { Carriage } from '../models/carriage.model';
 import { Order } from '../models/order.model';
 import { User } from '../models/user.model';
 import { Ride } from '../models/ride.model';
-import { SearchResponse } from '../models/searchResponse.model';
+import { SearchResponseDTO } from '../models/searchResponseDTO.model';
+import { Route } from '../models/route.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TripsService {
-  public searchResponse$ = new Subject<SearchResponse>();
+  public searchResponse$ = new Subject<SearchResponseDTO>();
 
   constructor(private http: HttpClient) {}
 
@@ -21,7 +21,7 @@ export class TripsService {
     return this.searchResponse$.asObservable();
   }
 
-  public setSearchResponse(res: SearchResponse) {
+  public setSearchResponse(res: SearchResponseDTO) {
     this.searchResponse$.next(res);
   }
 
@@ -42,7 +42,7 @@ export class TripsService {
     if (time) {
       params.time = time;
     }
-    return this.http.get<SearchResponse>(`/api/search`, { params });
+    return this.http.get<SearchResponseDTO>(`/api/search`, { params });
   }
 
   public getStationList() {

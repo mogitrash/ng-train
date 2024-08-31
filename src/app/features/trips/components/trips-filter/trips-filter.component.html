@@ -1,12 +1,13 @@
+@let searchDate = searchDate$ | async;
 @let selectedIndex = searchDate ? getTabIndexAccordingDate(searchDate) : 0;
 
-@if (uniqueSearchDates.length > 0) {
+@if (searchDates.length > 0) {
   <mat-tab-group
     class="tabs"
     (selectedIndexChange)="setSearchDateByIndex($event)"
     [selectedIndex]="selectedIndex"
   >
-    @for (date of uniqueSearchDates; track date.getTime()) {
+    @for (date of searchDates; track date.getTime()) {
       <mat-tab class="tab-content">
         <ng-template mat-tab-label>
           <div class="tab-label">
@@ -21,7 +22,9 @@
         </ng-template>
 
         <ng-template matTabContent>
-          <app-trips-search-results></app-trips-search-results>
+          @if (searchDate) {
+            <app-trips-search-results [searchDate]="searchDate"></app-trips-search-results>
+          }
         </ng-template>
       </mat-tab>
     }

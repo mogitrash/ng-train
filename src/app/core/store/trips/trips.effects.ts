@@ -4,6 +4,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TripsService } from '../../../features/trips/services/trips.service';
 import * as tripActions from './trips.actions';
+import { RideInfo, SearchResponse } from '../../models/trips.model';
 
 @Injectable()
 export class TripsEffects {
@@ -21,8 +22,34 @@ export class TripsEffects {
           )
           .pipe(
             map((search) => {
-              // NOTE: implement converter logic
-              return tripActions.searchLoadedSuccess({ search });
+              const searchResponse: SearchResponse = {};
+              const { from, routes, to } = search;
+
+              routes.forEach((route) => {
+                const fromStationIndex = route.path.indexOf(from.stationId);
+                const toStationIndex = route.path.indexOf(to.stationId);
+
+                route.schedule.forEach((schedule) => {
+                  const rideSegments = schedule.segments.slice(fromStationIndex, toStationIndex);
+                  const groupDate = rideSegments[0].time[0].split('T')[0];
+
+                  const rideInfoList = searchResponse[groupDate];
+                  const rideInfo: RideInfo = {
+                    from,
+                    to,
+                    rideId: schedule.rideId,
+                    segments: rideSegments,
+                  };
+
+                  if (rideInfoList) {
+                    rideInfoList.push(rideInfo);
+                  } else {
+                    searchResponse[groupDate] = [rideInfo];
+                  }
+                });
+              });
+
+              return tripActions.searchLoadedSuccess({ search: searchResponse });
             }),
             catchError((error) => {
               return of(tripActions.failureSnackBar(error));

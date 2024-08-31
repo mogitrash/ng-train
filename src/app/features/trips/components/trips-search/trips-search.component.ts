@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Station } from '../../models/station.model';
-import { SearchResponse } from '../../models/searchResponse.model';
+import { SearchResponseDTO } from '../../models/searchResponseDTO.model';
 import {
   loadSearch,
   loadStations,
@@ -18,7 +18,7 @@ import { selectStations } from '../../../../core/store/trips/trips.selectors';
   styleUrl: './trips-search.component.scss',
 })
 export class TripsSearchComponent implements OnInit {
-  public onSearchResponse = output<Subject<SearchResponse>>();
+  public onSearchResponse = output<Subject<SearchResponseDTO>>();
 
   public stations$ = this.store.select(selectStations);
 

@@ -1,11 +1,11 @@
 import { Store } from '@ngrx/store';
 import { Component, DestroyRef, Input, OnInit } from '@angular/core';
-import { RideItemInfo } from '../../../../../core/models/trips.model';
 import { loadRideById } from '../../../../../core/store/trips/trips.actions';
 import { selectRides, selectStations } from '../../../../../core/store/trips/trips.selectors';
 import { Ride } from '../../../models/ride.model';
 import { Segment } from '../../../models/segment.model';
 import { Station } from '../../../models/station.model';
+import { RideInfo } from '../../../../../core/models/trips.model';
 
 @Component({
   selector: 'app-trip-item',
@@ -13,7 +13,7 @@ import { Station } from '../../../models/station.model';
   styleUrl: './trip-item.component.scss',
 })
 export class TripItemComponent implements OnInit {
-  @Input({ required: true }) rideItemInfo!: RideItemInfo;
+  @Input({ required: true }) rideItemInfo!: RideInfo;
 
   public rides$ = this.store.select(selectRides);
 
@@ -76,8 +76,8 @@ export class TripItemComponent implements OnInit {
 
     this.initRideDuration();
 
-    this.rideStartStation = this.rideItemInfo.fromCity;
-    this.rideEndStation = this.rideItemInfo.toCity;
+    this.rideStartStation = this.rideItemInfo.from.city;
+    this.rideEndStation = this.rideItemInfo.to.city;
 
     if (this.stations) {
       this.initRouteStations();
@@ -111,10 +111,10 @@ export class TripItemComponent implements OnInit {
     const { segments } = schedule;
 
     const firstStationId = path.findIndex((station) => {
-      return this.rideItemInfo.fromStationId === station;
+      return this.rideItemInfo.from.stationId === station;
     });
     const lastStationId = path.findIndex((station) => {
-      return this.rideItemInfo.toStationId === station;
+      return this.rideItemInfo.to.stationId === station;
     });
 
     return segments.slice(firstStationId, lastStationId);

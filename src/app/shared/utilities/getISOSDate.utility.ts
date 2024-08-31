@@ -1,5 +1,6 @@
-export function getISOSDate(date: Date) {
-  date.setUTCHours(0, 0, 0, 0);
+export function getStringDate(date: Date) {
+  const mm = date.getMonth() + 1;
+  const dd = date.getDate();
 
-  return date.toISOString().split('T')[0];
+  return `${date.getFullYear()}-${(mm > 9 ? '' : '0') + mm}-${(dd > 9 ? '' : '0') + dd}`;
 }

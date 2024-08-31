@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { take } from 'rxjs';
 import {
+  selectLastSearchReponse,
   selectSearchDate,
-  selectSearchResponses,
-  selectUniqueSearchDates,
 } from '../../../../core/store/trips/trips.selectors';
-import { getISOSDate } from '../../../../shared/utilities/getISOSDate.utility';
+import { getStringDate } from '../../../../shared/utilities/getISOSDate.utility';
 import { setSearchDate } from '../../../../core/store/trips/trips.actions';
 
 @Component({
@@ -15,42 +13,40 @@ import { setSearchDate } from '../../../../core/store/trips/trips.actions';
   styleUrl: './trips-filter.component.scss',
 })
 export class TripsFilterComponent implements OnInit {
-  public searchResponses$ = this.store.select(selectSearchResponses);
-
-  public uniqueSearchDates$ = this.store.select(selectUniqueSearchDates);
+  public searchResponse$ = this.store.select(selectLastSearchReponse);
 
   public searchDate$ = this.store.select(selectSearchDate);
 
-  public uniqueSearchDates!: Date[];
-
-  public searchDate?: Date;
+  public searchDates!: Date[];
 
   constructor(private store: Store) {}
 
   ngOnInit(): void {
-    this.searchResponses$.subscribe(() => {
-      this.uniqueSearchDates$.pipe(take(1)).subscribe((uniqueDates) => {
-        this.uniqueSearchDates = uniqueDates;
-      });
+    this.searchResponse$.subscribe((searchResponse) => {
+      this.searchDates = Object.keys(searchResponse)
+        .map((date) => {
+          return new Date(date);
+        })
+        .sort((a, b) => {
+          return a.getTime() - b.getTime();
+        });
+    });
 
-      this.searchDate$.subscribe((searchDate) => {
-        this.searchDate = searchDate;
-      });
-
-      if (!this.searchDate) {
+    this.searchDate$.subscribe((searchDate) => {
+      if (!searchDate) {
         this.setSearchDateByIndex(0);
       }
     });
   }
 
   public getTabIndexAccordingDate(date: Date): number {
-    const index = this.uniqueSearchDates.findIndex((value) => {
-      return getISOSDate(value) === getISOSDate(date);
+    const index = this.searchDates.findIndex((value) => {
+      return getStringDate(value) === getStringDate(date);
     });
     return index;
   }
 
   public setSearchDateByIndex(index: number) {
-    this.store.dispatch(setSearchDate({ date: this.uniqueSearchDates.at(index)! }));
+    this.store.dispatch(setSearchDate({ date: this.searchDates[index]! }));
   }
 }

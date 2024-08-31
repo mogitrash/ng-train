@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectSearchResponses } from '../../core/store/trips/trips.selectors';
-import { SearchResponse } from '../../features/trips/models/searchResponse.model';
+import { SearchResponse } from '../../core/models/trips.model';
 
 @Component({
   selector: 'app-main-page',

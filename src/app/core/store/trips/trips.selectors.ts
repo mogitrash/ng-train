@@ -1,57 +1,7 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
-import { GroupedRides, TripsState } from '../../models/trips.model';
-import { getISOSDate } from '../../../shared/utilities/getISOSDate.utility';
+import { TripsState } from '../../models/trips.model';
 
 const selectTripsState = createFeatureSelector<TripsState>('trips');
-
-export const selectRidesGroupedByDates = createSelector(selectTripsState, (state: TripsState) => {
-  const groupedRides: GroupedRides = {};
-  const lastResponse = state.searchResponses.at(state.searchResponses.length - 1);
-
-  lastResponse?.routes.forEach((route) => {
-    route.schedule?.forEach((schedule) => {
-      if (schedule.segments.length > 0) {
-        const [startDate] = schedule.segments[0].time[0].split('T');
-        if (!groupedRides[startDate]) {
-          groupedRides[startDate] = [];
-        }
-
-        groupedRides[startDate].push({
-          rideId: schedule.rideId,
-          fromCity: lastResponse.from.city,
-          fromStationId: lastResponse.from.stationId,
-          toCity: lastResponse.to.city,
-          toStationId: lastResponse.to.stationId,
-        });
-      }
-    });
-  });
-
-  return groupedRides;
-});
-
-export const selectUniqueSearchDates = createSelector(selectTripsState, (state: TripsState) => {
-  const dates: Set<string> = new Set();
-  const lastResponse = state.searchResponses.at(state.searchResponses.length - 1);
-
-  lastResponse?.routes.forEach((route) => {
-    route.schedule.forEach((ride) => {
-      const date = new Date(ride.segments[0].time[0]);
-
-      if (date >= new Date()) {
-        dates.add(getISOSDate(date));
-      }
-    });
-  });
-
-  return Array.from(dates)
-    .map((date) => {
-      return new Date(date);
-    })
-    .sort((a, b) => {
-      return a.getTime() - b.getTime();
-    });
-});
 
 export const selectSearchDate = createSelector(selectTripsState, (state: TripsState) => {
   return state.searchDate;
@@ -86,5 +36,5 @@ export const selectSearchResponses = createSelector(selectTripsState, (state: Tr
 });
 
 export const selectLastSearchReponse = createSelector(selectTripsState, (state: TripsState) => {
-  return state.searchResponses.at(state.searchResponses.length - 1);
+  return state.searchResponses.at(state.searchResponses.length - 1)!;
 });

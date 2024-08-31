@@ -1,12 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { map, Observable, switchMap, take } from 'rxjs';
-import {
-  selectRidesGroupedByDates,
-  selectSearchDate,
-} from '../../../../core/store/trips/trips.selectors';
-import { RideItemInfo } from '../../../../core/models/trips.model';
-import { getISOSDate } from '../../../../shared/utilities/getISOSDate.utility';
+import { map, Observable } from 'rxjs';
+import { selectLastSearchReponse } from '../../../../core/store/trips/trips.selectors';
+import { RideInfo } from '../../../../core/models/trips.model';
+import { getStringDate } from '../../../../shared/utilities/getISOSDate.utility';
 
 @Component({
   selector: 'app-trips-search-results',
@@ -14,25 +11,19 @@ import { getISOSDate } from '../../../../shared/utilities/getISOSDate.utility';
   styleUrl: './trips-search-results.component.scss',
 })
 export class TripsSearchResultsComponent implements OnInit {
-  private groupedRides$ = this.store.select(selectRidesGroupedByDates);
+  @Input({ required: true }) searchDate!: Date;
 
-  private selectedDate$ = this.store.select(selectSearchDate);
+  private searchResponse$ = this.store.select(selectLastSearchReponse);
 
-  public selectedGroup$!: Observable<RideItemInfo[]>;
+  public selectedGroup$!: Observable<RideInfo[]>;
 
   constructor(private store: Store) {}
 
   ngOnInit(): void {
-    this.selectedGroup$ = this.selectedDate$.pipe(
-      switchMap((selectedDate) => {
-        return this.groupedRides$.pipe(
-          map((groupedRides) => {
-            const date = getISOSDate(selectedDate!);
-            return groupedRides[date];
-          }),
-        );
+    this.selectedGroup$ = this.searchResponse$.pipe(
+      map((response) => {
+        return response[getStringDate(this.searchDate)];
       }),
-      take(1),
     );
   }
 }
