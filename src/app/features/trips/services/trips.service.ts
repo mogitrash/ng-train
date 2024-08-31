@@ -35,6 +35,15 @@ export class TripsService {
     return this.http.get<SearchResponse>(`/api/search`, { params });
   }
 
+  public searchStation(fromLatitude: number, fromLongitude: number) {
+    const params: {
+      fromLatitude: number;
+      fromLongitude: number;
+    } = { fromLatitude, fromLongitude };
+
+    return this.http.get<SearchResponse>(`/api/search`, { params });
+  }
+
   public getStationList() {
     return this.http.get<Station[]>('/api/station');
   }
@@ -61,7 +70,10 @@ export class TripsService {
   }
 
   public updateRoute(id: number, path: number[], carriages: string[]) {
-    return this.http.put<{ id: number }>(`/api/route/${id}`, { path, carriages });
+    return this.http.put<{ id: number }>(`/api/route/${id}`, {
+      path,
+      carriages,
+    });
   }
 
   public deleteRoute(id: number) {
@@ -73,7 +85,12 @@ export class TripsService {
   }
 
   public createCarriageType(name: string, rows: number, leftSeats: number, rightSeats: number) {
-    return this.http.post<{ code: string }>('/api/carriage', { name, rows, leftSeats, rightSeats });
+    return this.http.post<{ code: string }>('/api/carriage', {
+      name,
+      rows,
+      leftSeats,
+      rightSeats,
+    });
   }
 
   public updateCarriageType(
@@ -100,7 +117,12 @@ export class TripsService {
   }
 
   public createOrder(rideId: number, seat: number, stationStart: number, stationEnd: number) {
-    return this.http.post<{ id: string }>('/api/order', { rideId, seat, stationStart, stationEnd });
+    return this.http.post<{ id: string }>('/api/order', {
+      rideId,
+      seat,
+      stationStart,
+      stationEnd,
+    });
   }
 
   public deleteOrder(orderId: number) {

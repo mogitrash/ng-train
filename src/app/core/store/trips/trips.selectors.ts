@@ -30,3 +30,6 @@ export const selectUsers = createSelector(selectTripsState, (state: TripsState) 
 export const selectSearchResponses = createSelector(selectTripsState, (state: TripsState) => {
   return state.searchResponses;
 });
+export const selectLoading = createSelector(selectTripsState, (state: TripsState) => {
+  return state.loading;
+});
