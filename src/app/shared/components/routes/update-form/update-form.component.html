@@ -1,9 +1,9 @@
 <form [formGroup]="updateForm" (ngSubmit)="onSubmit()">
   <div class="stations">
     <h2>Stations</h2>
-    <select id="`station.id`" name="station" *ngFor="let city of cities">
-      <option [value]="city" *ngFor="let city of cities">
-        {{ city }}
+    <select [id]="cities![i]" name="station" *ngFor="let city of cities; index as i">
+      <option [value]="city" *ngFor="let nameCity of cities; index as k" [selected]="i === k">
+        {{ nameCity }}
       </option>
     </select>
   </div>
@@ -13,10 +13,14 @@
       id="`${carriages+i}`"
       name="carriage"
       *ngFor="let carriage of currentRoute!.carriages; index as i"
-      value="carriage"
+      [value]="carriage"
     >
-      <option [value]="carriage" *ngFor="let carriage of carriages | async">
-        {{ carriage.code }}
+      <option
+        [value]="carriage"
+        *ngFor="let typeCarriage of carriages"
+        [selected]="carriage === typeCarriage.code"
+      >
+        {{ typeCarriage.code }}
       </option>
     </select>
   </div>

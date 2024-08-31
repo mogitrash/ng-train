@@ -1,19 +1,33 @@
 <form [formGroup]="createForm" (ngSubmit)="onSubmit()">
-  <div class="stations">
+  <div class="stations" formArrayName="stations">
     <h2>Stations</h2>
-    <select id="stations" name="stations">
-      <option [value]="station.city" *ngFor="let station of stations | async">
+    <select
+      name="stations"
+      *ngFor="let item of stations.controls; index as i"
+      (change)="addItem('station')"
+      formControlName="i"
+    >
+      <option default>Choose city</option>
+      <option [value]="station.city" *ngFor="let station of stations$ | async">
         {{ station.city }}
       </option>
     </select>
   </div>
-  <div class="carriages">
+  <div class="carriages" formArrayName="carriages">
     <h2>Carriages</h2>
-    <select id="carriages" name="carriages">
-      <option [value]="carriage.name" *ngFor="let carriage of carriages | async">
+    <select
+      name="carriages"
+      *ngFor="let value of carriages.controls; index as k"
+      (change)="addItem('carriage')"
+      formControlName="k"
+    >
+      <option default>Choose carriage</option>
+      <option [value]="carriage.name" *ngFor="let carriage of carriages$ | async">
         {{ carriage.name }}
       </option>
     </select>
   </div>
-  <button mat-button>Create new Route</button>
+  <button mat-button [disabled]="stations.length < 3 || carriages.length < 3">
+    Create new Route
+  </button>
 </form>
