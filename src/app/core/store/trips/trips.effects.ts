@@ -152,7 +152,14 @@ export class TripsEffects {
           .createCarriageType(action.name, action.rows, action.leftSeats, action.rightSeats)
           .pipe(
             map((code) => {
-              return tripActions.carriagesCreatedSuccess(code);
+              const createCarriageData: Carriage = {
+                code: code.code,
+                name: action.name,
+                rows: action.rows,
+                leftSeats: action.leftSeats,
+                rightSeats: action.rightSeats,
+              };
+              return tripActions.carriagesCreatedSuccess({ createCarriage: createCarriageData });
             }),
             catchError((error) => {
               return of(tripActions.failureSnackBar(error));
