@@ -57,4 +57,8 @@ export class ScheduleComponent implements OnInit {
   ) {
     this.store.dispatch(createRide({ routeId, segments }));
   }
+
+  getKeys(obj: { [key: string]: number }): string[] {
+    return Object.keys(obj);
+  }
 }

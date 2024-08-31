@@ -2,17 +2,46 @@
   @for (route of routes; track route.id) {
     @for (ride of rides$ | async; track ride.rideId) {
       <mat-card appearance="outlined">
-        <mat-card-header> Ride {{ ride.rideId }}</mat-card-header>
-        @if (stations$ | async; as stations) {
-          <mat-card-content>
-            @for (path of ride.path; track path) {
-              {{ findStationNameById(path, stations) }}
-
-              <mat-divider></mat-divider>
-            }
-          </mat-card-content>
-        }
+        <mat-card-header
+          ><h5 class="font-weight:bold;">Ride {{ ride.rideId }}</h5></mat-card-header
+        >
+        <mat-card-content>
+          @if (stations$ | async; as stations) {
+            @for (path of ride.path; track path; let idx = $index) {
+              <div class="container">
+                <div class="column">
+                  <h6 class="font-weight:bold;">{{ findStationNameById(path, stations) }}</h6>
+                </div>
+                <div class="column">
+                  @if ($index === 0) {
+                    Departure: {{ ride.schedule.segments[idx].time[0] | date: 'yyyy-MM-dd HH:mm' }}
+                  } @else if ($index < ride.path.length - 1) {
+                    Arrival:
+                    {{
+                      ride.schedule.segments[idx - 1].time[1] | date: 'yyyy-MM-dd HH:mm'
+                    }}
+                    <br>
+                    Departure:
+                    {{ ride.schedule.segments[idx].time[0] | date: 'yyyy-MM-dd HH:mm' }}
+                  } @else {
+                    Arrival:
+                    {{ ride.schedule.segments[idx - 1].time[1] | date: 'yyyy-MM-dd HH:mm' }}
+                  }
+                </div>
+                <div class="column">
+                  @if ($index < ride.path.length - 1) {
+                    Price
+                    <div *ngFor="let key of getKeys(ride.schedule.segments[idx].price)">
+                      {{ key }}: {{ ride.schedule.segments[idx].price[key] /100 | currency:'USD':'symbol':'1.2-2' }}
+                    </div>
+                  }
+                </div>
+              </div>
+          }
+          }
+        </mat-card-content>
       </mat-card>
+      <br>
     }
   }
 }
