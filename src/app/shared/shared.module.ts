@@ -18,7 +18,7 @@ import { DialogComponent } from './components/dialog/dialog.component';
     MatDividerModule,
     MatIconModule,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
   ],
   exports: [CarriageComponent],
 })

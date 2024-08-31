@@ -73,6 +73,5 @@ export class ScheduleComponent implements OnInit {
         rideId,
       },
     });
-  
   }
 }

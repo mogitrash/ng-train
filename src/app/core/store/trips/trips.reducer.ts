@@ -55,7 +55,12 @@ export const tripsReducer = createReducer(
     return { ...state, rides };
   }),
   on(deleteRideByIdSuccess, (state, { rideId }): TripsState => {
-    return { ...state, rides: state.rides.filter((ride) => {return ride.rideId !== rideId}) };
+    return {
+      ...state,
+      rides: state.rides.filter((ride) => {
+        return ride.rideId !== rideId;
+      }),
+    };
   }),
   on(loadDataForOrdersViewSuccess, (state, { carriages, stations, orders }): TripsState => {
     return {
