@@ -29,6 +29,16 @@ export const stationsLoadedSuccess = createAction(
   '[Trips] Stations Loaded Success',
   props<{ stations: Station[] }>(),
 );
+export const canDelete = createAction(
+  '[Trips] Can Delete',
+  props<{
+    station: Station;
+    coordinates: {
+      latitude: number;
+      longitude: number;
+    }[];
+  }>(),
+);
 
 export const deleteStation = createAction('[Trips] Delete Station', props<{ id: number }>());
 export const stationDeleteSuccess = createAction('[Trips] Station Deleted Success');
@@ -101,6 +111,7 @@ export const carriageUpdatedSuccess = createAction(
   props<{ code: string }>(),
 );
 
+
 // Orders
 export const loadOrders = createAction('[Trips] Load Orders', props<{ all?: boolean }>());
 export const ordersLoadedSuccess = createAction(
@@ -143,6 +154,22 @@ export const usersLoadedSuccess = createAction(
   props<{ users: User[] }>(),
 );
 
+export const loadRouteById = createAction('[Trips] Load Route By Id', props<{ id: number }>());
+export const routeLoadedByIdSuccess = createAction(
+  '[Trips] Route Loaded By Id Success',
+  props<{ route: Route }>(),
+);
+
+export const createStation = createAction(
+  '[Trips] Create Station',
+
+  props<{ city: string; latitude: number; longitude: number; relations: number[] }>(),
+);
+export const createStationSuccess = createAction(
+  '[Trips] Create Station Success',
+  props<{ id: number }>,
+);
+
 export const loadRideById = createAction('[Trips] Load Ride By Id', props<{ rideId: number }>());
 export const rideLoadedByIdSuccess = createAction(
   '[Trips] Ride Loaded By Id Success',
@@ -183,3 +210,5 @@ export const failureSnackBar = createAction(
   '[Trips] Failure SnackBar',
   props<{ error: { message: string; reason: string } }>(),
 );
+export const loadingFinished = createAction('[Trips] Load finished');
+export const loadingStarted = createAction('[Trips] Load started');
