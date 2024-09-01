@@ -17,6 +17,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TripsService } from '../../../features/trips/services/trips.service';
 import * as tripActions from './trips.actions';
 import { RideInfo, SearchResponse } from '../../models/trips.model';
+import { Carriage } from '../../../features/trips/models/carriage.model';
 
 @Injectable()
 export class TripsEffects {
@@ -254,7 +255,14 @@ export class TripsEffects {
           .createCarriageType(action.name, action.rows, action.leftSeats, action.rightSeats)
           .pipe(
             map((code) => {
-              return tripActions.carriagesCreatedSuccess(code);
+              const createCarriageData: Carriage = {
+                code: code.code,
+                name: action.name,
+                rows: action.rows,
+                leftSeats: action.leftSeats,
+                rightSeats: action.rightSeats,
+              };
+              return tripActions.carriagesCreatedSuccess({ createCarriage: createCarriageData });
             }),
             catchError((error) => {
               return of(tripActions.failureSnackBar(error));
@@ -277,11 +285,18 @@ export class TripsEffects {
             action.rightSeats,
           )
           .pipe(
-            map((code) => {
-              return tripActions.carriageUpdatedSuccess(code);
+            map(() => {
+              const updatedCarriageData: Carriage = {
+                code: action.code,
+                name: action.name,
+                rows: action.rows,
+                leftSeats: action.leftSeats,
+                rightSeats: action.rightSeats,
+              };
+              return tripActions.carriageUpdatedSuccess({ updatedCarriage: updatedCarriageData });
             }),
             catchError((error) => {
-              return of(tripActions.failureSnackBar(error));
+              return of(tripActions.failureSnackBar({ error }));
             }),
           );
       }),

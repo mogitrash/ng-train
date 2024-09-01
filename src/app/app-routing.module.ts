@@ -10,9 +10,9 @@ import { MainPageComponent } from './pages/main-page/main-page.component';
 import { guestGuard } from './core/guards/guest.guard';
 import { adminGuard } from './core/guards/admin.guard';
 import { adminUserGuard } from './core/guards/admin-user.guard';
-import { CarriageComponent } from './shared/components/carriage/carriage.component';
 import { RoutesComponent } from './shared/components/routes/routes.component';
 import { StationsComponent } from './shared/components/stations/stations.component';
+import { AdminCarriagesComponent } from './shared/components/admin-carriages/admin-carriages.component';
 
 const routes: Routes = [
   // Common routes
@@ -43,7 +43,7 @@ const routes: Routes = [
     children: [
       {
         path: 'carriages',
-        component: CarriageComponent,
+        component: AdminCarriagesComponent,
       },
       {
         path: 'routes',
