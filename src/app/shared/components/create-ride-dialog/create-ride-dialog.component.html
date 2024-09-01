@@ -1,0 +1,59 @@
+<h1 mat-dialog-title>Create Ride</h1>
+<div mat-dialog-content>
+  @for (station of data.route.path; track $index) {
+    <form [formGroup]="createRide">
+      <div formArrayName="segments">
+        <div class="container">
+          <div class="column">
+            {{ findStationNameById(station) }}
+          </div>
+          <div class="column">
+            @if ($index < data.route.path.length - 1) {
+              <div [formGroupName]="$index">
+                <div formGroupName="time">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Departure:</mat-label>
+                    <input matInput formControlName="departure" required />
+                  </mat-form-field>
+                </div>
+              </div>
+            }
+            @if ($index > 0) {
+              <div [formGroupName]="$index - 1">
+                <div formGroupName="time">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Arrival:</mat-label>
+                    <input matInput formControlName="arrival" required />
+                  </mat-form-field>
+                </div>
+              </div>
+            }
+          </div>
+          <div class="column">
+            @if ($index < data.route.path.length - 1) {
+              <div [formGroupName]="$index">
+                <div formGroupName="price">
+                  <div *ngFor="let key of getUniqueCarriages()">
+                    <mat-form-field
+                      appearance="outline"
+                      subscriptSizing="dynamic"
+                      style="margin-bottom: 16px"
+                    >
+                      <mat-label>{{ key }}</mat-label>
+                      <input matInput [formControlName]="key" required type="number" />
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </form>
+  }
+</div>
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="true" (click)="onCreateRide()" cdkFocusInitial>
+    Create
+  </button>
+</mat-dialog-actions>

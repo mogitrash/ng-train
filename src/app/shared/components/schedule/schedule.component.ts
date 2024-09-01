@@ -20,6 +20,7 @@ import {
 import { Station } from '../../../features/trips/models/station.model';
 import { Ride } from '../../../features/trips/models/ride.model';
 import { DialogComponent } from '../dialog/dialog.component';
+import { CreateRideDialogComponent } from '../create-ride-dialog/create-ride-dialog.component';
 
 @Component({
   selector: 'app-schedule',
@@ -100,6 +101,15 @@ export class ScheduleComponent implements OnInit {
       data: {
         routeId: this.selectedId,
         rideId,
+      },
+    });
+  }
+
+  createRideDialog(route: Route, stations: Station[]) {
+    this.dialog.open(CreateRideDialogComponent, {
+      data: {
+        route,
+        stations,
       },
     });
   }

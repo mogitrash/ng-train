@@ -12,9 +12,16 @@ import { CarriageComponent } from './components/carriage/carriage.component';
 import { SplitSeatsPipe } from './pipes/split-seats.pipe';
 import { ScheduleComponent } from './components/schedule/schedule.component';
 import { DialogComponent } from './components/dialog/dialog.component';
+import { CreateRideDialogComponent } from './components/create-ride-dialog/create-ride-dialog.component';
 
 @NgModule({
-  declarations: [CarriageComponent, SplitSeatsPipe, ScheduleComponent, DialogComponent],
+  declarations: [
+    CarriageComponent,
+    SplitSeatsPipe,
+    ScheduleComponent,
+    DialogComponent,
+    CreateRideDialogComponent,
+  ],
   imports: [
     CommonModule,
     MatCardModule,

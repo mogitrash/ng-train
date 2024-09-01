@@ -1,6 +1,9 @@
 @if (route$ | async; as routes) {
   @for (route of routes; track route.id) {
     <h1>Route {{ route.id }}</h1>
+    @if (stations$ | async; as stations) {
+      <button mat-flat-button (click)="createRideDialog(route, stations)">Create Ride</button>
+    }
     @for (ride of rides$ | async; track ride.rideId) {
       <mat-card appearance="outlined">
         <mat-card-header
