@@ -7,7 +7,7 @@
         <div class="start">
           <div class="time">{{ rideStartDate | date: 'HH:mm' }}</div>
           <div class="date">{{ rideStartDate | date: 'MMMM d' }}</div>
-          <div class="city">{{ rideStartStation }}</div>
+          <div class="city">{{ rideStartCity }}</div>
         </div>
 
         <div class="path">
@@ -20,7 +20,7 @@
         <div class="end">
           <div class="time">{{ rideEndDate | date: 'HH:mm' }}</div>
           <div class="date">{{ rideEndDate | date: 'MMMM d' }}</div>
-          <div class="city">{{ rideEndStation }}</div>
+          <div class="city">{{ rideEndCity }}</div>
         </div>
       </div>
     </div>
@@ -34,24 +34,10 @@
       }
     </div>
 
-    <div class="buttons">
-      <button mat-button (click)="openRouteDialog()">
-        <mat-icon>route</mat-icon>
-        Route
-      </button>
-      <button
-        mat-button
-        [routerLink]="['/detail']"
-        [queryParams]="{
-          rideId: rideItemInfo.rideId,
-          fromId: rideItemInfo.from.stationId,
-          toId: rideItemInfo.to.stationId,
-        }"
-      >
-        <mat-icon>more_vert</mat-icon>
-        More
-      </button>
-    </div>
+    <button mat-button (click)="openRouteDialog()">
+      <mat-icon>route</mat-icon>
+      Route
+    </button>
   </div>
 } @else {
   <mat-spinner></mat-spinner>

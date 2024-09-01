@@ -13,10 +13,18 @@ import { adminUserGuard } from './core/guards/admin-user.guard';
 import { RoutesComponent } from './shared/components/routes/routes.component';
 import { StationsComponent } from './shared/components/stations/stations.component';
 import { AdminCarriagesComponent } from './shared/components/admin-carriages/admin-carriages.component';
+import { TripDetailComponent } from './features/trips/components/trip-detail/trip-detail.component';
 
 const routes: Routes = [
   // Common routes
-  { path: '', component: MainPageComponent },
+  {
+    path: '',
+    component: MainPageComponent,
+  },
+  {
+    path: 'detail',
+    component: TripDetailComponent,
+  },
 
   // Guest routes
   { path: 'signup', component: SignupPageComponent, canActivate: [guestGuard] },
@@ -70,7 +78,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { bindToComponentInputs: true })],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
