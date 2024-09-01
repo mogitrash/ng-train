@@ -40,7 +40,7 @@ export class AdminCarriagesComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  onSelectedUpdateCarriage(carriage: Carriage) {
+  protected onSelectedUpdateCarriage(carriage: Carriage) {
     this.isOpenForm = true;
     this.formType = 'update';
     this.updatedCarriage = carriage;
@@ -58,5 +58,9 @@ export class AdminCarriagesComponent implements OnInit, OnDestroy {
 
   scrollToForm() {
     this.formElement.nativeElement.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  trackByCarriage(index: number, carriage: Carriage): string {
+    return carriage.code;
   }
 }

@@ -22,7 +22,7 @@
 </div>
 
 <ol>
-  <li *ngFor="let carriage of carriages$ | async | reverse">
+  <li *ngFor="let carriage of carriages$ | async | reverse; trackBy: trackByCarriage">
     <app-carriage-card
       [carriage]="carriage"
       [isDisabled]="isOpenForm"

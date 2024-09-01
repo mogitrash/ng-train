@@ -14,7 +14,7 @@ export class CarriageSimpleComponent implements OnChanges {
 
   countOfSeats!: number;
 
-  ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges): void {
     if (changes['carriage']) {
       this.countOfSeats = this.calcCountTotalNumberOfSeats();
       this.createSeats();

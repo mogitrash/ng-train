@@ -13,7 +13,7 @@ export class CarriageCardComponent implements OnInit {
 
   @Output() updatedCarriage = new EventEmitter<Carriage>();
 
-  countOfSeats!: number;
+  protected countOfSeats!: number;
 
   ngOnInit(): void {
     this.countOfSeats = this.calcCountTotalNumberOfSeats();

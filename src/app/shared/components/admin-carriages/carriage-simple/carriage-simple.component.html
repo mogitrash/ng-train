@@ -4,7 +4,7 @@
   >
     <div class="seats seats-right">
       <div *ngFor="let column of seatGroup[0]" class="column">
-        <div *ngFor="let seat of column" class="seat seat-free">
+        <div *ngFor="let seat of column; trackBy: trackBySeat" class="seat seat-free">
           <label>
             <input type="checkbox" />
             {{ seat.numberInCarriage }}
