@@ -3,8 +3,15 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { MatDialog } from '@angular/material/dialog';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 import { Route } from '../../../features/trips/models/route.model';
-import { createRide, loadRouteById, loadStations } from '../../../core/store/trips/trips.actions';
+import {
+  createRide,
+  loadRouteById,
+  loadStations,
+  updateRide,
+} from '../../../core/store/trips/trips.actions';
 import {
   selectRides,
   selectRoutes,
@@ -26,16 +33,30 @@ export class ScheduleComponent implements OnInit {
 
   protected stations$: Observable<Station[]>;
 
+  protected isEnable?: [number, number];
+
+  protected isEnablePrice?: [number, number];
+
   protected rides$!: Observable<Ride[]>;
+
+  protected timetableForm = this.formBuilder.nonNullable.group({
+    departure: new FormControl(''),
+    arrival: new FormControl(''),
+  });
+
+  protected priceForm: FormGroup;
 
   selectedId!: number;
 
   constructor(
     private route: ActivatedRoute,
     private store: Store,
+    private formBuilder: FormBuilder,
+    private datePipe: DatePipe,
   ) {
     this.store.dispatch(loadStations());
     this.stations$ = this.store.select(selectStations);
+    this.priceForm = this.formBuilder.nonNullable.group({});
   }
 
   ngOnInit() {
@@ -66,6 +87,14 @@ export class ScheduleComponent implements OnInit {
     return Object.keys(obj);
   }
 
+  addPriceControl(key: string, value: number) {
+    this.priceForm.addControl(key, new FormControl(value, Validators.required));
+  }
+
+  get priceControls() {
+    return Object.keys(this.priceForm.controls);
+  }
+
   openDialog(rideId: number) {
     this.dialog.open(DialogComponent, {
       data: {
@@ -73,5 +102,68 @@ export class ScheduleComponent implements OnInit {
         rideId,
       },
     });
+  }
+
+  updateTimetable(ride: Ride, cell: number) {
+    const updatedRide = JSON.parse(JSON.stringify(ride));
+    if (this.timetableForm.controls.departure.valid) {
+      const departureDate = new Date(
+        this.timetableForm.controls.departure.value?.replace(' ', 'T') ?? '',
+      );
+      updatedRide.schedule.segments[cell].time[0] = departureDate.toISOString();
+    }
+    if (this.timetableForm.controls.arrival.valid && cell > 0) {
+      const arrivalDate = new Date(
+        this.timetableForm.controls.arrival.value?.replace(' ', 'T') ?? '',
+      );
+      updatedRide.schedule.segments[cell - 1].time[1] = arrivalDate.toISOString();
+    }
+    this.store.dispatch(
+      updateRide({
+        routeId: this.selectedId,
+        rideId: ride.rideId,
+        segments: updatedRide.schedule.segments,
+      }),
+    );
+    this.isEnable = undefined;
+  }
+
+  editTimetable(rideId: number, cell: number, departure: string, arrival: string) {
+    this.isEnable = [rideId, cell];
+    this.isEnablePrice = undefined;
+
+    if (arrival) {
+      const formattedArrival = this.datePipe.transform(arrival, 'yyyy-MM-dd HH:mm');
+      this.timetableForm.controls.arrival.setValue(formattedArrival);
+    }
+    if (departure) {
+      const formattedDeparture = this.datePipe.transform(departure, 'yyyy-MM-dd HH:mm');
+      this.timetableForm.controls.departure.setValue(formattedDeparture);
+    }
+  }
+
+  editPrice(rideId: number, cell: number, price: { [key: string]: number }) {
+    this.priceForm = this.formBuilder.nonNullable.group({});
+    this.isEnablePrice = [rideId, cell];
+    this.isEnable = undefined;
+
+    Object.entries(price).forEach(([key, value]) => {
+      this.addPriceControl(key, value);
+    });
+  }
+
+  updatePrice(ride: Ride, cell: number) {
+    const updatedRide = JSON.parse(JSON.stringify(ride));
+    if (this.priceForm.valid) {
+      updatedRide.schedule.segments[cell].price = this.priceForm.value;
+    }
+    this.store.dispatch(
+      updateRide({
+        routeId: this.selectedId,
+        rideId: ride.rideId,
+        segments: updatedRide.schedule.segments,
+      }),
+    );
+    this.isEnablePrice = undefined;
   }
 }

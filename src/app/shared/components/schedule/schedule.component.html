@@ -1,5 +1,6 @@
 @if (route$ | async; as routes) {
   @for (route of routes; track route.id) {
+    <h1>Route {{ route.id }}</h1>
     @for (ride of rides$ | async; track ride.rideId) {
       <mat-card appearance="outlined">
         <mat-card-header
@@ -19,30 +20,166 @@
                 <div class="column">
                   <h6 class="font-weight:bold;">{{ findStationNameById(path, stations) }}</h6>
                 </div>
-                <div class="column">
+                <div class="column" id="timetable-{{ ride.rideId }}-{{ idx }}">
                   @if ($index === 0) {
-                    Departure: {{ ride.schedule.segments[idx].time[0] | date: 'yyyy-MM-dd HH:mm' }}
+                    @if (
+                      !(
+                        isEnable !== undefined &&
+                        ride.rideId === isEnable[0] &&
+                        idx === isEnable[1]
+                      )
+                    ) {
+                      Departure:
+                      {{ ride.schedule.segments[idx].time[0] | date: 'yyyy-MM-dd HH:mm' }}
+                      <mat-icon
+                        aria-hidden="false"
+                        aria-label="delete station icon"
+                        fontIcon="edit"
+                        (click)="
+                          editTimetable(ride.rideId, idx, ride.schedule.segments[idx].time[0], '')
+                        "
+                      ></mat-icon>
+                    } @else {
+                      <form [formGroup]="timetableForm">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Departure:</mat-label>
+                          <input matInput formControlName="departure" required />
+                        </mat-form-field>
+                      </form>
+                      <mat-icon
+                        aria-hidden="false"
+                        aria-label="delete station icon"
+                        fontIcon="save"
+                        (click)="updateTimetable(ride, idx)"
+                      ></mat-icon>
+                    }
                   } @else if ($index < ride.path.length - 1) {
-                    Arrival:
-                    {{ ride.schedule.segments[idx - 1].time[1] | date: 'yyyy-MM-dd HH:mm' }}
-                    <br />
-                    Departure:
-                    {{ ride.schedule.segments[idx].time[0] | date: 'yyyy-MM-dd HH:mm' }}
+                    @if (
+                      !(
+                        isEnable !== undefined &&
+                        ride.rideId === isEnable[0] &&
+                        idx === isEnable[1]
+                      )
+                    ) {
+                      Departure:
+                      {{ ride.schedule.segments[idx - 1].time[1] | date: 'yyyy-MM-dd HH:mm' }}
+                      <br />
+                      Arrival: {{ ride.schedule.segments[idx].time[0] | date: 'yyyy-MM-dd HH:mm' }}
+                      <mat-icon
+                        aria-hidden="false"
+                        aria-label="delete station icon"
+                        fontIcon="edit"
+                        (click)="
+                          editTimetable(
+                            ride.rideId,
+                            idx,
+                            ride.schedule.segments[idx].time[0],
+                            ride.schedule.segments[idx - 1].time[1]
+                          )
+                        "
+                      ></mat-icon>
+                    } @else {
+                      <form [formGroup]="timetableForm">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Arrival:</mat-label>
+                          <input matInput formControlName="arrival" required />
+                        </mat-form-field>
+
+                        <br />
+                        <mat-form-field appearance="outline">
+                          <mat-label>Departure:</mat-label>
+                          <input matInput required formControlName="departure" />
+                        </mat-form-field>
+                      </form>
+                      <mat-icon
+                        aria-hidden="false"
+                        aria-label="delete station icon"
+                        fontIcon="save"
+                        (click)="updateTimetable(ride, idx)"
+                      ></mat-icon>
+                    }
                   } @else {
-                    Arrival:
-                    {{ ride.schedule.segments[idx - 1].time[1] | date: 'yyyy-MM-dd HH:mm' }}
+                    @if (
+                      !(
+                        isEnable !== undefined &&
+                        ride.rideId === isEnable[0] &&
+                        idx === isEnable[1]
+                      )
+                    ) {
+                      Arrival:
+                      {{ ride.schedule.segments[idx - 1].time[1] | date: 'yyyy-MM-dd HH:mm' }}
+                      <mat-icon
+                        aria-hidden="false"
+                        aria-label="delete station icon"
+                        fontIcon="edit"
+                        (click)="
+                          editTimetable(
+                            ride.rideId,
+                            idx,
+                            '',
+                            ride.schedule.segments[idx - 1].time[1]
+                          )
+                        "
+                      ></mat-icon>
+                    } @else {
+                      <form [formGroup]="timetableForm">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Arrival:</mat-label>
+                          <input matInput formControlName="arrival" required />
+                        </mat-form-field>
+                      </form>
+                      <mat-icon
+                        aria-hidden="false"
+                        aria-label="delete station icon"
+                        fontIcon="save"
+                        (click)="updateTimetable(ride, idx)"
+                      ></mat-icon>
+                    }
                   }
                 </div>
                 <div class="column">
                   @if ($index < ride.path.length - 1) {
-                    Price
-                    <div *ngFor="let key of getKeys(ride.schedule.segments[idx].price)">
-                      {{ key }}:
-                      {{
-                        ride.schedule.segments[idx].price[key] / 100
-                          | currency: 'USD' : 'symbol' : '1.2-2'
-                      }}
-                    </div>
+                    @if (
+                      !(
+                        isEnablePrice !== undefined &&
+                        ride.rideId === isEnablePrice[0] &&
+                        idx === isEnablePrice[1]
+                      )
+                    ) {
+                      Price
+                      <mat-icon
+                        aria-hidden="false"
+                        aria-label="delete station icon"
+                        fontIcon="edit"
+                        (click)="editPrice(ride.rideId, idx, ride.schedule.segments[idx].price)"
+                      ></mat-icon>
+                      <div *ngFor="let key of getKeys(ride.schedule.segments[idx].price)">
+                        {{ key }}:
+                        {{
+                          ride.schedule.segments[idx].price[key] / 100
+                            | currency: 'USD' : 'symbol' : '1.2-2'
+                        }}
+                      </div>
+                    } @else {
+                      <form [formGroup]="priceForm">
+                        <div *ngFor="let key of priceControls; let i = index">
+                          <mat-form-field
+                            appearance="outline"
+                            subscriptSizing="dynamic"
+                            style="margin-bottom: 16px"
+                          >
+                            <mat-label>{{ key }}</mat-label>
+                            <input matInput [formControlName]="key" required type="number" />
+                          </mat-form-field>
+                        </div>
+                      </form>
+                      <mat-icon
+                        aria-hidden="false"
+                        aria-label="delete station icon"
+                        fontIcon="save"
+                        (click)="updatePrice(ride, idx)"
+                      ></mat-icon>
+                    }
                   }
                 </div>
               </div>

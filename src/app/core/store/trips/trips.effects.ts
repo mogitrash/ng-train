@@ -364,7 +364,10 @@ export class TripsEffects {
       exhaustMap((action) => {
         return this.tripsService.updateRide(action.routeId, action.rideId, action.segments).pipe(
           map(() => {
-            return tripActions.updateRideSuccess();
+            return tripActions.updateRideSuccess({
+              rideId: action.rideId,
+              segments: action.segments,
+            });
           }),
           catchError((error) => {
             return of(tripActions.failureSnackBar(error));

@@ -180,7 +180,16 @@ export const updateRide = createAction(
     }[];
   }>(),
 );
-export const updateRideSuccess = createAction('[Trips] Update Ride Success');
+export const updateRideSuccess = createAction(
+  '[Trips] Update Ride Success',
+  props<{
+    rideId: number;
+    segments: {
+      time: [string, string];
+      price: { [key: string]: number };
+    }[];
+  }>(),
+);
 
 export const deleteRideById = createAction(
   '[Trips] Delete Ride',

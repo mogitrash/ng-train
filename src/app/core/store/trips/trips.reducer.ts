@@ -12,6 +12,7 @@ import {
   routesLoadedSuccess,
   searchLoadedSuccess,
   stationsLoadedSuccess,
+  updateRideSuccess,
   usersLoadedSuccess,
 } from './trips.actions';
 
@@ -53,6 +54,14 @@ export const tripsReducer = createReducer(
   }),
   on(ridesLoadedByRouteSuccess, (state, { rides }): TripsState => {
     return { ...state, rides };
+  }),
+  on(updateRideSuccess, (state, { rideId, segments }): TripsState => {
+    return {
+      ...state,
+      rides: state.rides.map((ride) => {
+        return ride.rideId === rideId ? { ...ride, segments } : ride;
+      }),
+    };
   }),
   on(deleteRideByIdSuccess, (state, { rideId }): TripsState => {
     return {
