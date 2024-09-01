@@ -1,13 +1,20 @@
 <form [formGroup]="updateForm" (ngSubmit)="onSubmit()">
-  <div class="stations">
+  <div class="stations" formArrayName="stations">
     <h2>Stations</h2>
-    <select [id]="cities![i]" name="station" *ngFor="let city of cities; index as i">
-      <option [value]="city" *ngFor="let nameCity of cities; index as k" [selected]="i === k">
+    <select name="station" *ngFor="let city of cities; index as i">
+      <option
+        [value]="city"
+        *ngFor="
+          let nameCity of i ? currentStations : getConnectedStationList(stations.value[i - 1]);
+          index as k
+        "
+        [selected]="i === k"
+      >
         {{ nameCity }}
       </option>
     </select>
   </div>
-  <div class="carriages">
+  <div class="carriages" formArrayName="carriages">
     <h2>Carriages</h2>
     <select
       id="`${carriages+i}`"
@@ -17,7 +24,7 @@
     >
       <option
         [value]="carriage"
-        *ngFor="let typeCarriage of carriages"
+        *ngFor="let typeCarriage of carriages$ | async"
         [selected]="carriage === typeCarriage.code"
       >
         {{ typeCarriage.code }}

@@ -454,7 +454,11 @@ export class TripsEffects {
 
   loadDataForRoutesView$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(tripActions.loadDataForRoutesView),
+      ofType(
+        tripActions.loadDataForRoutesView,
+        tripActions.routeCreatedSuccess,
+        tripActions.routeDeletedSuccess,
+      ),
       switchMap(() => {
         return of(
           tripActions.loadStations(),

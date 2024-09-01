@@ -2,13 +2,16 @@
   <div class="stations" formArrayName="stations">
     <h2>Stations</h2>
     <select
-      [name]="stations"
+      [name]="'stations-' + i"
       *ngFor="let item of stations.controls; index as i"
-      (input)="addItem('station')"
+      (change)="addItem('station')"
       [formControlName]="i"
     >
-      <option default>Choose city</option>
-      <option [value]="station.id" *ngFor="let station of stations$ | async">
+      <option value="" selected>Choose city</option>
+      <option
+        [value]="station.id"
+        *ngFor="let station of i ? getConnectedStationList() : (stations$ | async)"
+      >
         {{ station.city }}
       </option>
     </select>
@@ -16,12 +19,12 @@
   <div class="carriages" formArrayName="carriages">
     <h2>Carriages</h2>
     <select
-      [name]="carriages"
+      [name]="'carriages-' + k"
       *ngFor="let value of carriages.controls; index as k"
-      (input)="addItem('carriage')"
+      (change)="addItem('carriage')"
       [formControlName]="k"
     >
-      <option default>Choose carriage</option>
+      <option value="" selected>Choose carriage</option>
       <option [value]="carriage.name" *ngFor="let carriage of carriages$ | async">
         {{ carriage.name }}
       </option>

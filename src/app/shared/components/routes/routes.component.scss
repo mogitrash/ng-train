@@ -8,21 +8,36 @@
   flex-direction: column;
   align-items: flex-end;
 
+  .wrapper {
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    @media (max-width: 500px) {
+      flex-direction: column;
+      font-size: 8px;
+    }
+    .wrapper-forms-button {
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      button {
+        width: 50px;
+        margin: 2% 3%;
+        font-size: 10px;
+        padding: 1%;
+      }
+    }
+  }
   button {
     width: 30%;
     border: 2px solid var(--primary-blue);
     margin-bottom: 3%;
+    font-size: 10px;
   }
-
-  .mat-accordion {
-    width: 92%;
-    margin: 2% auto;
-    .mat-expansion-panel {
-      background-color: var(--grey);
-      .mat-expansion-panel-header-title {
-        color: var(--grey-extra-light);
-      }
-    }
+  .reverse {
+    width: 44px;
+    margin: 0;
   }
 
   form {
@@ -39,7 +54,7 @@
       width: 48%;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       h2 {
         text-align: center;
         width: 100%;

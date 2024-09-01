@@ -1,5 +1,5 @@
-import { Component, DestroyRef, inject, OnDestroy, OnInit } from '@angular/core';
-import { map, Observable, Subscription, take } from 'rxjs';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { BehaviorSubject, map, Observable, Subscription, take } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Station } from '../../../features/trips/models/station.model';
 import { Carriage } from '../../../features/trips/models/carriage.model';
@@ -17,7 +17,7 @@ import { deleteRoute, loadDataForRoutesView } from '../../../core/store/trips/tr
   templateUrl: './routes.component.html',
   styleUrl: './routes.component.scss',
 })
-export class RoutesComponent implements OnInit, OnDestroy {
+export class RoutesComponent implements OnInit {
   public routes$: Observable<Route[]>;
 
   public stations$: Observable<Station[]>;
@@ -38,6 +38,12 @@ export class RoutesComponent implements OnInit, OnDestroy {
 
   public NumberPage: number;
 
+  public isOpen: boolean = false;
+
+  public isReverse: boolean = false;
+
+  public panelOpenState$: BehaviorSubject<boolean>;
+
   private readonly destroyRef: DestroyRef;
 
   private subscription: Subscription | undefined;
@@ -50,16 +56,16 @@ export class RoutesComponent implements OnInit, OnDestroy {
     this.destroyRef = inject(DestroyRef);
     this.currentRoute = { id: 0, path: [], carriages: [] };
     this.NumberPage = 1;
+    this.panelOpenState$ = new BehaviorSubject(this.isOpen);
   }
 
   ngOnInit() {
     this.store.dispatch(loadDataForRoutesView());
-    console.log(this.NumberPage);
   }
 
-  public getCarriageTypes(carriages: string[]): Set<string> {
-    return new Set(carriages);
-  }
+  // public getCarriageTypes(carriages: string[]): Set<string> {
+  //   return new Set(carriages);
+  // }
 
   public getCities(indexes: number[]): Observable<string[]> {
     const list: string[] = [];
@@ -78,7 +84,6 @@ export class RoutesComponent implements OnInit, OnDestroy {
 
   protected updateRoute(route: Route): void {
     this.currentRoute = { ...route };
-    console.log(this.currentRoute);
     this.updateMode = true;
   }
 
@@ -109,14 +114,13 @@ export class RoutesComponent implements OnInit, OnDestroy {
 
   public changeCreateMode(): void {
     this.createMode = !this.createMode;
-    console.log(this.createMode);
   }
 
   protected onDeleteRoute(id: number) {
     this.store.dispatch(deleteRoute({ id }));
   }
 
-  ngOnDestroy(): void {
-    this.subscription!.unsubscribe();
-  }
+  // ngOnDestroy(): void {
+  //   this.subscription!.unsubscribe();
+  // }
 }
