@@ -5,12 +5,12 @@
   type="submit"
   (click)="toggleOpenForm()"
   class="button-create"
-  [disabled]="isOpenForm"
+  [disabled]="isFormOpen"
 >
   Create carriage
 </button>
 <div id="formContainer" #formElement>
-  <ng-container *ngIf="isOpenForm">
+  <ng-container *ngIf="isFormOpen">
     <app-carriage-form
       [carriage]="updatedCarriage"
       [countCarriages]="carriagesCount"
@@ -25,7 +25,7 @@
   <li *ngFor="let carriage of carriages$ | async | reverse; trackBy: trackByCarriage">
     <app-carriage-card
       [carriage]="carriage"
-      [isDisabled]="isOpenForm"
+      [isDisabled]="isFormOpen"
       (updatedCarriage)="onSelectedUpdateCarriage($event)"
     ></app-carriage-card>
   </li>
