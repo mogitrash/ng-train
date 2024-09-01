@@ -8,6 +8,7 @@ import { Segment } from '../../../models/segment.model';
 import { Station } from '../../../models/station.model';
 import { RideInfo } from '../../../../../core/models/trips.model';
 import { TripRouteDialogComponent } from '../trip-route-dialog/trip-route-dialog.component';
+import { getTimeDifference } from '../../../../../shared/utilities/getTimeDifference.utility';
 
 @Component({
   selector: 'app-trip-item',
@@ -74,7 +75,11 @@ export class TripItemComponent implements OnInit {
 
   public openRouteDialog() {
     this.dialog.open(TripRouteDialogComponent, {
-      data: { rideId: this.ride?.rideId, segments: this.getRideSegments(this.ride!) },
+      data: {
+        rideId: this.ride?.rideId,
+        segments: this.getRideSegments(this.ride!),
+        path: this.getRidePath(this.ride!),
+      },
     });
   }
 
@@ -85,7 +90,7 @@ export class TripItemComponent implements OnInit {
     this.rideStartDate = new Date(firstSegment.time[0]);
     this.rideEndDate = new Date(lastSegment.time[1]);
 
-    this.initRideDuration();
+    this.rideDuration = getTimeDifference(this.rideStartDate, this.rideEndDate);
 
     this.rideStartStation = this.rideItemInfo.from.city;
     this.rideEndStation = this.rideItemInfo.to.city;
@@ -112,15 +117,6 @@ export class TripItemComponent implements OnInit {
     }
   }
 
-  private initRideDuration() {
-    const durationMs = this.rideEndDate.getTime() - this.rideStartDate.getTime();
-
-    const durationHours = Math.floor(durationMs / (1000 * 60 * 60));
-    const durationMinutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
-
-    this.rideDuration = `${String(durationHours).padStart(2, '0')}:${String(durationMinutes).padStart(2, '0')}`;
-  }
-
   private getRideSegments(ride: Ride): Segment[] {
     const { path, schedule } = ride;
     const { segments } = schedule;
@@ -132,6 +128,19 @@ export class TripItemComponent implements OnInit {
       return this.rideItemInfo.to.stationId === station;
     });
 
-    return segments.slice(firstStationId, lastStationId);
+    return segments.slice(firstStationId, lastStationId + 1);
+  }
+
+  private getRidePath(ride: Ride): number[] {
+    const { path } = ride;
+
+    const firstStationId = path.findIndex((station) => {
+      return this.rideItemInfo.from.stationId === station;
+    });
+    const lastStationId = path.findIndex((station) => {
+      return this.rideItemInfo.to.stationId === station;
+    });
+
+    return path.slice(firstStationId, lastStationId + 1);
   }
 }

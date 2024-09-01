@@ -1,7 +1,3 @@
-.dialog {
-  padding: 10px;
-}
-
 .header {
   display: flex;
   justify-content: space-between;
@@ -62,6 +58,12 @@
   width: 90px;
 }
 
+.stop-legend,
+.stop-wrapper {
+  text-align: right;
+  width: 130px;
+}
+
 .route-wrapper {
   width: 100px;
   position: relative;
@@ -95,6 +97,7 @@
 }
 
 .time-item,
-.station-item {
-  height: 30px;
+.station-item,
+.stop-item {
+  height: 40px;
 }
