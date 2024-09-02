@@ -6,6 +6,7 @@ import {
   exhaustMap,
   forkJoin,
   map,
+  mergeMap,
   of,
   startWith,
   switchMap,
@@ -15,6 +16,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TripsService } from '../../../features/trips/services/trips.service';
 import * as tripActions from './trips.actions';
+import { RideInfo, SearchResponse } from '../../models/trips.model';
 import { Carriage } from '../../../features/trips/models/carriage.model';
 
 @Injectable()
@@ -33,7 +35,34 @@ export class TripsEffects {
           )
           .pipe(
             map((search) => {
-              return tripActions.searchLoadedSuccess({ search });
+              const searchResponse: SearchResponse = {};
+              const { from, routes, to } = search;
+
+              routes.forEach((route) => {
+                const fromStationIndex = route.path.indexOf(from.stationId);
+                const toStationIndex = route.path.indexOf(to.stationId);
+
+                route.schedule.forEach((schedule) => {
+                  const rideSegments = schedule.segments.slice(fromStationIndex, toStationIndex);
+                  const groupDate = rideSegments[0].time[0].split('T')[0];
+
+                  const rideInfoList = searchResponse[groupDate];
+                  const rideInfo: RideInfo = {
+                    from,
+                    to,
+                    rideId: schedule.rideId,
+                    segments: rideSegments,
+                  };
+
+                  if (rideInfoList) {
+                    rideInfoList.push(rideInfo);
+                  } else {
+                    searchResponse[groupDate] = [rideInfo];
+                  }
+                });
+              });
+
+              return tripActions.searchLoadedSuccess({ search: searchResponse });
             }),
             catchError((error) => {
               return of(tripActions.failureSnackBar(error));
@@ -392,7 +421,7 @@ export class TripsEffects {
   loadRideById$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(tripActions.loadRideById),
-      exhaustMap((action) => {
+      mergeMap((action) => {
         return this.tripsService.getRideById(action.rideId).pipe(
           map((ride) => {
             return tripActions.rideLoadedByIdSuccess({ ride });

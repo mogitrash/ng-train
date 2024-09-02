@@ -1,19 +1,30 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, throwError } from 'rxjs';
+import { Subject, catchError, throwError } from 'rxjs';
 import { Station } from '../models/station.model';
-import { Route } from '../models/route.model';
 import { Carriage } from '../models/carriage.model';
 import { Order } from '../models/order.model';
 import { User } from '../models/user.model';
 import { Ride } from '../models/ride.model';
-import { SearchResponse } from '../models/searchResponse.model';
+import { SearchResponseDTO } from '../models/searchResponseDTO.model';
+import { Route } from '../models/route.model';
+import { SearchResponse } from '../../../core/models/trips.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TripsService {
+  public searchResponse$ = new Subject<SearchResponseDTO>();
+
   constructor(private http: HttpClient) {}
+
+  public getSearchResponse() {
+    return this.searchResponse$.asObservable();
+  }
+
+  public setSearchResponse(res: SearchResponseDTO) {
+    this.searchResponse$.next(res);
+  }
 
   public search(
     fromLatitude: number,
@@ -32,7 +43,7 @@ export class TripsService {
     if (time) {
       params.time = time;
     }
-    return this.http.get<SearchResponse>(`/api/search`, { params });
+    return this.http.get<SearchResponseDTO>(`/api/search`, { params });
   }
 
   public searchStation(fromLatitude: number, fromLongitude: number) {
