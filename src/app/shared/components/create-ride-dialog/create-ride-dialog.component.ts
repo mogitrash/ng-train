@@ -38,7 +38,7 @@ export class CreateRideDialogComponent {
 
       const priceGroup = new FormGroup({});
       carriages.forEach((carriage) => {
-        priceGroup.addControl(carriage.toString(), new FormControl('55', Validators.required));
+        priceGroup.addControl(carriage.toString(), new FormControl('', Validators.required));
       });
 
       const segmentGroup = new FormGroup({
