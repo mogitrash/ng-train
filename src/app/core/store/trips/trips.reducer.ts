@@ -50,7 +50,16 @@ export const tripsReducer = createReducer(
     return { ...state, routes: [...state.routes, route] };
   }),
   on(rideLoadedByIdSuccess, (state, { ride }): TripsState => {
-    return { ...state, rides: [...state.rides, ride] };
+    const updatedRides = state.rides.map((r) => {
+      return r.rideId === ride.rideId ? ride : r;
+    });
+    const rideExists = state.rides.some((r) => {
+      return r.rideId === ride.rideId;
+    });
+    return {
+      ...state,
+      rides: rideExists ? updatedRides : [...state.rides, ride],
+    };
   }),
   on(ridesLoadedByRouteSuccess, (state, { rides }): TripsState => {
     return { ...state, rides };

@@ -6,12 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { Route } from '../../../features/trips/models/route.model';
-import {
-  createRide,
-  loadRouteById,
-  loadStations,
-  updateRide,
-} from '../../../core/store/trips/trips.actions';
+import { loadRouteById, loadStations, updateRide } from '../../../core/store/trips/trips.actions';
 import {
   selectRides,
   selectRoutes,
@@ -74,29 +69,22 @@ export class ScheduleComponent implements OnInit {
     return foundStation ? foundStation.city : 'Station not found';
   }
 
-  private onCreateRide(
-    routeId: number,
-    segments: {
-      time: [string, string];
-      price: { [key: string]: number };
-    }[],
-  ) {
-    this.store.dispatch(createRide({ routeId, segments }));
-  }
-
-  getKeys(obj: { [key: string]: number }): string[] {
+  protected getKeys(obj: { [key: string]: number }): string[] {
     return Object.keys(obj);
   }
 
-  addPriceControl(key: string, value: number) {
-    this.priceForm.addControl(key, new FormControl(value, Validators.required));
+  protected addPriceControl(key: string, value: number) {
+    this.priceForm.addControl(
+      key,
+      new FormControl(value, [Validators.required, Validators.min(0)]),
+    );
   }
 
   get priceControls() {
     return Object.keys(this.priceForm.controls);
   }
 
-  openDialog(rideId: number) {
+  protected openDialog(rideId: number) {
     this.dialog.open(DialogComponent, {
       data: {
         routeId: this.selectedId,
@@ -105,7 +93,7 @@ export class ScheduleComponent implements OnInit {
     });
   }
 
-  createRideDialog(route: Route, stations: Station[]) {
+  protected createRideDialog(route: Route, stations: Station[]) {
     this.dialog.open(CreateRideDialogComponent, {
       data: {
         route,
@@ -114,18 +102,14 @@ export class ScheduleComponent implements OnInit {
     });
   }
 
-  updateTimetable(ride: Ride, cell: number) {
+  protected updateTimetable(ride: Ride, cell: number) {
     const updatedRide = JSON.parse(JSON.stringify(ride));
     if (this.timetableForm.controls.departure.valid) {
-      const departureDate = new Date(
-        this.timetableForm.controls.departure.value?.replace(' ', 'T') ?? '',
-      );
+      const departureDate = new Date(this.timetableForm.controls.departure.value ?? '');
       updatedRide.schedule.segments[cell].time[0] = departureDate.toISOString();
     }
     if (this.timetableForm.controls.arrival.valid && cell > 0) {
-      const arrivalDate = new Date(
-        this.timetableForm.controls.arrival.value?.replace(' ', 'T') ?? '',
-      );
+      const arrivalDate = new Date(this.timetableForm.controls.arrival.value ?? '');
       updatedRide.schedule.segments[cell - 1].time[1] = arrivalDate.toISOString();
     }
     this.store.dispatch(
@@ -138,7 +122,7 @@ export class ScheduleComponent implements OnInit {
     this.isEnable = undefined;
   }
 
-  editTimetable(rideId: number, cell: number, departure: string, arrival: string) {
+  protected editTimetable(rideId: number, cell: number, departure: string, arrival: string) {
     this.isEnable = [rideId, cell];
     this.isEnablePrice = undefined;
 
@@ -152,20 +136,25 @@ export class ScheduleComponent implements OnInit {
     }
   }
 
-  editPrice(rideId: number, cell: number, price: { [key: string]: number }) {
+  protected editPrice(rideId: number, cell: number, price: { [key: string]: number }) {
     this.priceForm = this.formBuilder.nonNullable.group({});
     this.isEnablePrice = [rideId, cell];
     this.isEnable = undefined;
 
     Object.entries(price).forEach(([key, value]) => {
-      this.addPriceControl(key, value);
+      this.addPriceControl(key, value / 100);
     });
   }
 
-  updatePrice(ride: Ride, cell: number) {
+  protected updatePrice(ride: Ride, cell: number) {
     const updatedRide = JSON.parse(JSON.stringify(ride));
     if (this.priceForm.valid) {
-      updatedRide.schedule.segments[cell].price = this.priceForm.value;
+      const prices = this.priceForm.value;
+      Object.entries(prices).forEach(([key, value]) => {
+        if (typeof value === 'number') {
+          updatedRide.schedule.segments[cell].price[key] = value * 100;
+        }
+      });
     }
     this.store.dispatch(
       updateRide({

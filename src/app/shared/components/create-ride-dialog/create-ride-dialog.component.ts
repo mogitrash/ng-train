@@ -6,6 +6,7 @@ import { DialogComponent } from '../dialog/dialog.component';
 import { Route } from '../../../features/trips/models/route.model';
 import { Station } from '../../../features/trips/models/station.model';
 import { createRide } from '../../../core/store/trips/trips.actions';
+import { ArrivalDateValidator, departureDateValidator } from '../../validators/date-of-ride';
 
 @Component({
   selector: 'app-create-ride-dialog',
@@ -14,7 +15,7 @@ import { createRide } from '../../../core/store/trips/trips.actions';
 })
 export class CreateRideDialogComponent {
   protected createRide = this.formBuilder.nonNullable.group({
-    segments: new FormArray([]),
+    segments: this.formBuilder.array([]),
   });
 
   constructor(
@@ -28,13 +29,16 @@ export class CreateRideDialogComponent {
 
     for (let i = 0; i < this.data.route.path.length - 1; i += 1) {
       const timeGroup = new FormGroup({
-        departure: new FormControl('', Validators.required),
-        arrival: new FormControl('', Validators.required),
+        departure: new FormControl('', [
+          Validators.required,
+          departureDateValidator(i, segmentsArray),
+        ]),
+        arrival: new FormControl('', [Validators.required, ArrivalDateValidator(i, segmentsArray)]),
       });
 
       const priceGroup = new FormGroup({});
       carriages.forEach((carriage) => {
-        priceGroup.addControl(carriage.toString(), new FormControl('', Validators.required));
+        priceGroup.addControl(carriage.toString(), new FormControl('55', Validators.required));
       });
 
       const segmentGroup = new FormGroup({
@@ -62,11 +66,13 @@ export class CreateRideDialogComponent {
     return segmentsArray.controls.map((segment) => {
       const timeGroup = segment.get('time') as FormGroup;
       const priceGroup = segment.get('price') as FormGroup;
+      const departureDate = new Date(timeGroup.get('departure')?.value ?? '');
+      const arrivalDate = new Date(timeGroup.get('arrival')?.value ?? '');
       return {
-        time: [timeGroup.get('departure')?.value, timeGroup.get('arrival')?.value],
+        time: [departureDate.toISOString(), arrivalDate.toISOString()],
         price: Object.keys(priceGroup.controls).reduce(
           (acc, key) => {
-            acc[key] = priceGroup.controls[key].value;
+            acc[key] = priceGroup.controls[key].value * 100;
             return acc;
           },
           {} as { [key: string]: number },
