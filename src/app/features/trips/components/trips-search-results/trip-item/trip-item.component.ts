@@ -9,6 +9,8 @@ import { Station } from '../../../models/station.model';
 import { RideInfo } from '../../../../../core/models/trips.model';
 import { TripRouteDialogComponent } from '../trip-route-dialog/trip-route-dialog.component';
 import { getTimeDifference } from '../../../../../shared/utilities/getTimeDifference.utility';
+import { calculateTotalRidePrice } from '../../../../../shared/utilities/calculateTotalRidePrice.utility';
+import { getRideSegments } from '../../../../../shared/utilities/getRideSegments.utility';
 
 @Component({
   selector: 'app-trip-item',
@@ -40,7 +42,7 @@ export class TripItemComponent implements OnInit {
 
   public routeEndStation!: Station;
 
-  public prices!: [string, string][];
+  public prices!: [string, number][];
 
   constructor(
     private store: Store,
@@ -57,7 +59,12 @@ export class TripItemComponent implements OnInit {
       });
 
       if (this.ride) {
-        const rideSegments = this.getRideSegments(this.ride);
+        const rideSegments = getRideSegments(
+          this.ride.schedule.segments,
+          this.ride.path,
+          this.rideItemInfo.from.stationId,
+          this.rideItemInfo.to.stationId,
+        );
 
         this.initViewData(rideSegments);
       }
@@ -73,11 +80,28 @@ export class TripItemComponent implements OnInit {
     });
   }
 
+  public calculateTotalRidePrice(type: string) {
+    return calculateTotalRidePrice(
+      getRideSegments(
+        this.ride!.schedule.segments,
+        this.ride!.path,
+        this.rideItemInfo.from.stationId,
+        this.rideItemInfo.to.stationId,
+      ),
+      type,
+    );
+  }
+
   public openRouteDialog() {
     this.dialog.open(TripRouteDialogComponent, {
       data: {
         rideId: this.ride?.rideId,
-        segments: this.getRideSegments(this.ride!),
+        segments: getRideSegments(
+          this.ride!.schedule.segments,
+          this.ride!.path,
+          this.rideItemInfo.from.stationId,
+          this.rideItemInfo.to.stationId,
+        ),
         path: this.getRidePath(this.ride!),
       },
     });
@@ -95,9 +119,7 @@ export class TripItemComponent implements OnInit {
     this.rideStartStation = this.rideItemInfo.from.city;
     this.rideEndStation = this.rideItemInfo.to.city;
 
-    this.prices = Object.entries(firstSegment.price).map((price) => {
-      return [price[0], (price[1] / 100).toFixed(2)];
-    });
+    this.prices = Object.entries(firstSegment.price);
 
     if (this.stations) {
       this.initRouteStations();
@@ -115,20 +137,6 @@ export class TripItemComponent implements OnInit {
         return station.id === this.ride?.path.at(path.length - 1);
       })!;
     }
-  }
-
-  private getRideSegments(ride: Ride): Segment[] {
-    const { path, schedule } = ride;
-    const { segments } = schedule;
-
-    const firstStationId = path.findIndex((station) => {
-      return this.rideItemInfo.from.stationId === station;
-    });
-    const lastStationId = path.findIndex((station) => {
-      return this.rideItemInfo.to.stationId === station;
-    });
-
-    return segments.slice(firstStationId, lastStationId + 1);
   }
 
   private getRidePath(ride: Ride): number[] {

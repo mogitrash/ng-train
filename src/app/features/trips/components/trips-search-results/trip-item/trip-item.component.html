@@ -29,7 +29,7 @@
       @for (price of prices; track $index) {
         <div class="price-item">
           <div class="carriage">{{ price[0] }}</div>
-          <div class="price">${{ price[1] }}</div>
+          <div class="price">${{ calculateTotalRidePrice(price[0]) }}</div>
         </div>
       }
     </div>

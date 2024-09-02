@@ -2,15 +2,26 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { loadRideById, loadStations } from '../../../../core/store/trips/trips.actions';
+import {
+  createOrder,
+  loadCarriages,
+  loadRideById,
+  loadStations,
+} from '../../../../core/store/trips/trips.actions';
 import { getTimeDifference } from '../../../../shared/utilities/getTimeDifference.utility';
 import { Segment } from '../../models/segment.model';
 import { TripRouteDialogComponent } from '../trips-search-results/trip-route-dialog/trip-route-dialog.component';
-import { selectRides, selectStations } from '../../../../core/store/trips/trips.selectors';
+import {
+  selectCarriages,
+  selectRides,
+  selectStations,
+} from '../../../../core/store/trips/trips.selectors';
 import { Ride } from '../../models/ride.model';
 import { Station } from '../../models/station.model';
 import { getRidePath } from '../../../../shared/utilities/getRidePath.utility';
-import { getRideSegments } from '../../../../shared/utilities/getRideSegmets.utility';
+import { Carriage } from '../../models/carriage.model';
+import { CarriageSelectedSeats } from '../../../../shared/components/carriage/carriage.component';
+import { getRideSegments } from '../../../../shared/utilities/getRideSegments.utility';
 
 @Component({
   selector: 'app-trip-detail',
@@ -34,7 +45,15 @@ export class TripDetailComponent implements OnInit {
 
   public routeEndStation!: Station;
 
-  public prices!: [string, string][];
+  public prices: [string, string][] = [];
+
+  public carriages!: Carriage[];
+
+  public rideSegments!: Segment[];
+
+  public isSeatsSelected: boolean = false;
+
+  private carriages$ = this.store.select(selectCarriages);
 
   private stations$ = this.store.select(selectStations);
 
@@ -48,6 +67,8 @@ export class TripDetailComponent implements OnInit {
 
   private toId!: number;
 
+  private selectedSeats?: CarriageSelectedSeats;
+
   constructor(
     private store: Store,
     private destroyRef: DestroyRef,
@@ -56,8 +77,6 @@ export class TripDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.store.dispatch(loadStations());
-
     this.route.queryParams.subscribe((params) => {
       this.rideId = +params['rideId'];
       this.fromId = +params['fromId'];
@@ -72,27 +91,62 @@ export class TripDetailComponent implements OnInit {
       });
     });
 
+    this.store.dispatch(loadStations());
+
     const stationsSubscription = this.stations$.subscribe((stations) => {
       this.stations = stations;
 
       if (this.ride && this.stations.length > 0) {
-        const rideSegments = getRideSegments(this.ride, this.fromId, this.toId);
+        this.rideSegments = getRideSegments(
+          this.ride.schedule.segments,
+          this.ride.path,
+          this.fromId,
+          this.toId,
+        );
 
-        this.initViewData(rideSegments);
+        this.initViewData(this.rideSegments);
+
+        this.store.dispatch(loadCarriages());
       }
     });
 
+    const carriagesSubscription = this.carriages$.subscribe((carriages) => {
+      this.carriages = carriages.filter((carriage) => {
+        return this.prices.find((price) => {
+          return price[0] === carriage.name;
+        });
+      });
+    });
+
     this.destroyRef.onDestroy(() => {
+      carriagesSubscription.unsubscribe();
       ridesSubscription.unsubscribe();
       stationsSubscription.unsubscribe();
     });
+  }
+
+  public onSeatsSelect(seats: CarriageSelectedSeats) {
+    this.isSeatsSelected = seats.selectedSeats.length > 0;
+
+    this.selectedSeats = seats;
+  }
+
+  public onSeatsBook() {
+    this.store.dispatch(
+      createOrder({
+        rideId: this.rideId,
+        seat: this.selectedSeats!.selectedSeats[0]!.numberInCarriage,
+        stationEnd: this.toId,
+        stationStart: this.fromId,
+      }),
+    );
   }
 
   public openRouteDialog() {
     this.dialog.open(TripRouteDialogComponent, {
       data: {
         rideId: this.ride?.rideId,
-        segments: getRideSegments(this.ride!, this.fromId, this.toId),
+        segments: this.rideSegments,
         path: getRidePath(this.ride!, this.fromId, this.toId),
       },
     });

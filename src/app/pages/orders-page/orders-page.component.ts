@@ -21,6 +21,8 @@ import { Carriage } from '../../features/trips/models/carriage.model';
 import { Station } from '../../features/trips/models/station.model';
 import { OrderForView } from './order/order.component';
 import { User } from '../../features/trips/models/user.model';
+import { calculateTotalRidePrice } from '../../shared/utilities/calculateTotalRidePrice.utility';
+import { getRideSegments } from '../../shared/utilities/getRideSegments.utility';
 
 interface CarriageData {
   number: number;
@@ -93,6 +95,12 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
 
     return orders.map((order) => {
       const carriageData = this.getCarriageData(order, carriages);
+      const rideSegments = getRideSegments(
+        order.schedule.segments,
+        order.path,
+        order.stationStart,
+        order.stationEnd,
+      );
       return {
         id: order.id,
         user: this.getUserName(order.userId, users),
@@ -104,7 +112,7 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
         numberCarriage: carriageData.number,
         typeCarriage: carriageData.type,
         numberSeat: carriageData.seat,
-        price: this.calculateTotalPrice(order, carriageData.type),
+        price: calculateTotalRidePrice(rideSegments, carriageData.type),
         status: order.status,
       };
     });
@@ -123,21 +131,13 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
     const startDate = new Date(startTime);
 
     const endStationIndex = order.path.indexOf(order.stationEnd);
-    const endTime = order.schedule.segments[endStationIndex - 1].time[1];
+    const endTime = order.schedule.segments[endStationIndex].time[1];
     const endDate = new Date(endTime);
 
     const durationMs = endDate.getTime() - startDate.getTime();
     const hours = Math.floor(durationMs / (1000 * 60 * 60));
     const minutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
     return `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
-  }
-
-  private calculateTotalPrice(order: Order, type: string): string {
-    let totalPrice = 0;
-    order.schedule.segments.forEach((segment) => {
-      totalPrice += segment.price[type];
-    });
-    return (totalPrice / 100).toFixed(2);
   }
 
   private getCarriageData(order: Order, carriages: Carriage[] | null): CarriageData {
@@ -188,7 +188,7 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
 
   private getEndData(order: Order): string {
     const endStationIndex = order.path.indexOf(order.stationEnd);
-    const endTime = order.schedule.segments[endStationIndex - 1].time[1];
+    const endTime = order.schedule.segments[endStationIndex].time[1];
     return formatDate(new Date(endTime), 'MMMM dd hh:mm', 'en-US');
   }
 

@@ -19,6 +19,7 @@ import { TripsSearchResultsComponent } from './components/trips-search-results/t
 import { TripItemComponent } from './components/trips-search-results/trip-item/trip-item.component';
 import { TripRouteDialogComponent } from './components/trips-search-results/trip-route-dialog/trip-route-dialog.component';
 import { TripDetailComponent } from './components/trip-detail/trip-detail.component';
+import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
   providers: [provideNativeDateAdapter()],
@@ -33,6 +34,7 @@ import { TripDetailComponent } from './components/trip-detail/trip-detail.compon
   imports: [
     RouterModule,
     CommonModule,
+    SharedModule,
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
