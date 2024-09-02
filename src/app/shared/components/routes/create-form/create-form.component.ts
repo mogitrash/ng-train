@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
-import { FormArray, FormBuilder, FormControl } from '@angular/forms';
-import { Observable, take } from 'rxjs';
+import { FormArray, FormBuilder } from '@angular/forms';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
   MatSnackBar,
@@ -19,12 +19,12 @@ import { selectReasonError } from '../../../../core/store/user/user.selectors';
   styleUrl: './create-form.component.scss',
 })
 export class CreateFormComponent implements OnInit {
-  protected createForm = this.FB.nonNullable.group({
-    stations: this.FB.nonNullable.array([new FormControl('')]),
-    carriages: this.FB.nonNullable.array([new FormControl('')]),
-  });
-
   @Output() changeOpen = new EventEmitter<boolean>();
+
+  protected createForm = this.FB.nonNullable.group({
+    stations: this.FB.nonNullable.array([this.FB.control('')]),
+    carriages: this.FB.nonNullable.array([this.FB.control('')]),
+  });
 
   public stations$: Observable<Station[]>;
 
@@ -63,31 +63,37 @@ export class CreateFormComponent implements OnInit {
     return this.createForm.get('stations') as FormArray;
   }
 
-  public getLastStation(): string | null {
+  protected getLastStation(): string {
     const last = this.stations!.value;
-    return this.createForm.value.stations![last.length - 2];
+    return last
+      .filter((value: string) => {
+        return value !== '';
+      })
+      .slice(-1);
   }
 
-  public getConnectedStationList(): Station[] {
+  private getConnectedList(): { id: number; distance: number }[] {
+    console.log(...this.getLastStation());
+    const indexStation = this.currentStations.findIndex((station) => {
+      return station.id === Number(...this.getLastStation());
+    });
+    return this.currentStations[indexStation].connectedTo ?? { id: 0, distance: 0 };
+  }
+
+  public getConnectedCities(): Station[] {
     const list: Station[] = [];
-    this.stations$.pipe(take(1)).subscribe((stations: Station[]) => {
-      const lastValue = this.getLastStation();
-      const connect = stations.filter((station: Station) => {
-        return station.id === Number(lastValue);
-      });
-      if (connect.length) {
-        connect[0].connectedTo.forEach((item) => {
-          list.push(
-            stations[
-              stations.findIndex((station) => {
-                return station.id === item.id;
-              })
-            ],
-          );
+    this.getConnectedList().forEach(({ id }) => {
+      if (this.currentStations[id]) {
+        list.push(this.currentStations[id]);
+      } else {
+        list.push({
+          id: 0,
+          city: `This station doesn't have connect`,
+          latitude: 0,
+          longitude: 0,
+          connectedTo: [{ id: 0, distance: 0 }],
         });
-        return list;
       }
-      return [];
     });
     return list;
   }
@@ -95,6 +101,17 @@ export class CreateFormComponent implements OnInit {
   public addItem(goal: 'station' | 'carriage'): void {
     if (goal === 'station') this.stations.push(this.FB.control(''));
     if (goal === 'carriage') this.carriages.push(this.FB.control(''));
+  }
+
+  public changeStation(index: number): void {
+    if (index === this.stations.length - 1) {
+      this.addItem('station');
+    } else {
+      while (this.stations.length > index + 2) {
+        this.stations.removeAt(1);
+      }
+      console.log(this.stations.value);
+    }
   }
 
   private reset() {
@@ -108,7 +125,7 @@ export class CreateFormComponent implements OnInit {
   }
 
   public onSubmit() {
-    console.log(this.stations.value[-2]);
+    console.log(this.stations.value);
     if (
       this.createForm.value.carriages!.every((carriage) => {
         return typeof carriage === 'string';
@@ -140,6 +157,7 @@ export class CreateFormComponent implements OnInit {
     this.snackBar.open(`${message}`, 'Close', {
       horizontalPosition: this.horizontalPosition,
       verticalPosition: this.verticalPosition,
+      duration: 3000,
     });
   }
 }

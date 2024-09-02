@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
-import { BehaviorSubject, map, Observable, Subscription, take } from 'rxjs';
+import { map, Observable, Subscription, take } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
   MatSnackBar,
@@ -47,8 +47,6 @@ export class RoutesComponent implements OnInit {
 
   public isReverse: boolean = false;
 
-  public panelOpenState$: BehaviorSubject<boolean>;
-
   private readonly destroyRef: DestroyRef;
 
   private subscription: Subscription | undefined;
@@ -71,16 +69,11 @@ export class RoutesComponent implements OnInit {
     this.destroyRef = inject(DestroyRef);
     this.currentRoute = { id: 0, path: [], carriages: [] };
     this.NumberPage = 1;
-    this.panelOpenState$ = new BehaviorSubject(this.isOpen);
   }
 
   ngOnInit() {
     this.store.dispatch(loadDataForRoutesView());
   }
-
-  // public getCarriageTypes(carriages: string[]): Set<string> {
-  //   return new Set(carriages);
-  // }
 
   public getCities(indexes: number[]): Observable<string[]> {
     const list: string[] = [];
@@ -141,6 +134,7 @@ export class RoutesComponent implements OnInit {
     this.snackBar.open(`${message}`, 'Close', {
       horizontalPosition: this.horizontalPosition,
       verticalPosition: this.verticalPosition,
+      duration: 3000,
     });
   }
 

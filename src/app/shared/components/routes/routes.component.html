@@ -1,6 +1,6 @@
 <div class="wrapper">
   <div class="wrapper-forms-button">
-    <button mat-icon-button (click)="isOpen = true">New route</button>
+    <button mat-icon-button (click)="isOpen = true" [disabled]="updateMode">New route</button>
     <button mat-icon-button (click)="isOpen = false" *ngIf="isOpen">Close</button>
   </div>
   <button class="reverse" mat-icon-button (click)="isReverse = !isReverse">
@@ -12,8 +12,9 @@
 
 <app-update-form
   [currentRoute]="currentRoute"
-  [cities]="getCities(currentRoute.path) | async"
+  [cities]="currentRoute.path"
   *ngIf="updateMode"
+  (closeForm)="updateMode = $event"
 ></app-update-form>
 
 <div class="overlay" *ngIf="isLoading$ | async">
@@ -22,13 +23,11 @@
 
 <div class="dialog" *ngIf="dialogOpen">
   <h2 mat-dialog-title>Delete route</h2>
-  <mat-dialog-content> Would you like to delete route №{{ deleteId }}? </mat-dialog-content>
-  <mat-dialog-actions>
-    <button mat-button mat-dialog-close (click)="dialogOpen = false">No</button>
-    <button mat-button mat-dialog-close cdkFocusInitial (click)="onDeleteRoute(deleteId)">
-      Yes
-    </button>
-  </mat-dialog-actions>
+  <div class="content">Would you like to delete route №{{ deleteId }}?</div>
+  <div class="actions">
+    <button mat-button (click)="dialogOpen = false">No</button>
+    <button mat-button (click)="onDeleteRoute(deleteId)">Yes</button>
+  </div>
 </div>
 
 <mat-divider></mat-divider>
@@ -49,7 +48,7 @@
       (mousemove)="showButtonsGoal()"
       (mouseleave)="hideButtonsGoal()"
     >
-      <button mat-icon-button title="Update" (click)="updateRoute(route)">
+      <button mat-icon-button title="Update" (click)="updateRoute(route)" [disabled]="createMode">
         <mat-icon color="primary">edit_square</mat-icon>
         <span *ngIf="showMode">Update ride</span>
       </button>

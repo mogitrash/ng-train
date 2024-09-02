@@ -41,13 +41,13 @@
     border-radius: 15px;
     border: 2px solid var(--primary-blue);
     background-color: var(--grey-light);
-    .mdc-dialog__content {
+    .content {
       text-align: center;
       width: 100%;
       font-size: 14px;
       margin: 7% auto;
     }
-    .mdc-dialog__actions {
+    .actions {
       display: flex;
       width: 100%;
     }

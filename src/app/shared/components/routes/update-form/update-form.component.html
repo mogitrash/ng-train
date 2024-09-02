@@ -1,26 +1,31 @@
 <form [formGroup]="updateForm" (ngSubmit)="onSubmit()">
   <div class="stations" formArrayName="stations">
     <h2>Stations</h2>
-    <select name="station" *ngFor="let city of cities; index as i">
+    <select
+      [name]="'stations-' + i"
+      *ngFor="let city of cities; index as i"
+      (change)="changeStation(i)"
+      [formControlName]="i"
+    >
       <option
-        [value]="city"
+        [value]="nameCity.id"
         *ngFor="
-          let nameCity of i ? currentStations : getConnectedStationList(stations.value[i - 1]);
+          let nameCity of mode === 'add' ? getConnectedCities() : getConnectedCities(cities[i]);
           index as k
         "
         [selected]="i === k"
       >
-        {{ nameCity }}
+        {{ nameCity.city }}
       </option>
     </select>
   </div>
   <div class="carriages" formArrayName="carriages">
     <h2>Carriages</h2>
     <select
-      id="`${carriages+i}`"
-      name="carriage"
-      *ngFor="let carriage of currentRoute!.carriages; index as i"
+      [name]="'carriages-' + k"
+      *ngFor="let carriage of currentRoute.carriages; index as k"
       [value]="carriage"
+      [formControlName]="k"
     >
       <option
         [value]="carriage"
@@ -31,5 +36,6 @@
       </option>
     </select>
   </div>
-  <button mat-button>Save update Route</button>
+  <button mat-button type="submit">Save update Route</button>
+  <button mat-button (click)="close()">Close</button>
 </form>
