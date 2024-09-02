@@ -2,19 +2,20 @@
   <div class="stations" formArrayName="stations">
     <h2>Stations</h2>
     @if (mode === 'update') {
-      @for (station of updatePathes; track station; let i = $index) {
+      @for (station of currentRoute.path; track station + i; let i = $index) {
         @if (i === 0) {
           <select (change)="changeControls(i, 'station')" [formControlName]="i">
+            <option value="" disabled [selected]="!stations.value[i]">Choose city</option>
             @for (city of stations$ | async; track city.id) {
-              <option [value]="city.id" [defaultSelected]="currentRoute.path[0] === city.id">
+              <option [value]="city.id" [selected]="currentRoute.path[i] === city.id">
                 {{ city.city }}
               </option>
             }
           </select>
         } @else {
           <select [formControlName]="i" (change)="changeControls(i, 'station')">
-            @for (city of updatePathes[i]; track city.city) {
-              <option [value]="city.id" [defaultSelected]="currentRoute.path[i] === city.id">
+            @for (city of getConnectedCities(currentRoute.path[i - 1]); track k; let k = $index) {
+              <option [value]="city.id" [selected]="currentRoute.path[i] === city.id">
                 {{ city.city }}
               </option>
             }
@@ -25,16 +26,17 @@
       @for (station of stations.controls; track station; let i = $index) {
         @if (i === 0) {
           <select (change)="changeControls(i, 'station')" [formControlName]="i">
-            @for (city of stations$ | async; track city.id) {
-              <option [value]="city.id" [defaultSelected]="stations.value[0] === city.id">
+            <option value="" disabled [selected]="!stations.value[i]">Choose city</option>
+            @for (city of stations$ | async; track city.longitude) {
+              <option [value]="city.id" [selected]="stations.controls[0].value === city.id">
                 {{ city.city }}
               </option>
             }
           </select>
         } @else {
           <select (change)="changeControls(i, 'station')" [formControlName]="i">
-            @for (city of getConnectedCities(stations.value[i - 1]); track city.id) {
-              <option [value]="city.id" [defaultSelected]="stations.value[i] === city.id">
+            @for (city of getConnectedCities(stations.value[i - 1]); track city.latitude) {
+              <option [value]="city.id" [selected]="stations.controls[i].value === city.id">
                 {{ city.city }}
               </option>
             }
@@ -47,8 +49,9 @@
     <h2>Carriages</h2>
     @for (carriage of currentRoute.carriages; track carriage + i; let i = $index) {
       <select [formControlName]="i" (change)="changeControls(i, 'carriage')">
-        @for (bag of carriages$ | async; track bag.code) {
-          <option [value]="bag.name" [defaultSelected]="currentRoute.carriages[i] === bag.name">
+        <option value="" disabled [selected]="!carriages.value[i]">Choose city</option>
+        @for (bag of carriages$ | async; track k; let k = $index) {
+          <option [value]="bag.name" [selected]="currentRoute.carriages[i] === bag.name">
             {{ bag.name }}
           </option>
         }

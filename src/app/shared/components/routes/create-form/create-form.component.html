@@ -31,7 +31,11 @@
       [formControlName]="k"
     >
       <option value="" disabled selected>Choose carriage</option>
-      <option [value]="carriage.name" *ngFor="let carriage of carriages$ | async">
+      <option
+        [value]="carriage.name"
+        *ngFor="let carriage of carriages$ | async; index as q"
+        [selected]="carriages.controls[q].value === carriage.name"
+      >
         {{ carriage.name }}
       </option>
     </select>

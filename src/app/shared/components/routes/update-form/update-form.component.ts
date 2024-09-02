@@ -1,12 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  EventEmitter,
-  inject,
-  Input,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
@@ -26,7 +18,7 @@ import { updateRoute } from '../../../../core/store/trips/trips.actions';
   templateUrl: './update-form.component.html',
   styleUrl: './update-form.component.scss',
 })
-export class UpdateFormComponent implements OnInit, AfterViewInit {
+export class UpdateFormComponent implements OnInit {
   @Input() public currentRoute!: Route;
 
   @Output() closeForm = new EventEmitter<boolean>();
@@ -65,21 +57,24 @@ export class UpdateFormComponent implements OnInit, AfterViewInit {
       this.currentStations = stations;
       console.log(this.currentStations, 'stations');
     });
-    console.log(this.currentRoute);
+    console.log(this.currentRoute.path, 'route');
     this.currentRoute.path.forEach((step) => {
       this.stations.push(this.FB.control(`${step}`));
     });
     this.currentRoute.carriages.forEach((carriage) => {
       this.carriages.push(this.FB.control(`${carriage}`));
     });
-    this.updatePathes = this.currentRoute.path.map((step) => {
-      return this.getConnectedCities(step);
-    });
+    // this.updatePathes = this.currentRoute.path.map((step) => {
+    //   return this.getConnectedCities(step);
+    // });
   }
 
-  ngAfterViewInit() {
-    console.log(this.updateForm.value);
-  }
+  // ngAfterViewInit() {
+  //   console.log(this.updateForm.value);
+  // }
+  // public getRandomInt() {
+  //   return Math.floor(Math.random() * this.currentStations.length);
+  // }
 
   public get carriages(): FormArray {
     return this.updateForm.get('carriages') as FormArray;
@@ -95,17 +90,17 @@ export class UpdateFormComponent implements OnInit, AfterViewInit {
       .filter((value: string) => {
         return value !== '';
       })
-      .slice(-1);
+      .pop();
   }
 
   private getConnectedList(index?: number): { id: number; distance: number }[] {
     console.log(index, 'value');
-    const value: number = index || Number(...this.getLastStation());
-    const indexStation = this.currentStations.find((station: Station) => {
+    const value: number = index || Number(this.getLastStation());
+    const queryStation = this.currentStations.find((station: Station) => {
       return station.id === +value;
     });
-    console.log(indexStation);
-    return indexStation ? indexStation.connectedTo : [{ id: 0, distance: 0 }];
+    console.log(queryStation);
+    return queryStation ? queryStation.connectedTo : [{ id: 0, distance: 0 }];
   }
 
   public getConnectedCities(index?: number): Station[] {
