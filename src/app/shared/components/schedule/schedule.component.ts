@@ -16,6 +16,7 @@ import { Station } from '../../../features/trips/models/station.model';
 import { Ride } from '../../../features/trips/models/ride.model';
 import { DialogComponent } from '../dialog/dialog.component';
 import { CreateRideDialogComponent } from '../create-ride-dialog/create-ride-dialog.component';
+import { timetableValidator } from '../../validators/timetable';
 
 @Component({
   selector: 'app-schedule',
@@ -122,7 +123,13 @@ export class ScheduleComponent implements OnInit {
     this.isEnable = undefined;
   }
 
-  protected editTimetable(rideId: number, cell: number, departure: string, arrival: string) {
+  protected editTimetable(
+    ride: Ride,
+    rideId: number,
+    cell: number,
+    departure: string,
+    arrival: string,
+  ) {
     this.isEnable = [rideId, cell];
     this.isEnablePrice = undefined;
 
@@ -134,6 +141,7 @@ export class ScheduleComponent implements OnInit {
       const formattedDeparture = this.datePipe.transform(departure, 'yyyy-MM-dd HH:mm');
       this.timetableForm.controls.departure.setValue(formattedDeparture);
     }
+    this.timetableForm.addValidators(timetableValidator(ride, 1));
   }
 
   protected editPrice(rideId: number, cell: number, price: { [key: string]: number }) {

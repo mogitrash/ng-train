@@ -41,7 +41,13 @@
                           aria-label="delete station icon"
                           fontIcon="edit"
                           (click)="
-                            editTimetable(ride.rideId, idx, ride.schedule.segments[idx].time[0], '')
+                            editTimetable(
+                              ride,
+                              ride.rideId,
+                              idx,
+                              ride.schedule.segments[idx].time[0],
+                              ''
+                            )
                           "
                         ></mat-icon>
                       } @else {
@@ -90,6 +96,7 @@
                           fontIcon="edit"
                           (click)="
                             editTimetable(
+                              ride,
                               ride.rideId,
                               idx,
                               ride.schedule.segments[idx].time[0],
@@ -153,6 +160,7 @@
                           fontIcon="edit"
                           (click)="
                             editTimetable(
+                              ride,
                               ride.rideId,
                               idx,
                               '',
