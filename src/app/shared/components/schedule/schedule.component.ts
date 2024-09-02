@@ -124,11 +124,12 @@ export class ScheduleComponent implements OnInit {
   }
 
   protected editTimetable(
-    ride: Ride,
     rideId: number,
     cell: number,
     departure: string,
     arrival: string,
+    previousArrival: string,
+    nextDeparture: string,
   ) {
     this.isEnable = [rideId, cell];
     this.isEnablePrice = undefined;
@@ -141,7 +142,7 @@ export class ScheduleComponent implements OnInit {
       const formattedDeparture = this.datePipe.transform(departure, 'yyyy-MM-dd HH:mm');
       this.timetableForm.controls.departure.setValue(formattedDeparture);
     }
-    this.timetableForm.addValidators(timetableValidator(ride, 1));
+    this.timetableForm.addValidators(timetableValidator(cell, previousArrival, nextDeparture));
   }
 
   protected editPrice(rideId: number, cell: number, price: { [key: string]: number }) {

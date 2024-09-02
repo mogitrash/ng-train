@@ -1,5 +1,6 @@
 @if (route$ | async; as routes) {
   @for (route of routes; track route.id) {
+    <mat-icon aria-hidden="false" aria-label="back icon" fontIcon="arrow_back"> </mat-icon>
     <h1>Route {{ route.id }}</h1>
     @if (stations$ | async; as stations) {
       <button mat-flat-button (click)="createRideDialog(route, stations)">Create Ride</button>
@@ -42,11 +43,12 @@
                           fontIcon="edit"
                           (click)="
                             editTimetable(
-                              ride,
                               ride.rideId,
                               idx,
                               ride.schedule.segments[idx].time[0],
-                              ''
+                              '',
+                              '',
+                              ride.schedule.segments[idx].time[1]
                             )
                           "
                         ></mat-icon>
@@ -64,6 +66,9 @@
                               <mat-error> Departure is required </mat-error>
                             }
                           </mat-form-field>
+                          @if (timetableForm.hasError('invalidDeparture')) {
+                            <mat-error>{{ timetableForm.getError('invalidDeparture') }}</mat-error>
+                          }
                         </form>
                         <button
                           mat-icon-button
@@ -96,11 +101,12 @@
                           fontIcon="edit"
                           (click)="
                             editTimetable(
-                              ride,
                               ride.rideId,
                               idx,
                               ride.schedule.segments[idx].time[0],
-                              ride.schedule.segments[idx - 1].time[1]
+                              ride.schedule.segments[idx - 1].time[1],
+                              ride.schedule.segments[idx - 1].time[0],
+                              ride.schedule.segments[idx].time[1]
                             )
                           "
                         ></mat-icon>
@@ -118,6 +124,9 @@
                               <mat-error> Departure is required </mat-error>
                             }
                           </mat-form-field>
+                          @if (timetableForm.hasError('invalidDeparture')) {
+                            <mat-error>{{ timetableForm.getError('invalidDeparture') }}</mat-error>
+                          }
                           <br />
                           <mat-form-field appearance="outline">
                             <mat-label>Arrival:</mat-label>
@@ -131,6 +140,9 @@
                               <mat-error> Arrival is required </mat-error>
                             }
                           </mat-form-field>
+                          @if (timetableForm.hasError('invalidArrival')) {
+                            <mat-error>{{ timetableForm.getError('invalidArrival') }}</mat-error>
+                          }
                         </form>
                         <button
                           mat-icon-button
@@ -160,11 +172,12 @@
                           fontIcon="edit"
                           (click)="
                             editTimetable(
-                              ride,
                               ride.rideId,
                               idx,
                               '',
-                              ride.schedule.segments[idx - 1].time[1]
+                              ride.schedule.segments[idx - 1].time[1],
+                              ride.schedule.segments[idx - 1].time[0],
+                              ''
                             )
                           "
                         ></mat-icon>
@@ -182,6 +195,9 @@
                               <mat-error> Arrival is required </mat-error>
                             }
                           </mat-form-field>
+                          @if (timetableForm.hasError('invalidArrival')) {
+                            <mat-error>{{ timetableForm.getError('invalidArrival') }}</mat-error>
+                          }
                         </form>
                         <button
                           mat-icon-button
