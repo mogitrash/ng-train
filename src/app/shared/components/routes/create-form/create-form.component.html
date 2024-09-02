@@ -2,22 +2,21 @@
   <div class="stations" formArrayName="stations">
     <h2>Stations</h2>
     <select
-      [name]="'stations-' + i"
       *ngFor="let item of stations.controls; index as i"
       (change)="changeStation(i)"
       [formControlName]="i"
     >
-      <option value="" disabled selected>Choose city</option>
+      <option value="" disabled [selected]="!stations.value[i]">Choose city</option>
       <ng-container *ngIf="i === 0; else connectedTo">
         @for (station of stations$ | async; track station.city) {
-          <option [value]="station.id">
+          <option [value]="station.id" [selected]="stations.controls[i].value === station.id">
             {{ station.city }}
           </option>
         }
       </ng-container>
       <ng-template #connectedTo>
-        @for (station of getConnectedCities(); track station.city) {
-          <option [value]="station.id">
+        @for (station of getConnectedCities(stations.value[i - 1]); track station.city) {
+          <option [value]="station.id" [selected]="stations.controls[i].value === station.id">
             {{ station.city }}
           </option>
         }
@@ -27,7 +26,6 @@
   <div class="carriages" formArrayName="carriages">
     <h2>Carriages</h2>
     <select
-      [name]="'carriages-' + k"
       *ngFor="let value of carriages.controls; index as k"
       (change)="addItem('carriage')"
       [formControlName]="k"

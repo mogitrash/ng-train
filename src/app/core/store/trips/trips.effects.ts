@@ -458,6 +458,7 @@ export class TripsEffects {
         tripActions.loadDataForRoutesView,
         tripActions.routeCreatedSuccess,
         tripActions.routeDeletedSuccess,
+        tripActions.updateRoute,
       ),
       switchMap(() => {
         return of(

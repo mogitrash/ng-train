@@ -12,7 +12,6 @@
 
 <app-update-form
   [currentRoute]="currentRoute"
-  [cities]="currentRoute.path"
   *ngIf="updateMode"
   (closeForm)="updateMode = $event"
 ></app-update-form>

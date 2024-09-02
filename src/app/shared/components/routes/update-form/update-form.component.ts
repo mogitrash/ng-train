@@ -1,4 +1,12 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
@@ -11,17 +19,15 @@ import { Route } from '../../../../features/trips/models/route.model';
 import { Carriage } from '../../../../features/trips/models/carriage.model';
 import { Station } from '../../../../features/trips/models/station.model';
 import { selectCarriages, selectStations } from '../../../../core/store/trips/trips.selectors';
-import { loadDataForRoutesView } from '../../../../core/store/trips/trips.actions';
+import { updateRoute } from '../../../../core/store/trips/trips.actions';
 
 @Component({
   selector: 'app-update-form',
   templateUrl: './update-form.component.html',
   styleUrl: './update-form.component.scss',
 })
-export class UpdateFormComponent implements OnInit {
+export class UpdateFormComponent implements OnInit, AfterViewInit {
   @Input() public currentRoute!: Route;
-
-  @Input() public cities!: number[];
 
   @Output() closeForm = new EventEmitter<boolean>();
 
@@ -42,6 +48,8 @@ export class UpdateFormComponent implements OnInit {
 
   private verticalPosition: MatSnackBarVerticalPosition = 'bottom';
 
+  public updatePathes!: Station[][];
+
   public mode: 'update' | 'add' = 'update';
 
   constructor(
@@ -55,7 +63,22 @@ export class UpdateFormComponent implements OnInit {
   ngOnInit(): void {
     this.stations$.subscribe((stations) => {
       this.currentStations = stations;
+      console.log(this.currentStations, 'stations');
     });
+    console.log(this.currentRoute);
+    this.currentRoute.path.forEach((step) => {
+      this.stations.push(this.FB.control(`${step}`));
+    });
+    this.currentRoute.carriages.forEach((carriage) => {
+      this.carriages.push(this.FB.control(`${carriage}`));
+    });
+    this.updatePathes = this.currentRoute.path.map((step) => {
+      return this.getConnectedCities(step);
+    });
+  }
+
+  ngAfterViewInit() {
+    console.log(this.updateForm.value);
   }
 
   public get carriages(): FormArray {
@@ -76,16 +99,20 @@ export class UpdateFormComponent implements OnInit {
   }
 
   private getConnectedList(index?: number): { id: number; distance: number }[] {
+    console.log(index, 'value');
     const value: number = index || Number(...this.getLastStation());
-    const indexStation = this.currentStations.findIndex((station) => {
-      return station.id === value;
+    const indexStation = this.currentStations.find((station: Station) => {
+      return station.id === +value;
     });
-    return this.currentStations[indexStation].connectedTo ?? { id: 0, distance: 0 };
+    console.log(indexStation);
+    return indexStation ? indexStation.connectedTo : [{ id: 0, distance: 0 }];
   }
 
   public getConnectedCities(index?: number): Station[] {
+    console.log(index);
     const list: Station[] = [];
     const connectedList = index ? this.getConnectedList(index) : this.getConnectedList();
+    console.log(connectedList, 'Connected');
     connectedList.forEach(({ id }) => {
       if (this.currentStations[id]) {
         list.push(this.currentStations[id]);
@@ -102,21 +129,26 @@ export class UpdateFormComponent implements OnInit {
     return list;
   }
 
-  public addItem(goal: 'station' | 'carriage'): void {
-    if (goal === 'station') this.stations.push(this.FB.control(''));
-    if (goal === 'carriage') this.carriages.push(this.FB.control(''));
-  }
-
-  public changeStation(index: number): void {
-    if (index === this.stations.length - 1) {
-      this.addItem('station');
-    } else {
-      while (this.stations.length > index + 2) {
-        this.stations.removeAt(1);
+  public changeControls(index: number, goal: 'station' | 'carriage'): void {
+    console.log(index);
+    if (goal === 'station') {
+      if (index === this.stations.length - 1) {
+        this.stations.push(this.FB.control(''));
+      } else {
+        while (this.stations.length > index + 2) {
+          this.stations.removeAt(1);
+        }
       }
-      this.mode = 'add';
-      console.log(this.stations.value);
+    } else if (index === this.carriages.length - 1) {
+      this.carriages.push(this.FB.control(''));
+    } else {
+      while (this.carriages.length > index + 2) {
+        this.carriages.removeAt(1);
+      }
     }
+    this.mode = 'add';
+    console.log(this.mode);
+    console.log(this.stations.value[0]);
   }
 
   public onSubmit() {
@@ -126,34 +158,31 @@ export class UpdateFormComponent implements OnInit {
       })
     ) {
       const pathes: number[] = [];
-      this.updateForm.value.stations!.slice(0, -1).forEach((path: string | null) => {
-        pathes.push(Number(path));
+      this.updateForm.value.stations!.forEach((path: string | null) => {
+        if (path !== '' && path) {
+          pathes.push(Number(path));
+        }
       });
-
-      // this.store.dispatch(
-      //   updateRoute({
-      //     id: this.currentRoute.id,
-      //     path: pathes,
-      //     carriages: this.updateForm.value.carriages!.slice(0, -1),
-      //   }),
-      // );
+      console.log(
+        pathes,
+        this.updateForm.value.carriages!.filter((item) => {
+          return item !== '';
+        }),
+      );
+      this.store.dispatch(
+        updateRoute({
+          id: this.currentRoute.id,
+          path: pathes,
+          carriages: this.updateForm.value.carriages!.filter((item) => {
+            return item !== '';
+          }),
+        }),
+      );
     }
-
-    console.log(this.updateForm.value);
 
     this.openSnackBarError(`Route ${this.currentRoute.id} was update`);
 
-    this.store.dispatch(loadDataForRoutesView());
-  }
-
-  private reset() {
-    while (this.carriages.length > 1) {
-      this.carriages.removeAt(1);
-    }
-    while (this.stations.length > 1) {
-      this.stations.removeAt(1);
-    }
-    this.updateForm.reset();
+    this.close();
   }
 
   private openSnackBarError(message: string) {

@@ -63,7 +63,7 @@ export class CreateFormComponent implements OnInit {
     return this.createForm.get('stations') as FormArray;
   }
 
-  protected getLastStation(): string {
+  protected getLastStation(): string[] {
     const last = this.stations!.value;
     return last
       .filter((value: string) => {
@@ -72,17 +72,18 @@ export class CreateFormComponent implements OnInit {
       .slice(-1);
   }
 
-  private getConnectedList(): { id: number; distance: number }[] {
-    console.log(...this.getLastStation());
-    const indexStation = this.currentStations.findIndex((station) => {
-      return station.id === Number(...this.getLastStation());
+  private getConnectedList(index?: number): { id: number; distance: number }[] {
+    const value: number = index || Number(...this.getLastStation());
+    const indexStation = this.currentStations.find((station: Station) => {
+      return station.id === +value;
     });
-    return this.currentStations[indexStation].connectedTo ?? { id: 0, distance: 0 };
+    return indexStation ? indexStation.connectedTo : [{ id: 0, distance: 0 }];
   }
 
-  public getConnectedCities(): Station[] {
+  public getConnectedCities(index?: number): Station[] {
     const list: Station[] = [];
-    this.getConnectedList().forEach(({ id }) => {
+    const connectedList = index ? this.getConnectedList(index) : this.getConnectedList();
+    connectedList.forEach(({ id }) => {
       if (this.currentStations[id]) {
         list.push(this.currentStations[id]);
       } else {
@@ -110,7 +111,6 @@ export class CreateFormComponent implements OnInit {
       while (this.stations.length > index + 2) {
         this.stations.removeAt(1);
       }
-      console.log(this.stations.value);
     }
   }
 
@@ -125,7 +125,6 @@ export class CreateFormComponent implements OnInit {
   }
 
   public onSubmit() {
-    console.log(this.stations.value);
     if (
       this.createForm.value.carriages!.every((carriage) => {
         return typeof carriage === 'string';
