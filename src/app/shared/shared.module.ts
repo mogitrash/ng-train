@@ -12,6 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDialogModule } from '@angular/material/dialog';
 import { CarriageComponent } from './components/carriage/carriage.component';
 import { SplitSeatsPipe } from './pipes/split-seats.pipe';
 import { AdminCarriagesComponent } from './components/admin-carriages/admin-carriages.component';
@@ -55,6 +56,7 @@ import { CreateFormComponent } from './components/routes/create-form/create-form
     MatInputModule,
     MatDividerModule,
     MatExpansionModule,
+    MatDialogModule,
   ],
   exports: [CarriageComponent, AdminCarriagesComponent, StationsComponent, RoutesComponent],
 })

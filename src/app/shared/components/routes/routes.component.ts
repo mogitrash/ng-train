@@ -1,6 +1,11 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { BehaviorSubject, map, Observable, Subscription, take } from 'rxjs';
 import { Store } from '@ngrx/store';
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
 import { Station } from '../../../features/trips/models/station.model';
 import { Carriage } from '../../../features/trips/models/carriage.model';
 import { CityInfo, Route } from '../../../features/trips/models/route.model';
@@ -47,6 +52,16 @@ export class RoutesComponent implements OnInit {
   private readonly destroyRef: DestroyRef;
 
   private subscription: Subscription | undefined;
+
+  public deleteId: number = 0;
+
+  public dialogOpen: boolean = false;
+
+  private snackBar = inject(MatSnackBar);
+
+  private horizontalPosition: MatSnackBarHorizontalPosition = 'start';
+
+  private verticalPosition: MatSnackBarVerticalPosition = 'bottom';
 
   constructor(private readonly store: Store) {
     this.isLoading$ = this.store.select(selectLoading);
@@ -118,6 +133,20 @@ export class RoutesComponent implements OnInit {
 
   protected onDeleteRoute(id: number) {
     this.store.dispatch(deleteRoute({ id }));
+    this.dialogOpen = false;
+    this.openSnackBarError(`Route ${id} deleted`);
+  }
+
+  private openSnackBarError(message: string) {
+    this.snackBar.open(`${message}`, 'Close', {
+      horizontalPosition: this.horizontalPosition,
+      verticalPosition: this.verticalPosition,
+    });
+  }
+
+  openDialog(id: number): void {
+    this.deleteId = id;
+    this.dialogOpen = true;
   }
 
   // ngOnDestroy(): void {

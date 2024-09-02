@@ -13,12 +13,22 @@
 <app-update-form
   [currentRoute]="currentRoute"
   [cities]="getCities(currentRoute.path) | async"
-  [carriages]="carriages$ | async"
   *ngIf="updateMode"
 ></app-update-form>
 
 <div class="overlay" *ngIf="isLoading$ | async">
   <mat-spinner></mat-spinner>
+</div>
+
+<div class="dialog" *ngIf="dialogOpen">
+  <h2 mat-dialog-title>Delete route</h2>
+  <mat-dialog-content> Would you like to delete route №{{ deleteId }}? </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close (click)="dialogOpen = false">No</button>
+    <button mat-button mat-dialog-close cdkFocusInitial (click)="onDeleteRoute(deleteId)">
+      Yes
+    </button>
+  </mat-dialog-actions>
 </div>
 
 <mat-divider></mat-divider>
@@ -47,7 +57,7 @@
         <mat-icon color="primary">train</mat-icon>
         <span *ngIf="showMode">Assign ride</span>
       </button>
-      <button mat-icon-button title="Delete ride" (click)="onDeleteRoute(route.id)">
+      <button mat-icon-button title="Delete ride" (click)="openDialog(route.id)">
         <mat-icon color="primary">delete</mat-icon>
         <span *ngIf="showMode">Delete ride</span>
       </button>

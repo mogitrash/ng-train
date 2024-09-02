@@ -19,8 +19,6 @@ export class UpdateFormComponent implements OnInit {
 
   @Input() public cities: string[] | null = null;
 
-  @Input() public typeCarriages: Carriage[] | null = null;
-
   public carriages$: Observable<Carriage[]>;
 
   public stations$: Observable<Station[]>;
