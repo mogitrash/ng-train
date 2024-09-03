@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDivider } from '@angular/material/divider';
 import { RouterModule } from '@angular/router';
+
 import { MatInputModule } from '@angular/material/input';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { TripsSearchComponent } from './components/trips-search/trips-search.component';
@@ -20,6 +21,7 @@ import { TripItemComponent } from './components/trips-search-results/trip-item/t
 import { TripRouteDialogComponent } from './components/trips-search-results/trip-route-dialog/trip-route-dialog.component';
 import { TripDetailComponent } from './components/trip-detail/trip-detail.component';
 import { SharedModule } from '../../shared/shared.module';
+
 
 @NgModule({
   providers: [provideNativeDateAdapter()],
@@ -32,6 +34,7 @@ import { SharedModule } from '../../shared/shared.module';
     TripDetailComponent,
   ],
   imports: [
+    CommonModule,
     RouterModule,
     CommonModule,
     SharedModule,

@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, DestroyRef, ViewChild, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import * as L from 'leaflet';
 import { Observable, Subscription } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -72,6 +79,7 @@ export class StationsComponent implements AfterViewInit {
     private store: Store,
     private popupService: PopUpService,
     private formBuilder: FormBuilder,
+    private cdr: ChangeDetectorRef,
   ) {
     this.destroyRef = inject(DestroyRef);
     this.store.dispatch(loadStations());
@@ -84,6 +92,18 @@ export class StationsComponent implements AfterViewInit {
     this.stations$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((stations) => {
       this.updateMap(stations);
     });
+    this.stationForm.controls.latitude.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((lat) => {
+        this.updateMarkerPosition(lat, this.stationForm.controls.longitude.value);
+      });
+
+    this.stationForm.controls.longitude.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((lng) => {
+        this.updateMarkerPosition(this.stationForm.controls.latitude.value, lng);
+      });
+    this.cdr.detectChanges();
   }
 
   get relations(): FormArray {
@@ -128,6 +148,16 @@ export class StationsComponent implements AfterViewInit {
       marker.addTo(this.map);
       this.markers.push(marker);
     });
+  }
+
+  private updateMarkerPosition(lat: number, lng: number): void {
+    if (this.marker) {
+      this.map.removeLayer(this.marker);
+    }
+    this.marker = L.marker([lat, lng], {
+      icon: redIcon,
+      draggable: true,
+    }).addTo(this.map);
   }
 
   private onMapClick(e: L.LeafletMouseEvent): void {

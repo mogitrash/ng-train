@@ -143,6 +143,9 @@ export const loadDataForOrdersView = createAction(
   '[Trips] Load Data For View Orders',
   props<{ role: 'manager' | 'user' }>(),
 );
+
+export const loadDataForRoutesView = createAction('[Trips] Load Data For View Routes');
+
 export const loadDataForOrdersViewSuccess = createAction(
   '[Trips] Load Data For View Orders Success',
   props<{ carriages: Carriage[]; stations: Station[]; orders: Order[]; users?: User[] }>(),
@@ -153,12 +156,6 @@ export const loadUsers = createAction('[Trips] Load Users');
 export const usersLoadedSuccess = createAction(
   '[Trips] Users Loaded Success',
   props<{ users: User[] }>(),
-);
-
-export const loadRideById = createAction('[Trips] Load Ride By Id', props<{ rideId: number }>());
-export const rideLoadedByIdSuccess = createAction(
-  '[Trips] Ride Loaded By Id Success',
-  props<{ ride: Ride }>(),
 );
 
 // Rides
@@ -177,6 +174,16 @@ export const createRideSuccess = createAction(
   props<{ id: number }>(),
 );
 
+export const loadRideById = createAction('[Trips] Load Ride By Id', props<{ rideId: number }>());
+export const rideLoadedByIdSuccess = createAction(
+  '[Trips] Ride Loaded By Id Success',
+  props<{ ride: Ride }>(),
+);
+
+export const ridesLoadedByRouteSuccess = createAction(
+  '[Trips] Rides Loaded By Route Success',
+  props<{ rides: Ride[] }>(),
+);
 export const updateRide = createAction(
   '[Trips] Update Ride',
   props<{
@@ -188,7 +195,25 @@ export const updateRide = createAction(
     }[];
   }>(),
 );
-export const updateRideSuccess = createAction('[Trips] Update Ride Success');
+export const updateRideSuccess = createAction(
+  '[Trips] Update Ride Success',
+  props<{
+    rideId: number;
+    segments: {
+      time: [string, string];
+      price: { [key: string]: number };
+    }[];
+  }>(),
+);
+
+export const deleteRideById = createAction(
+  '[Trips] Delete Ride',
+  props<{ routeId: number; rideId: number }>(),
+);
+export const deleteRideByIdSuccess = createAction(
+  '[Trips] Delete Ride Success',
+  props<{ rideId: number }>(),
+);
 
 // Fail
 export const failureSnackBar = createAction(
