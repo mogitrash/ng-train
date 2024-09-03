@@ -68,7 +68,7 @@
   <mat-divider></mat-divider>
   <div class="cities">
     <h4>Cities:</h4>
-    <span *ngFor="let city of getCities(route.path) | async; last as isLast"
+    <span *ngFor="let city of getCities(route.path); last as isLast"
       >{{ isLast ? city : city + ' -' }}
     </span>
   </div>

@@ -60,6 +60,9 @@ export class UpdateFormComponent implements OnInit, OnDestroy {
     this.subscribeStations$ = this.stations$.subscribe((stations) => {
       this.currentStations = stations;
     });
+    this.subscribeCarriages$ = this.carriages$.subscribe((carry) => {
+      this.carriagesList = carry;
+    });
     this.currentRoute.path.forEach((step, index) => {
       this.stations.controls[index].setValue(`${step}`);
       this.stations.push(this.FB.control(''));
@@ -67,9 +70,6 @@ export class UpdateFormComponent implements OnInit, OnDestroy {
     this.currentRoute.carriages.forEach((carriage, index) => {
       this.carriages.controls[index].setValue(`${carriage}`);
       this.carriages.push(this.FB.control(''));
-    });
-    this.subscribeCarriages$ = this.carriages$.subscribe((carry) => {
-      this.carriagesList = carry;
     });
   }
 
@@ -101,7 +101,7 @@ export class UpdateFormComponent implements OnInit, OnDestroy {
       } else {
         list.push({
           id: 0,
-          city: `This station doesn't have connect`,
+          city: `This station has no contacts`,
           latitude: 0,
           longitude: 0,
           connectedTo: [{ id: 0, distance: 0 }],

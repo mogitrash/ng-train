@@ -21,6 +21,12 @@
           </option>
         }
       </ng-template>
+      <option
+        *ngIf="currentRoute.path[i] === 0"
+        [selected]="stations.controls[stations.controls.length - 1].value === ''"
+      >
+        City0(Test)
+      </option>
     </select>
   </div>
   <div class="carriages" formArrayName="carriages">

@@ -1,5 +1,13 @@
-import { Component, DestroyRef, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
-import { map, Observable, take } from 'rxjs';
+import {
+  Component,
+  DestroyRef,
+  ElementRef,
+  inject,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
   MatSnackBar,
@@ -23,7 +31,7 @@ import { deleteRoute, loadDataForRoutesView } from '../../../core/store/trips/tr
   templateUrl: './routes.component.html',
   styleUrl: './routes.component.scss',
 })
-export class RoutesComponent implements OnInit {
+export class RoutesComponent implements OnInit, OnDestroy {
   @ViewChild('formElement') formElement!: ElementRef;
 
   public routes$: Observable<Route[]>;
@@ -62,6 +70,10 @@ export class RoutesComponent implements OnInit {
 
   private verticalPosition: MatSnackBarVerticalPosition = 'bottom';
 
+  private subscribe$!: Subscription;
+
+  protected listStations!: Station[];
+
   constructor(
     private readonly store: Store,
     private router: Router,
@@ -76,21 +88,27 @@ export class RoutesComponent implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(loadDataForRoutesView());
+    this.subscribe$ = this.stations$.subscribe((stations) => {
+      this.listStations = stations;
+    });
   }
 
-  public getCities(indexes: number[]): Observable<string[]> {
-    const list: string[] = [];
-    return this.stations$.pipe(
-      take(1),
-      map((stations) => {
-        stations.forEach((station) => {
-          if (indexes.includes(station.id)) {
-            list.push(station.city);
-          }
-        });
-        return list;
-      }),
-    );
+  public getCities(indexes: number[]): string[] {
+    const list: string[] = new Array(indexes.length).fill('');
+    indexes.forEach((idx: number) => {
+      if (idx === 0) {
+        list.push('City0(This station has no contacts)');
+      }
+      const findIndex = this.listStations.find((station) => {
+        return +idx === +station.id;
+      });
+      if (findIndex) {
+        list.push(findIndex.city);
+      }
+    });
+    return list.filter((item) => {
+      return item !== '';
+    });
   }
 
   protected updateRoute(route: Route): void {
@@ -147,9 +165,11 @@ export class RoutesComponent implements OnInit {
     this.dialogOpen = true;
   }
 
-  // public goToSchedule(id: number) {}
-
   private scrollToForm() {
     this.formElement.nativeElement.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  ngOnDestroy() {
+    this.subscribe$.unsubscribe();
   }
 }
