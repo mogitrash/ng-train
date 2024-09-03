@@ -14,6 +14,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { RouterModule } from '@angular/router';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { CarriageComponent } from './components/carriage/carriage.component';
 import { SplitSeatsPipe } from './pipes/split-seats.pipe';
 import { AdminCarriagesComponent } from './components/admin-carriages/admin-carriages.component';
@@ -26,6 +27,8 @@ import { RoutesComponent } from './components/routes/routes.component';
 import { ScheduleComponent } from './components/schedule/schedule.component';
 import { CreateRideDialogComponent } from './components/create-ride-dialog/create-ride-dialog.component';
 import { DialogComponent } from './components/dialog/dialog.component';
+import { UpdateFormComponent } from './components/routes/update-form/update-form.component';
+import { CreateFormComponent } from './components/routes/create-form/create-form.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +44,8 @@ import { DialogComponent } from './components/dialog/dialog.component';
     ReversePipe,
     RoutesComponent,
     StationsComponent,
+    UpdateFormComponent,
+    CreateFormComponent,
   ],
   imports: [
     CommonModule,
@@ -58,6 +63,12 @@ import { DialogComponent } from './components/dialog/dialog.component';
     MatDialogModule,
     FormsModule,
     RouterModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatInputModule,
+    MatDividerModule,
+    MatExpansionModule,
+    MatDialogModule,
   ],
   providers: [DatePipe],
   exports: [CarriageComponent, AdminCarriagesComponent, StationsComponent, RoutesComponent],

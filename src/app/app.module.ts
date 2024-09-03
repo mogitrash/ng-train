@@ -1,4 +1,3 @@
-import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { StoreModule } from '@ngrx/store';
@@ -8,12 +7,13 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatDividerModule } from '@angular/material/divider';
+import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -64,6 +64,7 @@ import { SharedModule } from './shared/shared.module';
     EffectsModule.forRoot([TripsEffects, UserEffects]),
     StoreDevtoolsModule.instrument(),
     UserModule,
+    SharedModule,
     MatButtonModule,
     MatCardModule,
     MatTableModule,
@@ -73,7 +74,6 @@ import { SharedModule } from './shared/shared.module';
     MatSelectModule,
     ReactiveFormsModule,
     MatDividerModule,
-    SharedModule,
   ],
   providers: [
     provideAnimationsAsync(),

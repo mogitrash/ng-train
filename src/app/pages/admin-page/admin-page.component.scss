@@ -2,14 +2,14 @@
 
 :host {
   display: flex;
-  @media (max-width: 500px) {
+  @media (max-width: 770px) {
     flex-direction: column;
   }
 
   .content-wrapper {
     padding-left: 2rem;
     width: 100%;
-    @media (max-width: 500px) {
+    @media (max-width: 770px) {
       padding-left: 0;
       padding-top: 2rem;
     }
@@ -22,7 +22,7 @@
     button {
       width: 10rem;
     }
-    @media (max-width: 500px) {
+    @media (max-width: 770px) {
       width: 100%;
       flex-direction: row;
     }

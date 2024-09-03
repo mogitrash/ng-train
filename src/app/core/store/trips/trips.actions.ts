@@ -143,6 +143,9 @@ export const loadDataForOrdersView = createAction(
   '[Trips] Load Data For View Orders',
   props<{ role: 'manager' | 'user' }>(),
 );
+
+export const loadDataForRoutesView = createAction('[Trips] Load Data For View Routes');
+
 export const loadDataForOrdersViewSuccess = createAction(
   '[Trips] Load Data For View Orders Success',
   props<{ carriages: Carriage[]; stations: Station[]; orders: Order[]; users?: User[] }>(),
