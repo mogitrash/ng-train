@@ -1,11 +1,13 @@
 import { createAction, props } from '@ngrx/store';
 import { Station } from '../../../features/trips/models/station.model';
-import { Route } from '../../../features/trips/models/route.model';
 import { Carriage } from '../../../features/trips/models/carriage.model';
 import { Order } from '../../../features/trips/models/order.model';
 import { User } from '../../../features/trips/models/user.model';
 import { Ride } from '../../../features/trips/models/ride.model';
-import { SearchResponse } from '../../../features/trips/models/searchResponse.model';
+import { Route } from '../../../features/trips/models/route.model';
+import { SearchResponse } from '../../models/trips.model';
+
+export const setSearchDate = createAction('[Trips] Set Search Date', props<{ date: Date }>());
 
 // Search
 export const loadSearch = createAction(
@@ -156,12 +158,6 @@ export const usersLoadedSuccess = createAction(
   props<{ users: User[] }>(),
 );
 
-export const loadRideById = createAction('[Trips] Load Ride By Id', props<{ rideId: number }>());
-export const rideLoadedByIdSuccess = createAction(
-  '[Trips] Ride Loaded By Id Success',
-  props<{ ride: Ride }>(),
-);
-
 // Rides
 export const createRide = createAction(
   '[Trips] Create Ride',
@@ -178,6 +174,16 @@ export const createRideSuccess = createAction(
   props<{ id: number }>(),
 );
 
+export const loadRideById = createAction('[Trips] Load Ride By Id', props<{ rideId: number }>());
+export const rideLoadedByIdSuccess = createAction(
+  '[Trips] Ride Loaded By Id Success',
+  props<{ ride: Ride }>(),
+);
+
+export const ridesLoadedByRouteSuccess = createAction(
+  '[Trips] Rides Loaded By Route Success',
+  props<{ rides: Ride[] }>(),
+);
 export const updateRide = createAction(
   '[Trips] Update Ride',
   props<{
@@ -189,7 +195,25 @@ export const updateRide = createAction(
     }[];
   }>(),
 );
-export const updateRideSuccess = createAction('[Trips] Update Ride Success');
+export const updateRideSuccess = createAction(
+  '[Trips] Update Ride Success',
+  props<{
+    rideId: number;
+    segments: {
+      time: [string, string];
+      price: { [key: string]: number };
+    }[];
+  }>(),
+);
+
+export const deleteRideById = createAction(
+  '[Trips] Delete Ride',
+  props<{ routeId: number; rideId: number }>(),
+);
+export const deleteRideByIdSuccess = createAction(
+  '[Trips] Delete Ride Success',
+  props<{ rideId: number }>(),
+);
 
 // Fail
 export const failureSnackBar = createAction(

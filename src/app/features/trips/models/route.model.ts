@@ -4,7 +4,7 @@ export interface Route {
   id: number;
   path: number[];
   carriages: string[];
-  schedule?: Schedule[];
+  schedule: Schedule[];
 }
 
 export interface CityInfo {

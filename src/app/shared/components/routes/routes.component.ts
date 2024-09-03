@@ -6,6 +6,7 @@ import {
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { Station } from '../../../features/trips/models/station.model';
 import { Carriage } from '../../../features/trips/models/carriage.model';
 import { CityInfo, Route } from '../../../features/trips/models/route.model';
@@ -41,7 +42,7 @@ export class RoutesComponent implements OnInit {
 
   public citiesList: CityInfo[] = [];
 
-  public currentRoute: Route;
+  public currentRoute!: Route;
 
   public NumberPage: number;
 
@@ -61,13 +62,15 @@ export class RoutesComponent implements OnInit {
 
   private verticalPosition: MatSnackBarVerticalPosition = 'bottom';
 
-  constructor(private readonly store: Store) {
+  constructor(
+    private readonly store: Store,
+    private router: Router,
+  ) {
     this.isLoading$ = this.store.select(selectLoading);
     this.routes$ = this.store.select(selectRoutes);
     this.stations$ = this.store.select(selectStations);
     this.carriages$ = this.store.select(selectCarriages);
     this.destroyRef = inject(DestroyRef);
-    this.currentRoute = { id: 0, path: [], carriages: [] };
     this.NumberPage = 1;
   }
 
@@ -143,6 +146,8 @@ export class RoutesComponent implements OnInit {
     this.deleteId = id;
     this.dialogOpen = true;
   }
+
+  // public goToSchedule(id: number) {}
 
   private scrollToForm() {
     this.formElement.nativeElement.scrollIntoView({ behavior: 'smooth' });

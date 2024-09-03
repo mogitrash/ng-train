@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+
 import {
   catchError,
   delay,
@@ -6,6 +7,7 @@ import {
   exhaustMap,
   forkJoin,
   map,
+  mergeMap,
   of,
   startWith,
   switchMap,
@@ -15,6 +17,8 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TripsService } from '../../../features/trips/services/trips.service';
 import * as tripActions from './trips.actions';
+import { Ride } from '../../../features/trips/models/ride.model';
+import { RideInfo, SearchResponse } from '../../models/trips.model';
 import { Carriage } from '../../../features/trips/models/carriage.model';
 
 @Injectable()
@@ -33,7 +37,34 @@ export class TripsEffects {
           )
           .pipe(
             map((search) => {
-              return tripActions.searchLoadedSuccess({ search });
+              const searchResponse: SearchResponse = {};
+              const { from, routes, to } = search;
+
+              routes.forEach((route) => {
+                const fromStationIndex = route.path.indexOf(from.stationId);
+                const toStationIndex = route.path.indexOf(to.stationId);
+
+                route.schedule.forEach((schedule) => {
+                  const rideSegments = schedule.segments.slice(fromStationIndex, toStationIndex);
+                  const groupDate = rideSegments[0].time[0].split('T')[0];
+
+                  const rideInfoList = searchResponse[groupDate];
+                  const rideInfo: RideInfo = {
+                    from,
+                    to,
+                    rideId: schedule.rideId,
+                    segments: rideSegments,
+                  };
+
+                  if (rideInfoList) {
+                    rideInfoList.push(rideInfo);
+                  } else {
+                    searchResponse[groupDate] = [rideInfo];
+                  }
+                });
+              });
+
+              return tripActions.searchLoadedSuccess({ search: searchResponse });
             }),
             catchError((error) => {
               return of(tripActions.failureSnackBar(error));
@@ -354,7 +385,42 @@ export class TripsEffects {
             return tripActions.routeLoadedByIdSuccess({ route });
           }),
           catchError((error) => {
-            return of(tripActions.failureSnackBar(error));
+            return of(tripActions.failureSnackBar({ error }));
+          }),
+        );
+      }),
+    );
+  });
+
+  loadRidesForRoutes$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(tripActions.routeLoadedByIdSuccess),
+      mergeMap((action) => {
+        const schedule = action.route.schedule || [];
+        return forkJoin(
+          schedule.map((item) => {
+            return this.tripsService.getRideById(item.rideId).pipe(
+              map((ride) => {
+                return { ride };
+              }),
+              catchError((error) => {
+                return of({ error, rideId: item.rideId });
+              }),
+            );
+          }),
+        ).pipe(
+          map((results) => {
+            const successfulRides = results.filter((result): result is { ride: Ride } => {
+              return 'ride' in result;
+            });
+            return tripActions.ridesLoadedByRouteSuccess({
+              rides: successfulRides.map((result) => {
+                return result.ride;
+              }),
+            });
+          }),
+          catchError((error) => {
+            return of(tripActions.failureSnackBar({ error }));
           }),
         );
       }),
@@ -392,7 +458,7 @@ export class TripsEffects {
   loadRideById$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(tripActions.loadRideById),
-      exhaustMap((action) => {
+      mergeMap((action) => {
         return this.tripsService.getRideById(action.rideId).pipe(
           map((ride) => {
             return tripActions.rideLoadedByIdSuccess({ ride });
@@ -411,7 +477,7 @@ export class TripsEffects {
       exhaustMap((action) => {
         return this.tripsService.createRide(action.routeId, action.segments).pipe(
           map((id) => {
-            return tripActions.createRideSuccess(id);
+            return tripActions.loadRideById({ rideId: id.id });
           }),
           catchError((error) => {
             return of(tripActions.failureSnackBar(error));
@@ -427,7 +493,25 @@ export class TripsEffects {
       exhaustMap((action) => {
         return this.tripsService.updateRide(action.routeId, action.rideId, action.segments).pipe(
           map(() => {
-            return tripActions.updateRideSuccess();
+            return tripActions.loadRideById({
+              rideId: action.rideId,
+            });
+          }),
+          catchError((error) => {
+            return of(tripActions.failureSnackBar(error));
+          }),
+        );
+      }),
+    );
+  });
+
+  deleteRide$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(tripActions.deleteRideById),
+      exhaustMap((action) => {
+        return this.tripsService.deleteRide(action.routeId, action.rideId).pipe(
+          map(() => {
+            return tripActions.deleteRideByIdSuccess({ rideId: action.rideId });
           }),
           catchError((error) => {
             return of(tripActions.failureSnackBar(error));

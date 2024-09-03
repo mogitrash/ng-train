@@ -55,7 +55,7 @@
         <mat-icon color="primary">edit_square</mat-icon>
         <span *ngIf="showMode">Update ride</span>
       </button>
-      <button mat-icon-button title="Assign ride">
+      <button mat-icon-button title="Assign ride" [routerLink]="[route.id]">
         <mat-icon color="primary">train</mat-icon>
         <span *ngIf="showMode">Assign ride</span>
       </button>

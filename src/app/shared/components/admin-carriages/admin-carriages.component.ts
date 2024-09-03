@@ -18,7 +18,7 @@ export class AdminCarriagesComponent implements OnInit, OnDestroy {
 
   protected updatedCarriage: Carriage | null = null;
 
-  protected isOpenForm: boolean = false;
+  protected isFormOpen: boolean = false;
 
   protected formType: 'create' | 'update' = 'create';
 
@@ -41,19 +41,19 @@ export class AdminCarriagesComponent implements OnInit, OnDestroy {
   }
 
   protected onSelectedUpdateCarriage(carriage: Carriage) {
-    this.isOpenForm = true;
+    this.isFormOpen = true;
     this.formType = 'update';
     this.updatedCarriage = carriage;
-    if (this.isOpenForm) {
+    if (this.isFormOpen) {
       this.scrollToForm();
     }
   }
 
   toggleOpenForm() {
-    if (!this.isOpenForm) {
+    if (!this.isFormOpen) {
       this.updatedCarriage = null;
     }
-    this.isOpenForm = !this.isOpenForm;
+    this.isFormOpen = !this.isFormOpen;
   }
 
   scrollToForm() {

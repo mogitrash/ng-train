@@ -3,6 +3,7 @@ import { TripsState } from '../../models/trips.model';
 import {
   carriagesCreatedSuccess,
   carriagesLoadedSuccess,
+  deleteRideByIdSuccess,
   loadingFinished,
   loadingStarted,
   carriageUpdatedSuccess,
@@ -11,11 +12,15 @@ import {
   orderDeletedSuccess,
   ordersLoadedSuccess,
   rideLoadedByIdSuccess,
+  ridesLoadedByRouteSuccess,
   routeLoadedByIdSuccess,
   routesLoadedSuccess,
   searchLoadedSuccess,
+  setSearchDate,
   stationsLoadedSuccess,
+  updateRideSuccess,
   usersLoadedSuccess,
+  failureSnackBar,
 } from './trips.actions';
 
 const inititalTripState: TripsState = {
@@ -31,6 +36,9 @@ const inititalTripState: TripsState = {
 
 export const tripsReducer = createReducer(
   inititalTripState,
+  on(setSearchDate, (state, { date }): TripsState => {
+    return { ...state, searchDate: date };
+  }),
   on(searchLoadedSuccess, (state, { search }): TripsState => {
     return { ...state, searchResponses: [...state.searchResponses, search] };
   }),
@@ -53,7 +61,35 @@ export const tripsReducer = createReducer(
     return { ...state, routes: [...state.routes, route] };
   }),
   on(rideLoadedByIdSuccess, (state, { ride }): TripsState => {
-    return { ...state, rides: [...state.rides, ride] };
+    const updatedRides = state.rides.map((r) => {
+      return r.rideId === ride.rideId ? ride : r;
+    });
+    const rideExists = state.rides.some((r) => {
+      return r.rideId === ride.rideId;
+    });
+    return {
+      ...state,
+      rides: rideExists ? updatedRides : [...state.rides, ride],
+    };
+  }),
+  on(ridesLoadedByRouteSuccess, (state, { rides }): TripsState => {
+    return { ...state, rides };
+  }),
+  on(updateRideSuccess, (state, { rideId, segments }): TripsState => {
+    return {
+      ...state,
+      rides: state.rides.map((ride) => {
+        return ride.rideId === rideId ? { ...ride, segments } : ride;
+      }),
+    };
+  }),
+  on(deleteRideByIdSuccess, (state, { rideId }): TripsState => {
+    return {
+      ...state,
+      rides: state.rides.filter((ride) => {
+        return ride.rideId !== rideId;
+      }),
+    };
   }),
   on(rideLoadedByIdSuccess, (state, { ride }): TripsState => {
     return { ...state, rides: [...state.rides, ride] };
@@ -62,6 +98,9 @@ export const tripsReducer = createReducer(
     return { ...state, loading: true };
   }),
   on(loadingFinished, (state): TripsState => {
+    return { ...state, loading: false };
+  }),
+  on(failureSnackBar, (state): TripsState => {
     return { ...state, loading: false };
   }),
   on(loadDataForOrdersViewSuccess, (state, { carriages, stations, orders }): TripsState => {

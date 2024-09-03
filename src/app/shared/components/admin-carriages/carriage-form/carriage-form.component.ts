@@ -11,7 +11,7 @@ import { createCarriage, updateCarriage } from '../../../../core/store/trips/tri
   styleUrl: './carriage-form.component.scss',
 })
 export class CarriageFormComponent implements OnInit, OnDestroy {
-  @Input() carriage!: Carriage | null;
+  @Input() carriage?: Carriage | null;
 
   @Input({ required: true }) countCarriages!: number;
 
