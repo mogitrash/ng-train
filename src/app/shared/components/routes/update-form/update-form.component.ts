@@ -48,8 +48,6 @@ export class UpdateFormComponent implements OnInit, OnDestroy {
 
   public updatePathes!: Station[][];
 
-  // public mode: 'update' | 'add' = 'update';
-
   constructor(
     private readonly store: Store,
     private FB: FormBuilder,
@@ -73,17 +71,7 @@ export class UpdateFormComponent implements OnInit, OnDestroy {
     this.subscribeCarriages$ = this.carriages$.subscribe((carry) => {
       this.carriagesList = carry;
     });
-    // this.updatePathes = this.currentRoute.path.map((step) => {
-    //   return this.getConnectedCities(step);
-    // });
   }
-
-  // ngAfterViewInit() {
-  //   console.log(this.updateForm.value);
-  // }
-  // public getRandomInt() {
-  //   return Math.floor(Math.random() * this.currentStations.length);
-  // }
 
   public get carriages(): FormArray {
     return this.updateForm.get('carriages') as FormArray;
@@ -93,32 +81,17 @@ export class UpdateFormComponent implements OnInit, OnDestroy {
     return this.updateForm.get('stations') as FormArray;
   }
 
-  // protected getLastStation(): string[] {
-  //   console.log('ny');
-  //   const last = this.stations!.value.filter((value: string) => {
-  //     return value !== '';
-  //   });
-  //   return last.slice(last.length - 1);
-  // }
-
   private getConnectedList(index: number): { id: number; distance: number }[] {
-    console.log(this.updateForm.value);
-    console.log(index, 'value');
     const value: number = index;
-    // || Number(this.getLastStation());
     const queryStation = this.currentStations.find((station: Station) => {
       return station.id === +value;
     });
-    console.log(queryStation);
     return queryStation ? queryStation.connectedTo : [{ id: 0, distance: 0 }];
   }
 
   public getConnectedCities(index: number): Station[] {
-    console.log(index);
     const list: Station[] = [];
     const connectedList = this.getConnectedList(index);
-    // : this.getConnectedList();
-    console.log(connectedList, 'Connected');
     connectedList.forEach(({ id }) => {
       const queryStation = this.currentStations.find((station: Station) => {
         return station.id === +id;
@@ -139,7 +112,6 @@ export class UpdateFormComponent implements OnInit, OnDestroy {
   }
 
   public changeControls(index: number, goal: 'station' | 'carriage'): void {
-    console.log(this.updateForm.value);
     if (goal === 'station') {
       if (index === this.stations.length - 1) {
         this.stations.push(this.FB.control(''));
@@ -149,12 +121,16 @@ export class UpdateFormComponent implements OnInit, OnDestroy {
         }
         this.stations.push(this.FB.control(''));
       }
-    } else if (index === this.carriages.length - 1) {
+    } else if (
+      index === this.carriages.length - 1 &&
+      this.carriages.controls[index]!.value !== ''
+    ) {
       this.carriages.push(this.FB.control(''));
-    } else {
-      while (this.carriages.length > index + 2) {
-        this.carriages.removeAt(1);
-      }
+    } else if (
+      index !== this.carriages.length - 1 &&
+      this.carriages.controls[index]!.value === ''
+    ) {
+      this.carriages.removeAt(index);
     }
   }
 
@@ -170,12 +146,6 @@ export class UpdateFormComponent implements OnInit, OnDestroy {
           pathes.push(Number(path));
         }
       });
-      console.log(
-        pathes,
-        this.updateForm.value.carriages!.filter((item) => {
-          return item !== '';
-        }),
-      );
       this.store.dispatch(
         updateRoute({
           id: this.currentRoute.id,

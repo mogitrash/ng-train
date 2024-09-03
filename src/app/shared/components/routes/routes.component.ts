@@ -1,5 +1,5 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
-import { map, Observable, Subscription, take } from 'rxjs';
+import { Component, DestroyRef, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { map, Observable, take } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
   MatSnackBar,
@@ -23,6 +23,8 @@ import { deleteRoute, loadDataForRoutesView } from '../../../core/store/trips/tr
   styleUrl: './routes.component.scss',
 })
 export class RoutesComponent implements OnInit {
+  @ViewChild('formElement') formElement!: ElementRef;
+
   public routes$: Observable<Route[]>;
 
   public stations$: Observable<Station[]>;
@@ -48,8 +50,6 @@ export class RoutesComponent implements OnInit {
   public isReverse: boolean = false;
 
   private readonly destroyRef: DestroyRef;
-
-  private subscription: Subscription | undefined;
 
   public deleteId: number = 0;
 
@@ -93,6 +93,7 @@ export class RoutesComponent implements OnInit {
   protected updateRoute(route: Route): void {
     this.currentRoute = { ...route };
     this.updateMode = true;
+    this.scrollToForm();
   }
 
   public showButtonsGoal() {
@@ -143,7 +144,7 @@ export class RoutesComponent implements OnInit {
     this.dialogOpen = true;
   }
 
-  // ngOnDestroy(): void {
-  //   this.subscription!.unsubscribe();
-  // }
+  private scrollToForm() {
+    this.formElement.nativeElement.scrollIntoView({ behavior: 'smooth' });
+  }
 }

@@ -10,11 +10,15 @@
 
 <app-create-form (changeOpen)="isOpen = $event" *ngIf="isOpen"></app-create-form>
 
-<app-update-form
-  [currentRoute]="currentRoute"
-  *ngIf="updateMode"
-  (closeForm)="updateMode = $event"
-></app-update-form>
+<div class="formContainer" #formElement>
+  <ng-container *ngIf="updateMode">
+    <app-update-form
+      [currentRoute]="currentRoute"
+      (closeForm)="updateMode = $event"
+      #anchorElement
+    ></app-update-form>
+  </ng-container>
+</div>
 
 <div class="overlay" *ngIf="isLoading$ | async">
   <mat-spinner></mat-spinner>

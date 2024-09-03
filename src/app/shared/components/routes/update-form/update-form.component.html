@@ -30,7 +30,7 @@
       (change)="changeControls(k, 'carriage')"
       [formControlName]="k"
     >
-      <option value="" disabled [selected]="!carriages.value[k]">Choose carriage</option>
+      <option value="" [selected]="!carriages.value[k]">Choose carriage</option>
       @for (carriage of carriagesList; track $index) {
         <option [value]="carriage.code" [selected]="carriages.controls[k].value === carriage.code">
           {{ carriage.name }}
