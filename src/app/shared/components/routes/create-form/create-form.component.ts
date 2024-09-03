@@ -57,7 +57,6 @@ export class CreateFormComponent implements OnInit, OnDestroy {
     });
     this.subscribeCarriages$ = this.carriages$.subscribe((carriages) => {
       this.carriagesList = carriages;
-      console.log(this.carriagesList);
     });
   }
 
@@ -69,18 +68,8 @@ export class CreateFormComponent implements OnInit, OnDestroy {
     return this.createForm.get('stations') as FormArray;
   }
 
-  // protected getLastStation(): string[] {
-  //   const last = this.stations!.value;
-  //   return last
-  //     .filter((value: string) => {
-  //       return value !== '';
-  //     })
-  //     .slice(-1);
-  // }
-
   private getConnectedList(index: number): { id: number; distance: number }[] {
     const value: number = index;
-    // || Number(...this.getLastStation());
     const indexStation = this.currentStations.find((station: Station) => {
       return station.id === +value;
     });
