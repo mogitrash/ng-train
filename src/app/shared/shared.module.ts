@@ -1,15 +1,19 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
+import { CommonModule, DatePipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { RouterModule } from '@angular/router';
 import { CarriageComponent } from './components/carriage/carriage.component';
 import { SplitSeatsPipe } from './pipes/split-seats.pipe';
 import { AdminCarriagesComponent } from './components/admin-carriages/admin-carriages.component';
@@ -19,11 +23,17 @@ import { CarriageSimpleComponent } from './components/admin-carriages/carriage-s
 import { ReversePipe } from './pipes/reverse.pipe';
 import { StationsComponent } from './components/stations/stations.component';
 import { RoutesComponent } from './components/routes/routes.component';
+import { ScheduleComponent } from './components/schedule/schedule.component';
+import { CreateRideDialogComponent } from './components/create-ride-dialog/create-ride-dialog.component';
+import { DialogComponent } from './components/dialog/dialog.component';
 
 @NgModule({
   declarations: [
     CarriageComponent,
     SplitSeatsPipe,
+    ScheduleComponent,
+    DialogComponent,
+    CreateRideDialogComponent,
     AdminCarriagesComponent,
     CarriageCardComponent,
     CarriageFormComponent,
@@ -44,7 +54,12 @@ import { RoutesComponent } from './components/routes/routes.component';
     MatPaginatorModule,
     MatProgressSpinnerModule,
     LeafletModule,
+    MatDividerModule,
+    MatDialogModule,
+    FormsModule,
+    RouterModule,
   ],
+  providers: [DatePipe],
   exports: [CarriageComponent, AdminCarriagesComponent, StationsComponent, RoutesComponent],
 })
 export class SharedModule {}
