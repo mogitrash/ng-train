@@ -13,6 +13,7 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     @media (max-width: 500px) {
       flex-direction: column;
       font-size: 8px;
@@ -28,6 +29,10 @@
         padding: 1%;
         border-radius: 10px;
       }
+      @media (max-width: 500px) {
+        flex-direction: column;
+        font-size: 8px;
+      }
     }
   }
   .formContainer {
@@ -37,7 +42,7 @@
     position: fixed;
     top: 40%;
     left: 35%;
-    width: 25%;
+    width: clamp(350px, 25%, 600px);
     padding: 3%;
     display: flex;
     flex-direction: column;
@@ -45,6 +50,7 @@
     border-radius: 15px;
     border: 2px solid var(--primary-blue);
     background-color: var(--grey-light);
+    z-index: 100;
     .content {
       text-align: center;
       width: 100%;
@@ -54,6 +60,12 @@
     .actions {
       display: flex;
       width: 100%;
+    }
+    @media (max-width: 600px) {
+      left: 20%;
+    }
+    @media (max-width: 500px) {
+      left: 10%;
     }
   }
   button {
@@ -69,7 +81,7 @@
 
   form {
     background-color: var(--grey-light);
-    width: 95%;
+    width: clamp(310px, 80%, 800px);
     border-radius: 15px;
     padding: 3%;
     display: flex;
@@ -82,6 +94,9 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
+      @media (max-width: 500px) {
+        width: 100%;
+      }
       h2 {
         text-align: center;
         width: 100%;
@@ -92,6 +107,10 @@
         border: 1px solid var(--primary-blue);
         border-radius: 3px;
       }
+    }
+    @media (max-width: 500px) {
+      flex-direction: column;
+      font-size: 8px;
     }
   }
   button {

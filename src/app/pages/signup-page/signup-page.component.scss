@@ -63,6 +63,9 @@
       display: flex;
       justify-content: space-evenly;
       gap: 5%;
+      button {
+        border: 1px solid var(--blue-extra-light);
+      }
     }
   }
 

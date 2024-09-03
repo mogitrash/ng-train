@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
   templateUrl: './admin-page.component.html',
   styleUrl: './admin-page.component.scss',
 })
-export class AdminPageComponent implements OnInit, OnDestroy {
+export class AdminPageComponent implements OnInit {
   public activeButtons: 'stations' | 'carriages' | 'routes' | '' = '';
 
   private path!: string[];
@@ -16,15 +16,9 @@ export class AdminPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.path = this.route.url.split('/');
     this.activeButtons = this.path[2] ? (this.path[2] as 'stations' | 'carriages' | 'routes') : '';
-    console.log(this.activeButtons);
   }
 
   public makeActive(activeButtons: 'stations' | 'carriages' | 'routes') {
     this.activeButtons = activeButtons;
-    console.log(this.path);
-  }
-
-  ngOnDestroy() {
-    this.activeButtons = '';
   }
 }
