@@ -1,10 +1,25 @@
 import { Injectable } from '@angular/core';
-import { catchError, exhaustMap, forkJoin, map, mergeMap, of, switchMap, tap } from 'rxjs';
+
+import {
+  catchError,
+  delay,
+  endWith,
+  exhaustMap,
+  forkJoin,
+  map,
+  mergeMap,
+  of,
+  startWith,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TripsService } from '../../../features/trips/services/trips.service';
 import * as tripActions from './trips.actions';
 import { Ride } from '../../../features/trips/models/ride.model';
+import { RideInfo, SearchResponse } from '../../models/trips.model';
+import { Carriage } from '../../../features/trips/models/carriage.model';
 
 @Injectable()
 export class TripsEffects {
@@ -22,12 +37,90 @@ export class TripsEffects {
           )
           .pipe(
             map((search) => {
-              return tripActions.searchLoadedSuccess({ search });
+              const searchResponse: SearchResponse = {};
+              const { from, routes, to } = search;
+
+              routes.forEach((route) => {
+                const fromStationIndex = route.path.indexOf(from.stationId);
+                const toStationIndex = route.path.indexOf(to.stationId);
+
+                route.schedule.forEach((schedule) => {
+                  const rideSegments = schedule.segments.slice(fromStationIndex, toStationIndex);
+                  const groupDate = rideSegments[0].time[0].split('T')[0];
+
+                  const rideInfoList = searchResponse[groupDate];
+                  const rideInfo: RideInfo = {
+                    from,
+                    to,
+                    rideId: schedule.rideId,
+                    segments: rideSegments,
+                  };
+
+                  if (rideInfoList) {
+                    rideInfoList.push(rideInfo);
+                  } else {
+                    searchResponse[groupDate] = [rideInfo];
+                  }
+                });
+              });
+
+              return tripActions.searchLoadedSuccess({ search: searchResponse });
             }),
             catchError((error) => {
               return of(tripActions.failureSnackBar(error));
             }),
           );
+      }),
+    );
+  });
+
+  canDelete$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(tripActions.canDelete),
+      exhaustMap((action) => {
+        if (action.coordinates.length === 0) {
+          return of(tripActions.deleteStation(action.station));
+        }
+        const searchRequests = action.coordinates.map((coordinate) => {
+          const now = Date.now();
+          return this.tripsService
+            .search(
+              coordinate.latitude,
+              coordinate.longitude,
+              action.station.latitude,
+              action.station.longitude,
+              now,
+            )
+            .pipe(
+              map((route) => {
+                return route.routes.length > 0;
+              }),
+            );
+        });
+
+        return forkJoin(searchRequests).pipe(
+          delay(1000),
+          switchMap((results) => {
+            const canDelete = !results.some((hasRoutes) => {
+              return hasRoutes;
+            });
+            if (canDelete) {
+              return of(tripActions.deleteStation(action.station));
+            }
+            return of(
+              tripActions.failureSnackBar({
+                error: {
+                  message: 'Cannot delete station with active rides',
+                  reason: 'Cannot delete station with active rides',
+                },
+              }),
+            );
+          }),
+          catchError((error) => {
+            return of(tripActions.failureSnackBar(error));
+          }),
+          startWith(tripActions.loadingStarted()),
+        );
       }),
     );
   });
@@ -43,6 +136,8 @@ export class TripsEffects {
           catchError((error) => {
             return of(tripActions.failureSnackBar(error));
           }),
+          startWith(tripActions.loadingStarted()),
+          endWith(tripActions.loadingFinished()),
         );
       }),
     );
@@ -59,7 +154,17 @@ export class TripsEffects {
           catchError((error) => {
             return of(tripActions.failureSnackBar(error));
           }),
+          startWith(tripActions.loadingStarted()),
         );
+      }),
+    );
+  });
+
+  loadStationsAfterDelete$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(tripActions.stationDeleteSuccess),
+      map(() => {
+        return tripActions.loadStations();
       }),
     );
   });
@@ -152,7 +257,14 @@ export class TripsEffects {
           .createCarriageType(action.name, action.rows, action.leftSeats, action.rightSeats)
           .pipe(
             map((code) => {
-              return tripActions.carriagesCreatedSuccess(code);
+              const createCarriageData: Carriage = {
+                code: code.code,
+                name: action.name,
+                rows: action.rows,
+                leftSeats: action.leftSeats,
+                rightSeats: action.rightSeats,
+              };
+              return tripActions.carriagesCreatedSuccess({ createCarriage: createCarriageData });
             }),
             catchError((error) => {
               return of(tripActions.failureSnackBar(error));
@@ -175,11 +287,18 @@ export class TripsEffects {
             action.rightSeats,
           )
           .pipe(
-            map((code) => {
-              return tripActions.carriageUpdatedSuccess(code);
+            map(() => {
+              const updatedCarriageData: Carriage = {
+                code: action.code,
+                name: action.name,
+                rows: action.rows,
+                leftSeats: action.leftSeats,
+                rightSeats: action.rightSeats,
+              };
+              return tripActions.carriageUpdatedSuccess({ updatedCarriage: updatedCarriageData });
             }),
             catchError((error) => {
-              return of(tripActions.failureSnackBar(error));
+              return of(tripActions.failureSnackBar({ error }));
             }),
           );
       }),
@@ -321,7 +440,17 @@ export class TripsEffects {
             catchError((error) => {
               return of(tripActions.failureSnackBar(error));
             }),
+            startWith(tripActions.loadingStarted()),
           );
+      }),
+    );
+  });
+
+  loadStationsAfterCreate$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(tripActions.createStationSuccess),
+      map(() => {
+        return tripActions.loadStations();
       }),
     );
   });
@@ -329,7 +458,7 @@ export class TripsEffects {
   loadRideById$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(tripActions.loadRideById),
-      exhaustMap((action) => {
+      mergeMap((action) => {
         return this.tripsService.getRideById(action.rideId).pipe(
           map((ride) => {
             return tripActions.rideLoadedByIdSuccess({ ride });
@@ -400,6 +529,7 @@ export class TripsEffects {
           this.snackBar.open(error.error.message, 'Close', {
             duration: 5000,
           });
+          tripActions.loadingFinished();
         }),
       );
     },

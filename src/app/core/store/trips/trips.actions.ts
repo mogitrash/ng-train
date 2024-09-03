@@ -1,11 +1,13 @@
 import { createAction, props } from '@ngrx/store';
 import { Station } from '../../../features/trips/models/station.model';
-import { Route } from '../../../features/trips/models/route.model';
 import { Carriage } from '../../../features/trips/models/carriage.model';
 import { Order } from '../../../features/trips/models/order.model';
 import { User } from '../../../features/trips/models/user.model';
 import { Ride } from '../../../features/trips/models/ride.model';
-import { SearchResponse } from '../../../features/trips/models/searchResponse.model';
+import { Route } from '../../../features/trips/models/route.model';
+import { SearchResponse } from '../../models/trips.model';
+
+export const setSearchDate = createAction('[Trips] Set Search Date', props<{ date: Date }>());
 
 // Search
 export const loadSearch = createAction(
@@ -28,6 +30,16 @@ export const loadStations = createAction('[Trips] Load Stations');
 export const stationsLoadedSuccess = createAction(
   '[Trips] Stations Loaded Success',
   props<{ stations: Station[] }>(),
+);
+export const canDelete = createAction(
+  '[Trips] Can Delete',
+  props<{
+    station: Station;
+    coordinates: {
+      latitude: number;
+      longitude: number;
+    }[];
+  }>(),
 );
 
 export const deleteStation = createAction('[Trips] Delete Station', props<{ id: number }>());
@@ -89,7 +101,7 @@ export const createCarriage = createAction(
 );
 export const carriagesCreatedSuccess = createAction(
   '[Trips] Carriage Created Success',
-  props<{ code: string }>(),
+  props<{ createCarriage: Carriage }>(),
 );
 
 export const updateCarriage = createAction(
@@ -98,7 +110,7 @@ export const updateCarriage = createAction(
 );
 export const carriageUpdatedSuccess = createAction(
   '[Trips] Carriage Updated Success',
-  props<{ code: string }>(),
+  props<{ updatedCarriage: Carriage }>(),
 );
 
 // Orders
@@ -205,3 +217,5 @@ export const failureSnackBar = createAction(
   '[Trips] Failure SnackBar',
   props<{ error: { message: string; reason: string } }>(),
 );
+export const loadingFinished = createAction('[Trips] Load finished');
+export const loadingStarted = createAction('[Trips] Load started');

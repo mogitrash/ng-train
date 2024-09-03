@@ -48,9 +48,22 @@
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": ["src/favicon.svg", "src/assets"],
-            "styles": ["@angular/material/prebuilt-themes/azure-blue.css", "src/styles.scss"],
-            "stylePreprocessorOptions": {
+
+            "assets": [
+              "src/favicon.svg",
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/leaflet/dist/images/",
+                "output": "./assets"
+              }
+            ],
+            "styles": [
+              "./node_modules/leaflet/dist/leaflet.css",
+              "@angular/material/prebuilt-themes/azure-blue.css",
+              "src/styles.scss"
+            ],
+"stylePreprocessorOptions": {
               "includePaths": ["node_modules"]
             },
             "scripts": []

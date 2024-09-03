@@ -11,6 +11,9 @@ import { guestGuard } from './core/guards/guest.guard';
 import { adminGuard } from './core/guards/admin.guard';
 import { adminUserGuard } from './core/guards/admin-user.guard';
 import { ScheduleComponent } from './shared/components/schedule/schedule.component';
+import { RoutesComponent } from './shared/components/routes/routes.component';
+import { StationsComponent } from './shared/components/stations/stations.component';
+import { AdminCarriagesComponent } from './shared/components/admin-carriages/admin-carriages.component';
 
 const routes: Routes = [
   // Common routes
@@ -20,8 +23,7 @@ const routes: Routes = [
   { path: 'signup', component: SignupPageComponent, canActivate: [guestGuard] },
   { path: 'signin', component: SigninPageComponent, canActivate: [guestGuard] },
 
-  { path: 'routes/:id', component: ScheduleComponent },
-
+  //  Admin and Users routes
   //  Admin and Users routes
   {
     path: 'profile',
@@ -35,7 +37,26 @@ const routes: Routes = [
   },
 
   // Only admin route
-  { path: 'admin', component: AdminPageComponent, canActivate: [adminGuard] },
+  {
+    path: 'admin',
+    component: AdminPageComponent,
+    canActivate: [adminGuard],
+    children: [
+      {
+        path: 'carriages',
+        component: AdminCarriagesComponent,
+      },
+      {
+        path: 'routes',
+        component: RoutesComponent,
+      },
+      {
+        path: 'stations',
+        component: StationsComponent,
+      },
+      { path: 'routes/:id', component: ScheduleComponent },
+    ],
+  },
 
   // not found
   {

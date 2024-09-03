@@ -1,8 +1,12 @@
 import { createReducer, on } from '@ngrx/store';
 import { TripsState } from '../../models/trips.model';
 import {
+  carriagesCreatedSuccess,
   carriagesLoadedSuccess,
   deleteRideByIdSuccess,
+  loadingFinished,
+  loadingStarted,
+  carriageUpdatedSuccess,
   loadDataForOrdersViewSuccess,
   orderDeletedSuccess,
   ordersLoadedSuccess,
@@ -11,6 +15,7 @@ import {
   routeLoadedByIdSuccess,
   routesLoadedSuccess,
   searchLoadedSuccess,
+  setSearchDate,
   stationsLoadedSuccess,
   updateRideSuccess,
   usersLoadedSuccess,
@@ -24,15 +29,19 @@ const inititalTripState: TripsState = {
   rides: [],
   users: [],
   searchResponses: [],
+  loading: false,
 };
 
 export const tripsReducer = createReducer(
   inititalTripState,
+  on(setSearchDate, (state, { date }): TripsState => {
+    return { ...state, searchDate: date };
+  }),
   on(searchLoadedSuccess, (state, { search }): TripsState => {
     return { ...state, searchResponses: [...state.searchResponses, search] };
   }),
   on(stationsLoadedSuccess, (state, { stations }): TripsState => {
-    return { ...state, stations };
+    return { ...state, stations, loading: false };
   }),
   on(routesLoadedSuccess, (state, { routes }): TripsState => {
     return { ...state, routes };
@@ -80,6 +89,15 @@ export const tripsReducer = createReducer(
       }),
     };
   }),
+  on(rideLoadedByIdSuccess, (state, { ride }): TripsState => {
+    return { ...state, rides: [...state.rides, ride] };
+  }),
+  on(loadingStarted, (state): TripsState => {
+    return { ...state, loading: true };
+  }),
+  on(loadingFinished, (state): TripsState => {
+    return { ...state, loading: false };
+  }),
   on(loadDataForOrdersViewSuccess, (state, { carriages, stations, orders }): TripsState => {
     return {
       ...state,
@@ -94,6 +112,21 @@ export const tripsReducer = createReducer(
       orders: state.orders.map((order) => {
         return order.id === orderId ? { ...order, status: 'canceled' } : order;
       }),
+    };
+  }),
+
+  on(carriageUpdatedSuccess, (state, { updatedCarriage }): TripsState => {
+    return {
+      ...state,
+      carriages: state.carriages.map((carriage) => {
+        return carriage.code === updatedCarriage.code ? { ...updatedCarriage } : carriage;
+      }),
+    };
+  }),
+  on(carriagesCreatedSuccess, (state, { createCarriage }): TripsState => {
+    return {
+      ...state,
+      carriages: [...state.carriages, createCarriage],
     };
   }),
 );
