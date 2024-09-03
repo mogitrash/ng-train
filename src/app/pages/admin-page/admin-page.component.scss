@@ -2,7 +2,7 @@
 
 :host {
   display: flex;
-  @media (max-width: 500px) {
+  @media (max-width: 770px) {
     flex-direction: column;
   }
 
@@ -22,7 +22,7 @@
     button {
       width: 10rem;
     }
-    @media (max-width: 500px) {
+    @media (max-width: 770px) {
       width: 100%;
       flex-direction: row;
     }
