@@ -92,7 +92,6 @@ export class TripDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
     const routeSubscribe = this.route.queryParams.subscribe((params) => {
       this.rideId = +params['rideId'];
       this.fromId = +params['fromId'];
@@ -133,11 +132,15 @@ export class TripDetailComponent implements OnInit {
     });
 
     const carriagesSubscription = this.carriages$.subscribe((carriages) => {
-      this.carriages = this.prices.map((price) => {
-        return carriages.find((carriage) => {
-          return carriage.name === price[0];
-        })!;
-      });
+      this.carriages = this.prices
+        .map((price) => {
+          return carriages.find((carriage) => {
+            return carriage.name === price[0];
+          });
+        })
+        .filter((value) => {
+          return !!value;
+        });
     });
 
     const accessSubscription = this.access$.subscribe((access) => {

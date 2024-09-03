@@ -36,35 +36,37 @@
 
     <mat-tab-group class="tabs" dynamicHeight>
       @for (carriage of carriages; track carriage.code) {
-        <mat-tab>
-          <ng-template matTabLabel>
-            <div class="tab-label">
-              <div class="carriage-name">
-                {{ carriage.name }}
+        @if (carriage) {
+          <mat-tab>
+            <ng-template matTabLabel>
+              <div class="tab-label">
+                <div class="carriage-name">
+                  {{ carriage.name }}
+                </div>
+                <div class="price">${{ calculateTotalRidePrice(carriage.name) }}</div>
               </div>
-              <div class="price">${{ calculateTotalRidePrice(carriage.name) }}</div>
-            </div>
-          </ng-template>
+            </ng-template>
 
-          <app-carriage
-            [carriageNumber]="$index + 1"
-            [rows]="carriage.rows"
-            [leftSeats]="carriage.leftSeats"
-            [rightSeats]="carriage.rightSeats"
-            [occupiedSeat]="getCarriageOccupiedSeats(occupiedSeats, $index + 1)"
-            (selectedSeatsChange)="onSeatsSelect($event)"
-          ></app-carriage>
+            <app-carriage
+              [carriageNumber]="$index + 1"
+              [rows]="carriage.rows"
+              [leftSeats]="carriage.leftSeats"
+              [rightSeats]="carriage.rightSeats"
+              [occupiedSeat]="getCarriageOccupiedSeats(occupiedSeats, $index + 1)"
+              (selectedSeatsChange)="onSeatsSelect($event)"
+            ></app-carriage>
 
-          <button
-            class="book-button"
-            mat-flat-button
-            [disabled]="!isSeatsSelected"
-            (click)="onSeatsBook()"
-          >
-            <mat-icon>check_circle</mat-icon>
-            Book seats
-          </button>
-        </mat-tab>
+            <button
+              class="book-button"
+              mat-flat-button
+              [disabled]="!isSeatsSelected"
+              (click)="onSeatsBook()"
+            >
+              <mat-icon>check_circle</mat-icon>
+              Book seats
+            </button>
+          </mat-tab>
+        }
       }
     </mat-tab-group>
   </div>
