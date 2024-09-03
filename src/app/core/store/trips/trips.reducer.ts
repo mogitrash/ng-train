@@ -19,6 +19,7 @@ import {
   stationsLoadedSuccess,
   updateRideSuccess,
   usersLoadedSuccess,
+  failureSnackBar,
 } from './trips.actions';
 
 const inititalTripState: TripsState = {
@@ -96,6 +97,9 @@ export const tripsReducer = createReducer(
     return { ...state, loading: true };
   }),
   on(loadingFinished, (state): TripsState => {
+    return { ...state, loading: false };
+  }),
+  on(failureSnackBar, (state): TripsState => {
     return { ...state, loading: false };
   }),
   on(loadDataForOrdersViewSuccess, (state, { carriages, stations, orders }): TripsState => {
