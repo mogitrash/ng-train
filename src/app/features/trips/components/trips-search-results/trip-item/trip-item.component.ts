@@ -12,6 +12,7 @@ import { getTimeDifference } from '../../../../../shared/utilities/getTimeDiffer
 import { calculateTotalRidePrice } from '../../../../../shared/utilities/calculateTotalRidePrice.utility';
 import { getRideSegments } from '../../../../../shared/utilities/getRideSegments.utility';
 
+
 @Component({
   selector: 'app-trip-item',
   templateUrl: './trip-item.component.html',
@@ -65,6 +66,7 @@ export class TripItemComponent implements OnInit {
           this.rideItemInfo.from.stationId,
           this.rideItemInfo.to.stationId,
         );
+
 
         this.initViewData(rideSegments);
       }
@@ -120,7 +122,6 @@ export class TripItemComponent implements OnInit {
     this.rideEndStation = this.rideItemInfo.to.city;
 
     this.prices = Object.entries(firstSegment.price);
-
     if (this.stations) {
       this.initRouteStations();
     }
@@ -138,6 +139,7 @@ export class TripItemComponent implements OnInit {
       })!;
     }
   }
+
 
   private getRidePath(ride: Ride): number[] {
     const { path } = ride;

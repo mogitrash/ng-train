@@ -57,7 +57,13 @@
     >
       Register
     </button>
-    <button type="button" mat-button [ngStyle]="{ 'min-width.px': 100 }" (click)="goSignIn()">
+    <button
+      class="button"
+      type="button"
+      mat-button
+      [ngStyle]="{ 'min-width.px': 100 }"
+      (click)="goSignIn()"
+    >
       Sign In
     </button>
   </div>

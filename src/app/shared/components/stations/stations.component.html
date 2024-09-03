@@ -57,12 +57,13 @@
             <mat-card-title>
               <div class="title-container">
                 <span>{{ station.city }}</span>
-                <mat-icon
-                  aria-hidden="false"
-                  aria-label="delete station icon"
-                  fontIcon="delete"
-                  (click)="onDelete(station.id, stations)"
-                ></mat-icon>
+                <button mat-icon-button (click)="onDelete(station.id, stations)">
+                  <mat-icon
+                    aria-hidden="false"
+                    aria-label="delete station icon"
+                    fontIcon="delete"
+                  ></mat-icon>
+                </button>
               </div>
             </mat-card-title>
 
