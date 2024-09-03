@@ -22,7 +22,6 @@ import { TripRouteDialogComponent } from './components/trips-search-results/trip
 import { TripDetailComponent } from './components/trip-detail/trip-detail.component';
 import { SharedModule } from '../../shared/shared.module';
 
-
 @NgModule({
   providers: [provideNativeDateAdapter()],
   declarations: [
