@@ -146,8 +146,6 @@ export class UpdateFormComponent implements OnInit, OnDestroy {
           pathes.push(Number(path));
         }
       });
-      console.log(this.stations.value, 'stations');
-      console.log(pathes, 'patches');
       this.store.dispatch(
         updateRoute({
           id: this.currentRoute.id,
