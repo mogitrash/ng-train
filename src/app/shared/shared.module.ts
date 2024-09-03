@@ -1,8 +1,5 @@
 import { NgModule } from '@angular/core';
 
-import { DialogComponent } from './components/dialog/dialog.component';
-import { CreateRideDialogComponent } from './components/create-ride-dialog/create-ride-dialog.component';
-import { ScheduleComponent } from './components/schedule/schedule.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -16,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { RouterModule } from '@angular/router';
 import { CarriageComponent } from './components/carriage/carriage.component';
 import { SplitSeatsPipe } from './pipes/split-seats.pipe';
 import { AdminCarriagesComponent } from './components/admin-carriages/admin-carriages.component';
@@ -25,6 +23,9 @@ import { CarriageSimpleComponent } from './components/admin-carriages/carriage-s
 import { ReversePipe } from './pipes/reverse.pipe';
 import { StationsComponent } from './components/stations/stations.component';
 import { RoutesComponent } from './components/routes/routes.component';
+import { ScheduleComponent } from './components/schedule/schedule.component';
+import { CreateRideDialogComponent } from './components/create-ride-dialog/create-ride-dialog.component';
+import { DialogComponent } from './components/dialog/dialog.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { RoutesComponent } from './components/routes/routes.component';
     MatDividerModule,
     MatDialogModule,
     FormsModule,
+    RouterModule,
   ],
   providers: [DatePipe],
   exports: [CarriageComponent, AdminCarriagesComponent, StationsComponent, RoutesComponent],

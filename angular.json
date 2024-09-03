@@ -63,7 +63,7 @@
               "@angular/material/prebuilt-themes/azure-blue.css",
               "src/styles.scss"
             ],
-"stylePreprocessorOptions": {
+            "stylePreprocessorOptions": {
               "includePaths": ["node_modules"]
             },
             "scripts": []
