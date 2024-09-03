@@ -10,6 +10,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDivider } from '@angular/material/divider';
+import { RouterModule } from '@angular/router';
+
 import { MatInputModule } from '@angular/material/input';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { TripsSearchComponent } from './components/trips-search/trips-search.component';
@@ -17,6 +19,9 @@ import { TripsFilterComponent } from './components/trips-filter/trips-filter.com
 import { TripsSearchResultsComponent } from './components/trips-search-results/trips-search-results.component';
 import { TripItemComponent } from './components/trips-search-results/trip-item/trip-item.component';
 import { TripRouteDialogComponent } from './components/trips-search-results/trip-route-dialog/trip-route-dialog.component';
+import { TripDetailComponent } from './components/trip-detail/trip-detail.component';
+import { SharedModule } from '../../shared/shared.module';
+
 
 @NgModule({
   providers: [provideNativeDateAdapter()],
@@ -26,9 +31,13 @@ import { TripRouteDialogComponent } from './components/trips-search-results/trip
     TripsSearchResultsComponent,
     TripItemComponent,
     TripRouteDialogComponent,
+    TripDetailComponent,
   ],
   imports: [
     CommonModule,
+    RouterModule,
+    CommonModule,
+    SharedModule,
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,

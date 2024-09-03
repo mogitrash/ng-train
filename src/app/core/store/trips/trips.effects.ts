@@ -17,6 +17,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TripsService } from '../../../features/trips/services/trips.service';
 import * as tripActions from './trips.actions';
+
 import { Ride } from '../../../features/trips/models/ride.model';
 import { RideInfo, SearchResponse } from '../../models/trips.model';
 import { Carriage } from '../../../features/trips/models/carriage.model';

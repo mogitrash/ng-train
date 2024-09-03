@@ -101,7 +101,7 @@ export class CarriageComponent implements OnInit {
   public onSeatSelectionChange(seat: Seat, event: Event) {
     const currentSeat = seat;
     const { checked } = event.target as HTMLInputElement;
-    if (checked) {
+    if (checked && this.selectedSeats.length === 0) {
       currentSeat.status = SeatStatus.BOOKED;
       this.selectedSeats.push(seat);
     } else {

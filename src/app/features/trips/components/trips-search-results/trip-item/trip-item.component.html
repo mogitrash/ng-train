@@ -29,15 +29,30 @@
       @for (price of prices; track $index) {
         <div class="price-item">
           <div class="carriage">{{ price[0] }}</div>
-          <div class="price">${{ price[1] }}</div>
+          <div class="price">${{ calculateTotalRidePrice(price[0]) }}</div>
         </div>
       }
     </div>
 
-    <button mat-button (click)="openRouteDialog()">
-      <mat-icon>route</mat-icon>
-      Route
-    </button>
+
+    <div class="buttons">
+      <button mat-button (click)="openRouteDialog()">
+        <mat-icon>route</mat-icon>
+        Route
+      </button>
+      <button
+        mat-button
+        [routerLink]="['/detail']"
+        [queryParams]="{
+          rideId: rideItemInfo.rideId,
+          fromId: rideItemInfo.from.stationId,
+          toId: rideItemInfo.to.stationId,
+        }"
+      >
+        <mat-icon>more_vert</mat-icon>
+        More
+      </button>
+    </div>
   </div>
 } @else {
   <mat-spinner></mat-spinner>
