@@ -92,6 +92,7 @@ export class TripDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
     const routeSubscribe = this.route.queryParams.subscribe((params) => {
       this.rideId = +params['rideId'];
       this.fromId = +params['fromId'];
