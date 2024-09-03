@@ -55,7 +55,7 @@ export class TripDetailComponent implements OnInit {
 
   public prices: [string, number][] = [];
 
-  public carriages!: Carriage[];
+  public carriages: Carriage[] = [];
 
   public rideSegments!: Segment[];
 
@@ -92,7 +92,7 @@ export class TripDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
+    const routeSubscribe = this.route.queryParams.subscribe((params) => {
       this.rideId = +params['rideId'];
       this.fromId = +params['fromId'];
       this.toId = +params['toId'];
@@ -148,6 +148,7 @@ export class TripDetailComponent implements OnInit {
       carriagesSubscription.unsubscribe();
       ridesSubscription.unsubscribe();
       stationsSubscription.unsubscribe();
+      routeSubscribe.unsubscribe();
     });
   }
 
@@ -209,13 +210,17 @@ export class TripDetailComponent implements OnInit {
   }
 
   public getCarriageOccupiedSeats(selectedSeats: SelectedSeat[], carriageNumber: number): number[] {
-    return selectedSeats
-      .filter((seat) => {
-        return seat.carriageNumber === carriageNumber;
-      })
-      .map((seat) => {
-        return seat.seatNumber;
-      });
+    if (selectedSeats) {
+      return selectedSeats
+        .filter((seat) => {
+          return seat.carriageNumber === carriageNumber;
+        })
+        .map((seat) => {
+          return seat.seatNumber;
+        });
+    }
+
+    return [];
   }
 
   public openRouteDialog() {
