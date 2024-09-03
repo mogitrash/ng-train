@@ -155,12 +155,6 @@ export const usersLoadedSuccess = createAction(
   props<{ users: User[] }>(),
 );
 
-export const loadRideById = createAction('[Trips] Load Ride By Id', props<{ rideId: number }>());
-export const rideLoadedByIdSuccess = createAction(
-  '[Trips] Ride Loaded By Id Success',
-  props<{ ride: Ride }>(),
-);
-
 // Rides
 export const createRide = createAction(
   '[Trips] Create Ride',
@@ -177,6 +171,16 @@ export const createRideSuccess = createAction(
   props<{ id: number }>(),
 );
 
+export const loadRideById = createAction('[Trips] Load Ride By Id', props<{ rideId: number }>());
+export const rideLoadedByIdSuccess = createAction(
+  '[Trips] Ride Loaded By Id Success',
+  props<{ ride: Ride }>(),
+);
+
+export const ridesLoadedByRouteSuccess = createAction(
+  '[Trips] Rides Loaded By Route Success',
+  props<{ rides: Ride[] }>(),
+);
 export const updateRide = createAction(
   '[Trips] Update Ride',
   props<{
@@ -188,7 +192,25 @@ export const updateRide = createAction(
     }[];
   }>(),
 );
-export const updateRideSuccess = createAction('[Trips] Update Ride Success');
+export const updateRideSuccess = createAction(
+  '[Trips] Update Ride Success',
+  props<{
+    rideId: number;
+    segments: {
+      time: [string, string];
+      price: { [key: string]: number };
+    }[];
+  }>(),
+);
+
+export const deleteRideById = createAction(
+  '[Trips] Delete Ride',
+  props<{ routeId: number; rideId: number }>(),
+);
+export const deleteRideByIdSuccess = createAction(
+  '[Trips] Delete Ride Success',
+  props<{ rideId: number }>(),
+);
 
 // Fail
 export const failureSnackBar = createAction(

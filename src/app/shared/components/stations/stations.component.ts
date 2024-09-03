@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, DestroyRef, ViewChild, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import * as L from 'leaflet';
 import { Observable, Subscription } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -72,6 +79,7 @@ export class StationsComponent implements AfterViewInit {
     private store: Store,
     private popupService: PopUpService,
     private formBuilder: FormBuilder,
+    private cdr: ChangeDetectorRef,
   ) {
     this.destroyRef = inject(DestroyRef);
     this.store.dispatch(loadStations());
@@ -95,6 +103,7 @@ export class StationsComponent implements AfterViewInit {
       .subscribe((lng) => {
         this.updateMarkerPosition(this.stationForm.controls.latitude.value, lng);
       });
+    this.cdr.detectChanges();
   }
 
   get relations(): FormArray {

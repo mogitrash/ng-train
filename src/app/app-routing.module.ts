@@ -10,6 +10,7 @@ import { MainPageComponent } from './pages/main-page/main-page.component';
 import { guestGuard } from './core/guards/guest.guard';
 import { adminGuard } from './core/guards/admin.guard';
 import { adminUserGuard } from './core/guards/admin-user.guard';
+import { ScheduleComponent } from './shared/components/schedule/schedule.component';
 import { RoutesComponent } from './shared/components/routes/routes.component';
 import { StationsComponent } from './shared/components/stations/stations.component';
 import { AdminCarriagesComponent } from './shared/components/admin-carriages/admin-carriages.component';
@@ -53,6 +54,7 @@ const routes: Routes = [
         path: 'stations',
         component: StationsComponent,
       },
+      { path: 'routes/:id', component: ScheduleComponent },
     ],
   },
 
