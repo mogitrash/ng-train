@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   selectLastSearchReponse,
@@ -19,10 +19,13 @@ export class TripsFilterComponent implements OnInit {
 
   public searchDates!: Date[];
 
-  constructor(private store: Store) {}
+  constructor(
+    private store: Store,
+    private destroyRef: DestroyRef,
+  ) {}
 
   ngOnInit(): void {
-    this.searchResponse$.subscribe((searchResponse) => {
+    const searchSubscribe = this.searchResponse$.subscribe((searchResponse) => {
       this.searchDates = Object.keys(searchResponse)
         .map((date) => {
           return new Date(date);
@@ -32,10 +35,15 @@ export class TripsFilterComponent implements OnInit {
         });
     });
 
-    this.searchDate$.subscribe((searchDate) => {
+    const searchDateSubscribe = this.searchDate$.subscribe((searchDate) => {
       if (!searchDate) {
         this.setSearchDateByIndex(0);
       }
+    });
+
+    this.destroyRef.onDestroy(() => {
+      searchSubscribe.unsubscribe();
+      searchDateSubscribe.unsubscribe();
     });
   }
 

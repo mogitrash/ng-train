@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectSearchResponses } from '../../core/store/trips/trips.selectors';
 import { SearchResponse } from '../../core/models/trips.model';
@@ -14,10 +14,17 @@ export class MainPageComponent implements OnInit {
   public searchResponses!: SearchResponse[];
 
   ngOnInit(): void {
-    this.searchResponses$.subscribe((responses) => {
+    const searchSubscribe = this.searchResponses$.subscribe((responses) => {
       this.searchResponses = responses;
+    });
+
+    this.destroyRef.onDestroy(() => {
+      searchSubscribe.unsubscribe();
     });
   }
 
-  constructor(private store: Store) {}
+  constructor(
+    private store: Store,
+    private destroyRef: DestroyRef,
+  ) {}
 }
