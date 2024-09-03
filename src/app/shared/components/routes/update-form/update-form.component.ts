@@ -146,10 +146,12 @@ export class UpdateFormComponent implements OnInit, OnDestroy {
           pathes.push(Number(path));
         }
       });
+      console.log(this.stations.value, 'stations');
+      console.log(pathes, 'patches');
       this.store.dispatch(
         updateRoute({
           id: this.currentRoute.id,
-          path: pathes,
+          path: pathes.reverse(),
           carriages: this.updateForm.value.carriages!.filter((item) => {
             return item !== '';
           }),

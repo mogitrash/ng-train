@@ -1,6 +1,6 @@
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
   MatSnackBar,
@@ -11,14 +11,13 @@ import { Station } from '../../../../features/trips/models/station.model';
 import { Carriage } from '../../../../features/trips/models/carriage.model';
 import { selectCarriages, selectStations } from '../../../../core/store/trips/trips.selectors';
 import { createRoute, loadDataForRoutesView } from '../../../../core/store/trips/trips.actions';
-import { selectReasonError } from '../../../../core/store/user/user.selectors';
 
 @Component({
   selector: 'app-create-form',
   templateUrl: './create-form.component.html',
   styleUrl: './create-form.component.scss',
 })
-export class CreateFormComponent implements OnInit {
+export class CreateFormComponent implements OnInit, OnDestroy {
   @Output() changeOpen = new EventEmitter<boolean>();
 
   protected createForm = this.FB.nonNullable.group({
@@ -30,11 +29,15 @@ export class CreateFormComponent implements OnInit {
 
   public carriages$: Observable<Carriage[]>;
 
-  private hasError$: Observable<string>;
+  private subscribeStations$!: Subscription;
+
+  private subscribeCarriages$!: Subscription;
 
   private snackBar = inject(MatSnackBar);
 
   public currentStations!: Station[];
+
+  public carriagesList!: Carriage[];
 
   private horizontalPosition: MatSnackBarHorizontalPosition = 'start';
 
@@ -46,12 +49,15 @@ export class CreateFormComponent implements OnInit {
   ) {
     this.stations$ = this.store.select(selectStations);
     this.carriages$ = this.store.select(selectCarriages);
-    this.hasError$ = this.store.select(selectReasonError);
   }
 
   ngOnInit(): void {
-    this.stations$.subscribe((stations) => {
+    this.subscribeStations$ = this.stations$.subscribe((stations) => {
       this.currentStations = stations;
+    });
+    this.subscribeCarriages$ = this.carriages$.subscribe((carriages) => {
+      this.carriagesList = carriages;
+      console.log(this.carriagesList);
     });
   }
 
@@ -63,29 +69,33 @@ export class CreateFormComponent implements OnInit {
     return this.createForm.get('stations') as FormArray;
   }
 
-  protected getLastStation(): string[] {
-    const last = this.stations!.value;
-    return last
-      .filter((value: string) => {
-        return value !== '';
-      })
-      .slice(-1);
-  }
+  // protected getLastStation(): string[] {
+  //   const last = this.stations!.value;
+  //   return last
+  //     .filter((value: string) => {
+  //       return value !== '';
+  //     })
+  //     .slice(-1);
+  // }
 
-  private getConnectedList(index?: number): { id: number; distance: number }[] {
-    const value: number = index || Number(...this.getLastStation());
+  private getConnectedList(index: number): { id: number; distance: number }[] {
+    const value: number = index;
+    // || Number(...this.getLastStation());
     const indexStation = this.currentStations.find((station: Station) => {
       return station.id === +value;
     });
     return indexStation ? indexStation.connectedTo : [{ id: 0, distance: 0 }];
   }
 
-  public getConnectedCities(index?: number): Station[] {
+  public getConnectedCities(index: number): Station[] {
     const list: Station[] = [];
-    const connectedList = index ? this.getConnectedList(index) : this.getConnectedList();
+    const connectedList = this.getConnectedList(index);
     connectedList.forEach(({ id }) => {
-      if (this.currentStations[id]) {
-        list.push(this.currentStations[id]);
+      const queryStation = this.currentStations.find((station: Station) => {
+        return +station.id === +id;
+      });
+      if (queryStation) {
+        list.push(queryStation);
       } else {
         list.push({
           id: 0,
@@ -109,7 +119,7 @@ export class CreateFormComponent implements OnInit {
       this.addItem('station');
     } else {
       while (this.stations.length > index + 2) {
-        this.stations.removeAt(1);
+        this.stations.removeAt(-1);
       }
     }
   }
@@ -131,14 +141,19 @@ export class CreateFormComponent implements OnInit {
       })
     ) {
       const pathes: number[] = [];
-      this.createForm.value.stations!.slice(0, -1).forEach((path: string | null) => {
-        pathes.push(Number(path));
-      });
-
+      this.createForm.value
+        .stations!.filter((item) => {
+          return item !== '';
+        })
+        .forEach((path) => {
+          if (typeof path === 'string') pathes.push(+path);
+        });
       this.store.dispatch(
         createRoute({
           path: pathes,
-          carriages: this.createForm.value.carriages!.slice(0, -1),
+          carriages: this.createForm.value.carriages!.filter((item) => {
+            return item !== '';
+          }),
         }),
       );
     }
@@ -158,5 +173,10 @@ export class CreateFormComponent implements OnInit {
       verticalPosition: this.verticalPosition,
       duration: 3000,
     });
+  }
+
+  ngOnDestroy() {
+    this.subscribeStations$.unsubscribe();
+    this.subscribeCarriages$.unsubscribe();
   }
 }

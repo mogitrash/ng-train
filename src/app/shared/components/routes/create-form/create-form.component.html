@@ -30,14 +30,12 @@
       (change)="addItem('carriage')"
       [formControlName]="k"
     >
-      <option value="" disabled selected>Choose carriage</option>
-      <option
-        [value]="carriage.name"
-        *ngFor="let carriage of carriages$ | async; index as q"
-        [selected]="carriages.controls[q].value === carriage.name"
-      >
-        {{ carriage.name }}
-      </option>
+      <option value="" disabled [selected]="!carriages.value[k]">Choose carriage</option>
+      @for (carriage of carriagesList; track $index) {
+        <option [value]="carriage.code" [selected]="carriages.controls[k].value === carriage.code">
+          {{ carriage.name }}
+        </option>
+      }
     </select>
   </div>
   <button type="submit" mat-button [disabled]="stations.length < 4 || carriages.length < 4">

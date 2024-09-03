@@ -1,7 +1,7 @@
 <div class="wrapper">
   <div class="wrapper-forms-button">
-    <button mat-icon-button (click)="isOpen = true" [disabled]="updateMode">New route</button>
-    <button mat-icon-button (click)="isOpen = false" *ngIf="isOpen">Close</button>
+    <button mat-button (click)="isOpen = true" [disabled]="updateMode">New route</button>
+    <button mat-button (click)="isOpen = false" *ngIf="isOpen">Close</button>
   </div>
   <button class="reverse" mat-icon-button (click)="isReverse = !isReverse">
     <mat-icon color="primary">autorenew</mat-icon>
