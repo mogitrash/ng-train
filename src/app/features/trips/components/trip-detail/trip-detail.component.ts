@@ -1,4 +1,4 @@
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
@@ -22,6 +22,14 @@ import { getRidePath } from '../../../../shared/utilities/getRidePath.utility';
 import { Carriage } from '../../models/carriage.model';
 import { CarriageSelectedSeats } from '../../../../shared/components/carriage/carriage.component';
 import { getRideSegments } from '../../../../shared/utilities/getRideSegments.utility';
+import { calculateTotalRidePrice } from '../../../../shared/utilities/calculateTotalRidePrice.utility';
+import { selectAccess } from '../../../../core/store/user/user.selectors';
+import { Access } from '../../../../core/models/user.model';
+
+export interface SelectedSeat {
+  carriageNumber: number;
+  seatNumber: number;
+}
 
 @Component({
   selector: 'app-trip-detail',
@@ -45,17 +53,23 @@ export class TripDetailComponent implements OnInit {
 
   public routeEndStation!: Station;
 
-  public prices: [string, string][] = [];
+  public prices: [string, number][] = [];
 
   public carriages!: Carriage[];
 
   public rideSegments!: Segment[];
 
+  public occupiedSeats!: SelectedSeat[];
+
   public isSeatsSelected: boolean = false;
 
-  private carriages$ = this.store.select(selectCarriages);
+  public access!: Access;
 
-  private stations$ = this.store.select(selectStations);
+  public stations$ = this.store.select(selectStations);
+
+  private access$ = this.store.select(selectAccess);
+
+  private carriages$ = this.store.select(selectCarriages);
 
   private stations!: Station[];
 
@@ -74,6 +88,7 @@ export class TripDetailComponent implements OnInit {
     private destroyRef: DestroyRef,
     private dialog: MatDialog,
     private route: ActivatedRoute,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -106,19 +121,30 @@ export class TripDetailComponent implements OnInit {
 
         this.initViewData(this.rideSegments);
 
+        this.occupiedSeats = this.rideSegments
+          .reduce((prev: number[], currentSegment) => {
+            return [...prev, ...currentSegment.occupiedSeats];
+          }, [])
+          .map(this.getSeatNumberInCarriage.bind(this));
+
         this.store.dispatch(loadCarriages());
       }
     });
 
     const carriagesSubscription = this.carriages$.subscribe((carriages) => {
-      this.carriages = carriages.filter((carriage) => {
-        return this.prices.find((price) => {
-          return price[0] === carriage.name;
-        });
+      this.carriages = this.prices.map((price) => {
+        return carriages.find((carriage) => {
+          return carriage.name === price[0];
+        })!;
       });
     });
 
+    const accessSubscription = this.access$.subscribe((access) => {
+      this.access = access;
+    });
+
     this.destroyRef.onDestroy(() => {
+      accessSubscription.unsubscribe();
       carriagesSubscription.unsubscribe();
       ridesSubscription.unsubscribe();
       stationsSubscription.unsubscribe();
@@ -132,14 +158,64 @@ export class TripDetailComponent implements OnInit {
   }
 
   public onSeatsBook() {
+    const { carriageNumber } = this.selectedSeats!;
+    const seatNumber = this.selectedSeats!.selectedSeats[0].numberInCarriage!;
+
+    if (this.access === 'guest') {
+      this.router.navigateByUrl('/signin');
+
+      return;
+    }
+
     this.store.dispatch(
       createOrder({
         rideId: this.rideId,
-        seat: this.selectedSeats!.selectedSeats[0]!.numberInCarriage,
+        seat: this.getSeatNumberInTrain(seatNumber, carriageNumber),
         stationEnd: this.toId,
         stationStart: this.fromId,
       }),
     );
+  }
+
+  public getSeatNumberInTrain(numberInCarriage: number, carriageNumber: number) {
+    let sumOfPrevCarriages = 0;
+    this.carriages.forEach((carriage, index) => {
+      if (index + 1 < carriageNumber) {
+        sumOfPrevCarriages += (carriage.leftSeats + carriage.rightSeats) * carriage.rows;
+      }
+    });
+
+    return sumOfPrevCarriages + numberInCarriage;
+  }
+
+  public getSeatNumberInCarriage(numberInTrain: number): SelectedSeat {
+    let seatNumber = numberInTrain;
+    let carriageNumber = 1;
+
+    this.carriages.forEach((carriage) => {
+      const carriageSeatAmount = (carriage.leftSeats + carriage.rightSeats) * carriage.rows;
+      const seatDifference = seatNumber - carriageSeatAmount;
+
+      if (seatDifference > 0) {
+        seatNumber -= carriageSeatAmount;
+        carriageNumber += 1;
+      }
+    });
+
+    return {
+      carriageNumber,
+      seatNumber,
+    };
+  }
+
+  public getCarriageOccupiedSeats(selectedSeats: SelectedSeat[], carriageNumber: number): number[] {
+    return selectedSeats
+      .filter((seat) => {
+        return seat.carriageNumber === carriageNumber;
+      })
+      .map((seat) => {
+        return seat.seatNumber;
+      });
   }
 
   public openRouteDialog() {
@@ -152,6 +228,13 @@ export class TripDetailComponent implements OnInit {
     });
   }
 
+  public calculateTotalRidePrice(type: string) {
+    return calculateTotalRidePrice(
+      getRideSegments(this.ride!.schedule.segments, this.ride!.path, this.fromId, this.toId),
+      type,
+    );
+  }
+
   private initViewData(rideSegments: Segment[]) {
     const [firstSegment] = rideSegments;
     const lastSegment = rideSegments.at(rideSegments.length - 1)!;
@@ -161,9 +244,7 @@ export class TripDetailComponent implements OnInit {
 
     this.rideDuration = getTimeDifference(this.rideStartDate, this.rideEndDate);
 
-    this.prices = Object.entries(firstSegment.price).map((price) => {
-      return [price[0], (price[1] / 100).toFixed(2)];
-    });
+    this.prices = Object.entries(firstSegment.price);
 
     if (this.stations) {
       this.initRouteStations();

@@ -71,4 +71,10 @@
     gap: 20px;
     flex-wrap: wrap;
   }
+
+  .tab-label {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
 }

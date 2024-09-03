@@ -1,9 +1,10 @@
 @let rides = rides$ | async;
+@let stations = stations$ | async;
 
 <button mat-icon-button routerLink="..">
   <mat-icon>arrow_back</mat-icon>
 </button>
-@if (rides && rides.length > 0) {
+@if (rides && rides.length > 0 && stations && stations.length > 0) {
   <div class="ride">
     <div class="info">
       <div class="info-time">
@@ -37,7 +38,12 @@
       @for (carriage of carriages; track carriage.code) {
         <mat-tab>
           <ng-template matTabLabel>
-            {{ carriage.name }}
+            <div class="tab-label">
+              <div class="carriage-name">
+                {{ carriage.name }}
+              </div>
+              <div class="price">${{ calculateTotalRidePrice(carriage.name) }}</div>
+            </div>
           </ng-template>
 
           <app-carriage
@@ -45,7 +51,7 @@
             [rows]="carriage.rows"
             [leftSeats]="carriage.leftSeats"
             [rightSeats]="carriage.rightSeats"
-            [occupiedSeat]="[]"
+            [occupiedSeat]="getCarriageOccupiedSeats(occupiedSeats, $index + 1)"
             (selectedSeatsChange)="onSeatsSelect($event)"
           ></app-carriage>
 

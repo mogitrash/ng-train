@@ -99,28 +99,26 @@ export class CarriageComponent implements OnInit {
   }
 
   public onSeatSelectionChange(seat: Seat, event: Event) {
-    if (this.selectedSeats.length === 0) {
-      const currentSeat = seat;
-      const { checked } = event.target as HTMLInputElement;
-      if (checked) {
-        currentSeat.status = SeatStatus.BOOKED;
-        this.selectedSeats.push(seat);
-      } else {
-        currentSeat.status = SeatStatus.FREE;
-        this.selectedSeats = this.selectedSeats.filter((item) => {
-          return item.numberInCarriage !== seat.numberInCarriage;
-        });
-      }
-
-      // saving the location data for ordering
-      // maybe some of them will turn out to be unnecessary in the future.
-      const selectedSeatData: CarriageSelectedSeats = {
-        carriageNumber: this.carriageNumber,
-        selectedSeats: this.selectedSeats,
-      };
-
-      this.selectedSeatsChange.emit(selectedSeatData);
+    const currentSeat = seat;
+    const { checked } = event.target as HTMLInputElement;
+    if (checked && this.selectedSeats.length === 0) {
+      currentSeat.status = SeatStatus.BOOKED;
+      this.selectedSeats.push(seat);
+    } else {
+      currentSeat.status = SeatStatus.FREE;
+      this.selectedSeats = this.selectedSeats.filter((item) => {
+        return item.numberInCarriage !== seat.numberInCarriage;
+      });
     }
+
+    // saving the location data for ordering
+    // maybe some of them will turn out to be unnecessary in the future.
+    const selectedSeatData: CarriageSelectedSeats = {
+      carriageNumber: this.carriageNumber,
+      selectedSeats: this.selectedSeats,
+    };
+
+    this.selectedSeatsChange.emit(selectedSeatData);
   }
 
   trackBySeat(index: number, seat: Seat): number {
