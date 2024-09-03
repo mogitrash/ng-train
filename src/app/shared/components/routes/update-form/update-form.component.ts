@@ -1,6 +1,6 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
   MatSnackBar,
@@ -18,7 +18,7 @@ import { updateRoute } from '../../../../core/store/trips/trips.actions';
   templateUrl: './update-form.component.html',
   styleUrl: './update-form.component.scss',
 })
-export class UpdateFormComponent implements OnInit {
+export class UpdateFormComponent implements OnInit, OnDestroy {
   @Input() public currentRoute!: Route;
 
   @Output() closeForm = new EventEmitter<boolean>();
@@ -28,11 +28,17 @@ export class UpdateFormComponent implements OnInit {
     carriages: this.FB.nonNullable.array([this.FB.control('')]),
   });
 
+  private subscribeStations$!: Subscription;
+
+  private subscribeCarriages$!: Subscription;
+
   public carriages$: Observable<Carriage[]>;
 
   public stations$: Observable<Station[]>;
 
   public currentStations!: Station[];
+
+  public carriagesList!: Carriage[];
 
   private snackBar = inject(MatSnackBar);
 
@@ -42,7 +48,7 @@ export class UpdateFormComponent implements OnInit {
 
   public updatePathes!: Station[][];
 
-  public mode: 'update' | 'add' = 'update';
+  // public mode: 'update' | 'add' = 'update';
 
   constructor(
     private readonly store: Store,
@@ -53,16 +59,19 @@ export class UpdateFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.stations$.subscribe((stations) => {
+    this.subscribeStations$ = this.stations$.subscribe((stations) => {
       this.currentStations = stations;
-      console.log(this.currentStations, 'stations');
     });
-    console.log(this.currentRoute.path, 'route');
-    this.currentRoute.path.forEach((step) => {
-      this.stations.push(this.FB.control(`${step}`));
+    this.currentRoute.path.forEach((step, index) => {
+      this.stations.controls[index].setValue(`${step}`);
+      this.stations.push(this.FB.control(''));
     });
-    this.currentRoute.carriages.forEach((carriage) => {
-      this.carriages.push(this.FB.control(`${carriage}`));
+    this.currentRoute.carriages.forEach((carriage, index) => {
+      this.carriages.controls[index].setValue(`${carriage}`);
+      this.carriages.push(this.FB.control(''));
+    });
+    this.subscribeCarriages$ = this.carriages$.subscribe((carry) => {
+      this.carriagesList = carry;
     });
     // this.updatePathes = this.currentRoute.path.map((step) => {
     //   return this.getConnectedCities(step);
@@ -84,18 +93,19 @@ export class UpdateFormComponent implements OnInit {
     return this.updateForm.get('stations') as FormArray;
   }
 
-  protected getLastStation(): string[] {
-    const last = this.stations!.value;
-    return last
-      .filter((value: string) => {
-        return value !== '';
-      })
-      .pop();
-  }
+  // protected getLastStation(): string[] {
+  //   console.log('ny');
+  //   const last = this.stations!.value.filter((value: string) => {
+  //     return value !== '';
+  //   });
+  //   return last.slice(last.length - 1);
+  // }
 
-  private getConnectedList(index?: number): { id: number; distance: number }[] {
+  private getConnectedList(index: number): { id: number; distance: number }[] {
+    console.log(this.updateForm.value);
     console.log(index, 'value');
-    const value: number = index || Number(this.getLastStation());
+    const value: number = index;
+    // || Number(this.getLastStation());
     const queryStation = this.currentStations.find((station: Station) => {
       return station.id === +value;
     });
@@ -103,14 +113,18 @@ export class UpdateFormComponent implements OnInit {
     return queryStation ? queryStation.connectedTo : [{ id: 0, distance: 0 }];
   }
 
-  public getConnectedCities(index?: number): Station[] {
+  public getConnectedCities(index: number): Station[] {
     console.log(index);
     const list: Station[] = [];
-    const connectedList = index ? this.getConnectedList(index) : this.getConnectedList();
+    const connectedList = this.getConnectedList(index);
+    // : this.getConnectedList();
     console.log(connectedList, 'Connected');
     connectedList.forEach(({ id }) => {
-      if (this.currentStations[id]) {
-        list.push(this.currentStations[id]);
+      const queryStation = this.currentStations.find((station: Station) => {
+        return station.id === +id;
+      });
+      if (queryStation) {
+        list.push(queryStation);
       } else {
         list.push({
           id: 0,
@@ -125,14 +139,15 @@ export class UpdateFormComponent implements OnInit {
   }
 
   public changeControls(index: number, goal: 'station' | 'carriage'): void {
-    console.log(index);
+    console.log(this.updateForm.value);
     if (goal === 'station') {
       if (index === this.stations.length - 1) {
         this.stations.push(this.FB.control(''));
       } else {
-        while (this.stations.length > index + 2) {
-          this.stations.removeAt(1);
+        while (this.stations.length > index + 1) {
+          this.stations.removeAt(-1);
         }
+        this.stations.push(this.FB.control(''));
       }
     } else if (index === this.carriages.length - 1) {
       this.carriages.push(this.FB.control(''));
@@ -141,9 +156,6 @@ export class UpdateFormComponent implements OnInit {
         this.carriages.removeAt(1);
       }
     }
-    this.mode = 'add';
-    console.log(this.mode);
-    console.log(this.stations.value[0]);
   }
 
   public onSubmit() {
@@ -190,5 +202,10 @@ export class UpdateFormComponent implements OnInit {
 
   public close() {
     this.closeForm.emit(false);
+  }
+
+  ngOnDestroy() {
+    this.subscribeStations$.unsubscribe();
+    this.subscribeCarriages$.unsubscribe();
   }
 }

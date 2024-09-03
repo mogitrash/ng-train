@@ -27,7 +27,7 @@
     "@ngrx/effects": "^18.0.2",
     "@ngrx/store": "^18.0.2",
     "@ngrx/store-devtools": "^18.0.2",
-    "@planess/train-a-backend": "^0.0.6",
+    "@planess/train-a-backend": "^0.0.11",
     "@types/esri-leaflet": "^3.0.3",
     "@types/esri-leaflet-geocoder": "^2.2.7",
     "eslint-config-airbnb-base": "^15.0.0",

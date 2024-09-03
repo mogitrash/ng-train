@@ -1,64 +1,43 @@
-<form [formGroup]="updateForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="updateForm">
   <div class="stations" formArrayName="stations">
-    <h2>Stations</h2>
-    @if (mode === 'update') {
-      @for (station of currentRoute.path; track station + i; let i = $index) {
-        @if (i === 0) {
-          <select (change)="changeControls(i, 'station')" [formControlName]="i">
-            <option value="" disabled [selected]="!stations.value[i]">Choose city</option>
-            @for (city of stations$ | async; track city.id) {
-              <option [value]="city.id" [selected]="currentRoute.path[i] === city.id">
-                {{ city.city }}
-              </option>
-            }
-          </select>
-        } @else {
-          <select [formControlName]="i" (change)="changeControls(i, 'station')">
-            @for (city of getConnectedCities(currentRoute.path[i - 1]); track k; let k = $index) {
-              <option [value]="city.id" [selected]="currentRoute.path[i] === city.id">
-                {{ city.city }}
-              </option>
-            }
-          </select>
+    <h2>Stations:</h2>
+    <select
+      *ngFor="let station of stations.controls; index as i"
+      [formControlName]="i"
+      (change)="changeControls(i, 'station')"
+    >
+      <option value="" disabled [selected]="!stations.value[i]">Choose city</option>
+      <ng-container *ngIf="i === 0; else connectedTo">
+        @for (station of stations$ | async; track $index) {
+          <option [value]="station.id" [selected]="+stations.controls[0].value === +station.id">
+            {{ station.city }}
+          </option>
         }
-      }
-    } @else {
-      @for (station of stations.controls; track station; let i = $index) {
-        @if (i === 0) {
-          <select (change)="changeControls(i, 'station')" [formControlName]="i">
-            <option value="" disabled [selected]="!stations.value[i]">Choose city</option>
-            @for (city of stations$ | async; track city.longitude) {
-              <option [value]="city.id" [selected]="stations.controls[0].value === city.id">
-                {{ city.city }}
-              </option>
-            }
-          </select>
-        } @else {
-          <select (change)="changeControls(i, 'station')" [formControlName]="i">
-            @for (city of getConnectedCities(stations.value[i - 1]); track city.latitude) {
-              <option [value]="city.id" [selected]="stations.controls[i].value === city.id">
-                {{ city.city }}
-              </option>
-            }
-          </select>
+      </ng-container>
+      <ng-template #connectedTo>
+        @for (station of getConnectedCities(stations.controls[i - 1].value); track $index) {
+          <option [value]="station.id" [selected]="+stations.controls[i].value === +station.id">
+            {{ station.city }}
+          </option>
         }
-      }
-    }
+      </ng-template>
+    </select>
   </div>
   <div class="carriages" formArrayName="carriages">
     <h2>Carriages</h2>
-    @for (carriage of currentRoute.carriages; track carriage + i; let i = $index) {
-      <select [formControlName]="i" (change)="changeControls(i, 'carriage')">
-        <option value="" disabled [selected]="!carriages.value[i]">Choose city</option>
-        @for (bag of carriages$ | async; track k; let k = $index) {
-          <option [value]="bag.name" [selected]="currentRoute.carriages[i] === bag.name">
-            {{ bag.name }}
-          </option>
-        }
-      </select>
-    }
+    <select
+      *ngFor="let value of carriages.controls; index as k"
+      (change)="changeControls(k, 'carriage')"
+      [formControlName]="k"
+    >
+      <option value="" disabled [selected]="!carriages.value[k]">Choose carriage</option>
+      @for (carriage of carriagesList; track $index) {
+        <option [value]="carriage.code" [selected]="carriages.controls[k].value === carriage.code">
+          {{ carriage.name }}
+        </option>
+      }
+    </select>
   </div>
-
   <button mat-button type="submit">Save update Route</button>
   <button mat-button (click)="close()">Close</button>
 </form>
