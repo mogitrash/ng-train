@@ -14,6 +14,13 @@ export const selectStations = createSelector(selectTripsState, (state: TripsStat
 export const selectRoutes = createSelector(selectTripsState, (state: TripsState) => {
   return state.routes;
 });
+export const selectRouteById = (routeId: number) => {
+  return createSelector(selectRoutes, (routes) => {
+    return routes.filter((route) => {
+      return route.id === routeId;
+    });
+  });
+};
 
 export const selectCarriages = createSelector(selectTripsState, (state: TripsState) => {
   return state.carriages;
